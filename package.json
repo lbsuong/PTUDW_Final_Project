@@ -1,0 +1,28 @@
+{
+  "name": "PTUDW_Final_Project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbsuong/PTUDW_Final_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lbsuong/PTUDW_Final_Project/issues"
+  },
+  "homepage": "https://github.com/lbsuong/PTUDW_Final_Project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-handlebars": "^5.2.0",
+    "express-handlebars-sections": "^1.0.1",
+    "numeral": "^2.0.6"
+  }
+}
