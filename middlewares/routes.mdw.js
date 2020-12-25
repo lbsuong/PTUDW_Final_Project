@@ -4,14 +4,10 @@ module.exports = function(app) {
   });
 
   app.get('/sign-in', function(req, res){
-    res.render('vwAccountUser/sign-in', {
-      layout: false
-    });
+    res.render('vwAccountUser/sign-in');
   })
 
   app.get('/sign-up', function(req, res){
-    res.render('vwAccountUser/sign-up',{
-      layout: false
-    })
+    res.render('vwAccountUser/sign-up')
   })
 }

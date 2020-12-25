@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="../css/signin.css">
-</head>
-<body>
+{{#section 'css'}}
+<link rel="stylesheet" href="../css/sign-in.css">
+{{/section}}
 
-<div id="id01" class="modal">
-  
-  <form class="modal-content animate" action="/action_page.php" method="post">
+<div id="id01">
+  <form class="modal-content animate" action="" method="post">
     <div class="container">
       <label for="uname"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="uname" required>
@@ -22,15 +17,16 @@
       </label>
     </div>
     <div class="signup">
-        <p>Don't have an account? <a href="/signup"><b>Sign up</b> </a></p>
+        <p>Don't have an account? <a href="/sign-up"><b>Sign up</b> </a></p>
     </div>
     <div class="container" style="background-color:#f1f1f1">
-     <button type="button" onclick="returnToPreviousPage()" class="cancelbtn">Cancel</button>
       <span class="psw"> <a href="#">Forgot password?</a></span>
     </div>
   </form>
 </div>
 
+
+{{#section 'js'}}
 <script>
 // Get the modal
 var modal = document.getElementById('id01');
@@ -43,6 +39,5 @@ window.onclick = function(event) {
     returnToPreviousPage();
 }
 </script>
+{{/section}}
 
-</body>
-</html>
