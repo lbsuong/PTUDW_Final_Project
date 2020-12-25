@@ -3,14 +3,14 @@ module.exports = function(app) {
     res.render('home');
   });
 
-  app.get('/signin', function(req, res){
-    res.render('signin', {
+  app.get('/sign-in', function(req, res){
+    res.render('vwAccountUser/sign-in', {
       layout: false
     });
   })
 
-  app.get('/signup', function(req, res){
-    res.render('signup',{
+  app.get('/sign-up', function(req, res){
+    res.render('vwAccountUser/sign-up',{
       layout: false
     })
   })
