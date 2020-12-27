@@ -1,23 +1,23 @@
 {{#section 'css'}}
-<link rel="stylesheet" href="../css/sign-in.css">
+<link rel="stylesheet" href="../css/cssAccountUser/log-in.css">
 {{/section}}
 
 <div id="id01">
   <form class="modal-content animate" action="" method="post">
     <div class="container">
       <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <input class="account-input" type="text" placeholder="Enter Username" name="uname" required>
 
       <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-        
-      <button type="submit">Login</button>
+      <input class="account-input" type="password" placeholder="Enter Password" name="psw" required>
+
+      <button id="login-button" type="submit">Login</button>
       <label>
         <input type="checkbox" checked="checked" name="remember"> Remember me
       </label>
     </div>
     <div class="signup">
-        <p>Don't have an account? <a href="/sign-up"><b>Sign up</b> </a></p>
+      <p>Don't have an account? <a href="/sign-up"><b>Sign up</b> </a></p>
     </div>
     <div class="container" style="background-color:#f1f1f1">
       <span class="psw"> <a href="#">Forgot password?</a></span>
@@ -28,16 +28,15 @@
 
 {{#section 'js'}}
 <script>
-// Get the modal
-var modal = document.getElementById('id01');
-function returnToPreviousPage(){
+  // Get the modal
+  var modal = document.getElementById('id01');
+  function returnToPreviousPage() {
     // TODO
     console.log("hello!");
-}
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+  }
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
     returnToPreviousPage();
-}
+  }
 </script>
 {{/section}}
-

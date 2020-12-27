@@ -3,8 +3,8 @@ module.exports = function(app) {
     res.render('home');
   });
 
-  app.get('/sign-in', function(req, res){
-    res.render('vwAccountUser/sign-in');
+  app.get('/log-in', function(req, res){
+    res.render('vwAccountUser/log-in');
   })
 
   app.get('/sign-up', function(req, res){
