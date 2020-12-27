@@ -1,67 +1,96 @@
-CREATE database `udemy` character set utf8mb4;
-CREATE TABLE `udemy`.`users` (
+DROP DATABASE IF EXISTS `udemy`;
+CREATE DATABASE `udemy` CHARACTER SET utf8mb4;
+USE `udemy`;
+
+CREATE TABLE `users` (
   `username` VARCHAR(10) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`username`));
+  PRIMARY KEY (`username`)
+);
   
-  CREATE TABLE `udemy`.`lecturer` (
+CREATE TABLE `lecturer` (
   `username` VARCHAR(10) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `bankid` INT NOT NULL,
   `bankname` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`username`));
-  
-  CREATE TABLE `udemy`.`category` (
-  `id` VARCHAR(10) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`));
-  
-  CREATE TABLE `udemy`.`subcat`(
-  `parentid` varchar(10) not null,
-  `subid` varchar(10) not null,
-  constraint fk1 foreign key (`parentid`) references category(`id`) on delete cascade,
-  constraint fk2 foreign key (`subid`) references category(`id`) on delete cascade
-  );
-  
-CREATE TABLE `udemy`.`course` (
-  `id` VARCHAR(10) NOT NULL,
-  `category` varchar(10) not null,
-  `title` VARCHAR(45) NOT NULL,
-  `lecturer` VARCHAR(45) NOT NULL,
-  `tinydes` varchar(100) NOT NULL,
-  `fulldes` varchar(1000) NOT NULL,
-  `numstudent` int NOT NULL,
-  `rate` float not null,
-  `numrate` int not null,
-  `price` float not null,
-  constraint fk_c_1 foreign key (`lecturer`) references lecturer(`username`) on delete cascade,
-  constraint fk_c_2 foreign key (`category`) references category(`id`) on delete cascade,
-  PRIMARY KEY (`id`));
-  
-  CREATE TABLE `udemy`.`ownedcourse`(
-  `id` varchar(10) not null,
-  `userid` varchar(10) not null,
-  `courseid` varchar(10) not null,
-  `date` datetime not null,
-  constraint fk_o_1 foreign key (`userid`) references users(`username`) on delete cascade,
-  constraint fk_o_2 foreign key (`courseid`) references course(`id`) on delete cascade,
-  primary key(`id`)
-  );
-  
-CREATE TABLE `udemy`.`rating`(
- `id` varchar(10) not null,
- `courseid` varchar(10) not null,
- `studentid` varchar(10) not null,
- `piadid` varchar(10) not null,
- `rate` int not null,
- `ratedetail` varchar(500) not null,
- `hidden` boolean not null,
- constraint fk_r_1 foreign key (`courseid`) references course(`id`) on delete cascade,
- constraint fk_r_2 foreign key (`studentid`) references users(`username`) on delete cascade,
- constraint fk_r_3 foreign key (`piadid`) references ownedcourse(`id`) on delete cascade,
- primary key(`id`)
+  PRIMARY KEY (`username`)
 );
+
+CREATE TABLE `moderator` (
+  `username` VARCHAR(10) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
+  `name` VARCHAR(45) NOT NULL
+);
+  
+CREATE TABLE `category` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `subcat`(
+  `parentid` INT NOT NULL,
+  `subid` INT NOT NULL,
+  CONSTRAINT fk1 FOREIGN KEY (`parentid`) REFERENCES category(`id`) ON DELETE CASCADE,
+  CONSTRAINT fk2 FOREIGN KEY (`subid`) REFERENCES category(`id`) ON DELETE CASCADE
+);
+  
+CREATE TABLE `course` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `categoryid` INT NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
+  `lecturer` VARCHAR(10) NOT NULL,
+  `tinydes` VARCHAR(100) NOT NULL,
+  `fulldes` VARCHAR(1000) NOT NULL,
+  `numstudent` INT NOT NULL,
+  `rate` FLOAT NOT NULL,
+  `numrate` INT NOT NULL,
+  `price` FLOAT NOT NULL,
+  CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
+  CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
+  PRIMARY KEY (`id`)
+);
+  
+CREATE TABLE `ownedcourse` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userid` VARCHAR(10) NOT NULL,
+  `courseid` INT NOT NULL,
+  `date` DATETIME NOT NULL,
+  CONSTRAINT `fk_o_1` FOREIGN KEY (`userid`) REFERENCES `users`(`username`) ON DELETE CASCADE,
+  CONSTRAINT `fk_o_2` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
+  PRIMARY KEY(`id`)
+);
+  
+CREATE TABLE `rating`(
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `courseid` INT NOT NULL,
+ `studentid` VARCHAR(10) NOT NULL,
+ `paidid` INT NOT NULL,
+ `rate` INT NOT NULL,
+ `ratedetail` VARCHAR(500) NOT NULL,
+ `hidden` boolean NOT NULL,
+ CONSTRAINT `fk_r_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
+ CONSTRAINT `fk_r_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE,
+ CONSTRAINT `fk_r_3` FOREIGN KEY (`paidid`) REFERENCES `ownedcourse`(`id`) ON DELETE CASCADE,
+ PRIMARY KEY(`id`)
+);
+
+
+#--------------------------------------------------------------------------------
+
+INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
+
+INSERT INTO `category` (`name`) VALUES ("IT");
+INSERT INTO `category` (`name`) VALUES ("Lập trình Web");
+INSERT INTO `category` (`name`) VALUES ("Lập trình thiết bị di động");
+
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 2);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 3);
+
+SELECT * FROM `category`;
+SELECT * FROM `subcat`;
+SELECT * FROM `moderator`;

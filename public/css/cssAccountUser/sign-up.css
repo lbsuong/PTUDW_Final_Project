@@ -2,7 +2,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 * {box-sizing: border-box;}
 
 /* Full-width input fields */
-.account-input {
+.accountInput {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -12,7 +12,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 }
 
 /* Add a background color when the inputs get focus */
-.account-input:focus {
+.accountInput:focus {
   background-color: #ddd;
   outline: none;
 }
