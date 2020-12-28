@@ -2,6 +2,30 @@
 <link rel="stylesheet" href="../css/cssAccountUser/sign-up.css">
 {{/section}}
 
+{{#if isAuth}}
+  <div class="container" tabindex="-1" role="dialog" style="width: 300px">
+  <div class="modal-dialog animate" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">You are signed in!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Please sign out before create new account</p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
+        {{!-- <button type="button" class="btn btn-primary">Log out</button> --}}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
+        {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{else}}
 <div id="id01">
   <form id="frmSignUp" class="modal-content animate" action="" method="POST">
     <div class="container">
@@ -16,8 +40,6 @@
 
       <label for="email"><b>Email</b></label>
       <input class="accountInput" type="text" placeholder="Enter Email" name="email" required>
-
-
 
       <label for="psw"><b>Password</b></label>
       <input class="accountInput" type="password" placeholder="Enter Password" name="psw" required>
@@ -37,20 +59,20 @@
     </div>
   </form>
 </div>
+{{/if}}
 
 {{#section 'js'}}
 <script>
-  // Get the modal
-  var modal = document.getElementById('id01');
+  function returnToPreviousPage() {
+    let url = "{{retUrl}}";
+    if(url.length === 0){
+      url = "/";
+    }
+    location.replace(url);
+  }
 
-  // When the user clicks anywhere outside of the modal, close it
-  {
-    {
-      !--window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      } --}
+  function goToSignUp(){
+    location.replace("/account/sign-up");
   }
 </script>
 {{/section}}

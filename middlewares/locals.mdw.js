@@ -5,7 +5,9 @@ module.exports = function (app) {
     }
 
     res.locals.isAuth = req.session.isAuth;
-    res.locals.user = req.session.user;
+    res.locals.user = req.session.authUser;
+    res.locals.retUrl = req.headers.referer;
+   
     next();
   })
 }
