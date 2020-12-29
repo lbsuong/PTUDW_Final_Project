@@ -5,7 +5,8 @@ module.exports = function (app) {
     }
 
     res.locals.isAuth = req.session.isAuth;
-    res.locals.user = req.session.authUser;
+    res.locals.username = req.session.username;
+    res.locals.name = req.session.name;
     res.locals.retUrl = req.headers.referer;
    
     next();

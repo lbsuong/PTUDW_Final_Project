@@ -7,9 +7,14 @@ module.exports = function(app) {
     if (req.headers.referer) {
       req.session.retUrl = req.headers.referer;
     }
-    let url = res.locals.retUrl || '/';
+    let url = req.session.retUrl || '/';
     res.redirect(url);
   });
 
-  app.use('/account', require('../routes/front/account.route'));
+  app.get('/privacy', function(req, res){
+    res.render('privacy');
+  })
+
+  app.use('/user', require('../routes/front/user.route'));
+  // app.use('/teaching', require('../routes/'))
 }

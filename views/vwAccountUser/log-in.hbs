@@ -28,11 +28,14 @@
 <div id="id01">
   <form class="modal-content animate" action="" method="POST">
     <div class="container">
+      {{#if err_message}}
+        <div class="text-danger text-center"> {{err_message}}</div>
+      {{/if}}
       <label for="uname"><b>Username</b></label>
-      <input class="accountInput" type="text" placeholder="Enter Username" name="uname" required>
+      <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>
 
       <label for="psw"><b>Password</b></label>
-      <input class="accountInput" type="password" placeholder="Enter Password" name="psw" required>
+      <input class="accountInput" type="password" placeholder="Enter Password" name="password" required>
 
       <button id="loginButton" type="submit">Login</button>
       <label>
@@ -40,13 +43,14 @@
       </label>
     </div>
     <div class="signup">
-      <p>Don't have an account? <a href="/sign-up"><b>Sign up</b> </a></p>
+      <p>Don't have an account? <a href="/user/sign-up"><b>Sign up</b> </a></p>
     </div>
     <div class="container" style="background-color:#f1f1f1">
       <span class="psw"> <a href="#">Forgot password?</a></span>
     </div>
   </form>
 </div>
+
 {{/if}}
 
 {{#section 'js'}}

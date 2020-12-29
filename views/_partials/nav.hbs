@@ -30,7 +30,7 @@
         </button>
       </form>
       {{#if isAuth}}
-      <a href="/account/cart" style="padding-left: 5px; padding-right: 5px">
+      <a href="/user/cart" style="padding-left: 5px; padding-right: 5px">
     <i class="fas fa-shopping-cart"></i>
     </a>
        <ul class="navbar-nav pr-4">
@@ -38,18 +38,19 @@
       <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
-            HI, <b>{{user.username}}</b>
+            HI, <b>{{name}}</b>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="#">Account</a></li>
             <li><a class="dropdown-item" href="#">My Courses</a></li>
-            <li><a class="dropdown-item" href="/account/sign-out">Log out</a></li>
+            <li><a class="dropdown-item" href="/user/sign-out">Log out</a></li>
           </ul>
         </li>
         </ul>
       {{else}}
-      <a href="/account/log-in" class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
-      <a href="/account/sign-up" class="btn btn-primary text-nowrap">Sign up</a>
+       {{!-- <a href="/redirect" class="btn btn-outline-primary me-3 text-nowrap">redirect</a> --}}
+      <a href="/user/log-in" class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
+      <a href="/user/sign-up" class="btn btn-primary text-nowrap">Sign up</a>
       {{/if}}
     </div>
   </div>

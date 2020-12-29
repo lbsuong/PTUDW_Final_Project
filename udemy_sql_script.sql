@@ -20,7 +20,7 @@ CREATE TABLE `lecturer` (
   PRIMARY KEY (`username`)
 );
 
-CREATE TABLE `moderator` (
+CREATE TABLE `admin` (
   `username` VARCHAR(10) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL
@@ -82,7 +82,7 @@ CREATE TABLE `rating`(
 
 #--------------------------------------------------------------------------------
 
-INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
+INSERT INTO `admin` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
 
 INSERT INTO `category` (`name`) VALUES ("IT");
 INSERT INTO `category` (`name`) VALUES ("Lập trình Web");

@@ -8,5 +8,10 @@ module.exports = {
     if (rows.length == 0)
       return null;
     return rows[0];
-  }
+  },
+
+  add(entity){
+    return db.add(entity, TBL_USERS);
+  },
+
 };
