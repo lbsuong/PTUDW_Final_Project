@@ -1,0 +1,66 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="../css/cssAccountUser/log-in.css">
+{{/section}}
+
+{{#if isAuth}}
+<div class="container" tabindex="-1" role="dialog" style="width: 300px">
+  <div class="modal-dialog animate" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">You are signed in!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>You only can sign in when you are not sign in</p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
+        {{!-- <button type="button" class="btn btn-primary">Log out</button> --}}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
+        {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
+      </div>
+    </div>
+  </div>
+</div>
+{{else}}
+<div id="id01">
+  <form class="modal-content animate" action="" method="POST">
+    <div class="container">
+      {{#if err_message}}
+        <div class="text-danger text-center"> {{err_message}}</div>
+      {{/if}}
+      <label for="uname"><b>Username</b></label>
+      <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input class="accountInput" type="password" placeholder="Enter Password" name="password" required>
+
+      <button id="loginButton" type="submit">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+    <div class="signup">
+      <p>Don't have an account? <a href="/user/sign-up"><b>Sign up</b> </a></p>
+    </div>
+    <div class="container" style="background-color:#f1f1f1">
+      <span class="psw"> <a href="#">Forgot password?</a></span>
+    </div>
+  </form>
+</div>
+
+{{/if}}
+
+{{#section 'js'}}
+<script>
+  function returnToPreviousPage() {
+    let url = "{{retUrl}}";
+    if(url.length === 0){
+      url = "/";
+    }
+    location.replace(url);
+  }
+</script>
+{{/section}}

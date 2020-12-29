@@ -2,18 +2,15 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const userModel = require('../../models/user.model');
-const lecturerModel = require('../../models/lecturer.model');
-const moderatorModel = require('../../models/admin.model');
-// const { singleByUsername } = require('../../models/user.model');
 
 const router = express.Router();
 
 router.get('/log-in', function(req, res) {
-  res.render('vwAccountUser/log-in');
+  res.render('vwUser/log-in');
 });
 
 router.get('/sign-up', function(req, res) {
-  res.render('vwAccountUser/sign-up');
+  res.render('vwUser/sign-up');
 });
 
 router.get('/sign-out', function(req,res){
@@ -27,61 +24,24 @@ router.get('/sign-out', function(req,res){
 
 router.get('/cart', function(req,res){
   if(req.session.isAuth){
-  res.render('vwAccountUser/cart');
+  res.render('vwUser/cart');
   } else {
     res.redirect('/account/log-in')
   }
 });
 
-
-// async function findUserByUsername(username) {
-//   let user = await userModel.singleByUsername(username);
-//   if (user != null) {
-//     return {
-//       user: user,
-//       permission: 1,
-//       err_message: null
-//     }
-//   }
-
-//   user = await lecturerModel.singleByUsername(username);
-//   if (user != null) {
-//     return {
-//       user: user,
-//       permission: 2,
-//       err_message: null
-//     }
-//   }
-
-//   user = await moderatorModel.singleByUsername(username);
-//   if (user != null) {
-//     return {
-//       user: user,
-//       permission: 3,
-//       err_message: null
-//     }
-//   }
-
-//   return {
-//     user: null,
-//     permission: 0,
-//     err_message: 'Invalid username or password.'
-//   }
-// }
-
 router.post('/log-in', async function(req, res) {
   let result = await userModel.singleByUsername(req.body.username);
   if(result == null){
     // console.log("Logging failed");
-    return res.render('vwAccountUser/log-in', {
+    return res.render('vwUser/log-in', {
       err_message: 'There was a problem logging in. Check your email and password or create an account.',
     });
   }
   const correctPassword = bcrypt.compareSync(req.body.password, result.password);
-  console.log(correctPassword);
   if (correctPassword == false) {
     // console.log("Logging failed");
-    return res.render('vwAccountUser/log-in', {
+    return res.render('vwUser/log-in', {
       err_message: 'There was a problem logging in. Check your email and password or create an account.',
     });
   }
@@ -99,7 +59,7 @@ router.post('/sign-up', async function(req, res){
   console.log(req.body);
   let result = await userModel.singleByUsername(req.body.username);
   if(result){
-    return res.render('vwAccountUser/sign-up', {
+    return res.render('vwUser/sign-up', {
       err_message: "Duplicate username",
     });
   }

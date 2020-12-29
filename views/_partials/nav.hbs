@@ -49,7 +49,8 @@
         </ul>
       {{else}}
        {{!-- <a href="/redirect" class="btn btn-outline-primary me-3 text-nowrap">redirect</a> --}}
-      <a href="/user/log-in" class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
+       <a href="/lecturer" class=" me-3 text-nowrap">Teaching on Udemy</a>
+      <a href="{{#if forUser}}/user/log-in{{else if forLecturer}}/lecturer/log-in{{else}}/admin/log-in {{/if}}" class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
       <a href="/user/sign-up" class="btn btn-primary text-nowrap">Sign up</a>
       {{/if}}
     </div>

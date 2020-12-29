@@ -17,9 +17,7 @@
       </div>
       <div class="modal-footer">
         <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
-        {{!-- <button type="button" class="btn btn-primary">Log out</button> --}}
         <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
-        {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
       </div>
     </div>
   </div>
@@ -29,7 +27,6 @@
 <div id="id01">
   <form id="frmSignUp" class="modal-content animate" action="" method="POST">
     <div class="container">
-      {{!-- <h1 class="text-center">Sign Up</h1> --}}
       {{#if err_message}}
       <div class="text-danger text-center">
         {{err_message}}
@@ -60,7 +57,7 @@
         <button type="submit" class="submitbtn bg-primary rounded">Sign Up</button>
       </div>
       <div class="container text-center pt-4 bg-light rounded">
-        <p>Already have an account? <a href="/log-in"><b>Log In</b></a></p>
+        <p>Already have an account? <a href="/user/log-in"><b>Log In</b></a></p>
       </div>
     </div>
   </form>
