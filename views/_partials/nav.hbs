@@ -30,28 +30,34 @@
         </button>
       </form>
       {{#if isAuth}}
+      {{#if forUser}}
       <a href="/user/cart" style="padding-left: 5px; padding-right: 5px">
-    <i class="fas fa-shopping-cart"></i>
-    </a>
-       <ul class="navbar-nav pr-4">
-     
-      <li class="nav-item dropdown">
+        <i class="fas fa-shopping-cart"></i>
+      </a>
+      {{/if}}
+      <ul class="navbar-nav pr-4">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
             HI, <b>{{name}}</b>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Account</a></li>
+            <li><a class="dropdown-item" href="{{#if forUser}} /user/profile {{/if}}">Account</a></li>
             <li><a class="dropdown-item" href="#">My Courses</a></li>
             <li><a class="dropdown-item" href="/user/sign-out">Log out</a></li>
           </ul>
         </li>
-        </ul>
+      </ul>
       {{else}}
-       {{!-- <a href="/redirect" class="btn btn-outline-primary me-3 text-nowrap">redirect</a> --}}
-       <a href="/lecturer" class=" me-3 text-nowrap">Teaching on Udemy</a>
-      <a href="{{#if forUser}}/user/log-in{{else if forLecturer}}/lecturer/log-in{{else}}/admin/log-in {{/if}}" class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
-      <a href="/user/sign-up" class="btn btn-primary text-nowrap">Sign up</a>
+      <a href="/lecturer" class=" me-3 text-nowrap">Teaching on Udemy</a>
+      <a href="{{#if forUser}}/user/log-in{{else if forLecturer}}/lecturer/log-in{{else}}/admin/log-in {{/if}}"
+        class="btn btn-outline-primary me-3 text-nowrap">Log in</a>
+      {{#if forAdmin}}
+
+      {{else}}
+      <a href="{{#if forUser}}/user/sign-up{{else if forLecturer}}/lecturer/sign-up{{else}}/admin/sign-up {{/if}}"
+        class="btn btn-primary text-nowrap">Sign up</a>
+      {{/if}}
       {{/if}}
     </div>
   </div>

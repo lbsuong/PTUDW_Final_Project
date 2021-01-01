@@ -15,7 +15,7 @@ CREATE TABLE `lecturer` (
   `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
-  `bankid` INT NOT NULL,
+  `bankid` BIGINT NOT NULL,
   `bankname` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`username`)
 );

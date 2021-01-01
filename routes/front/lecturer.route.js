@@ -3,16 +3,17 @@ const bcrypt = require('bcryptjs');
 const lecturerModel = require('../../models/lecturer.model');
 
 const router = express.Router();
-router.get('/', function (req, res) {
-    res.render('vwLecturer/home');
-    req.session.permission = 1;
-})
+
 router.get('/log-in', function (req, res) {
-    res.render('vwLecturer/log-in');
+    res.render('vwLecturer/log-in', {
+        forLecturer: true,
+    });
 });
 
 router.get('/sign-up', function (req, res) {
-    res.render('vwLecturer/sign-up');
+    res.render('vwLecturer/sign-up', {
+        forLecturer: true,
+    });
 });
 
 router.get('/sign-out', function (req, res) {
@@ -30,6 +31,7 @@ router.post('/log-in', async function (req, res) {
     if (result == null) {
         return res.render('vwLecturer/log-in', {
             err_message: 'There was a problem logging in. Check your email and password or create an account.',
+            forLecturer: true,
         });
     }
     const correctPassword = bcrypt.compareSync(req.body.password, result.password);
@@ -37,6 +39,7 @@ router.post('/log-in', async function (req, res) {
     if (correctPassword == false) {
         return res.render('vwLecturer/log-in', {
             err_message: 'There was a problem logging in. Check your email and password or create an account.',
+            forLecturer: true,
         });
     }
     req.session.username = result.username;
@@ -44,16 +47,16 @@ router.post('/log-in', async function (req, res) {
     req.session.permission = 1;
     req.session.isAuth = true;
 
-    let url = '/';
-    res.redirect('/');
+    res.redirect('/lecturer');
 });
 
 router.post('/sign-up', async function (req, res) {
     const result = await lecturerModel.singleByUsername(req.body.username);
     console.log(req.body);
     if (result) {
-        return res.render('vwtLecturer/log-in', {
+        return res.render('vwLecturer/sign-up', {
             err_message: 'This account already exists. Please login or enter another account.',
+            forLecturer: true,
         });
     }
 
@@ -67,7 +70,7 @@ router.post('/sign-up', async function (req, res) {
     }
 
     lecturerModel.add(newLecturer);
-    // res.redirect('/lecturer')
+    res.redirect('/lecturer');
 });
 
 module.exports = router;

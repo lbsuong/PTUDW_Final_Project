@@ -1,5 +1,5 @@
 {{#section 'css'}}
-<link rel="stylesheet" href="../css/cssAccountUser/log-in.css">
+<link rel="stylesheet" href="../css/cssUser/log-in.css">
 {{/section}}
 
 {{#if isAuth}}
@@ -18,7 +18,8 @@
       <div class="modal-footer">
         <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
         {{!-- <button type="button" class="btn btn-primary">Log out</button> --}}
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          onclick="returnToPreviousPage()">Close</button>
         {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
       </div>
     </div>
@@ -29,7 +30,7 @@
   <form class="modal-content animate" action="" method="POST">
     <div class="container">
       {{#if err_message}}
-        <div class="text-danger text-center"> {{err_message}}</div>
+      <div class="text-danger text-center"> {{err_message}}</div>
       {{/if}}
       <label for="uname"><b>Username</b></label>
       <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>
@@ -57,7 +58,7 @@
 <script>
   function returnToPreviousPage() {
     let url = "{{retUrl}}";
-    if(url.length === 0){
+    if (url.length === 0) {
       url = "/";
     }
     location.replace(url);

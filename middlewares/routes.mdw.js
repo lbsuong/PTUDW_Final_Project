@@ -2,15 +2,11 @@ module.exports = function(app) {
   app.get('/', function(req, res) {
     res.render('home', {
       forUser: true,
-      forAdmin: false,
-      forLecturer: false,
     });
   });
 
   app.get('/lecturer', function(req,res){
     res.render('vwLecturer/home', {
-      forUser: false,
-      forAdmin: false,
       forLecturer: true,
     })
   });
@@ -18,8 +14,6 @@ module.exports = function(app) {
   app.get('/admin', function(req, res){
     res.render('vwAdmin/home', {
       forAdmin: true,
-      forLecturer: false,
-      forUser: false,
     })
   });
 
@@ -37,5 +31,6 @@ module.exports = function(app) {
 
   app.use('/user', require('../routes/front/user.route'));
   app.use('/lecturer', require('../routes/front/lecturer.route'));
+  app.use('/admin', require('../routes/front/admin.route'));
 
 }

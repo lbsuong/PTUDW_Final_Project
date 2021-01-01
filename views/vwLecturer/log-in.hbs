@@ -1,5 +1,5 @@
 {{#section 'css'}}
-<link rel="stylesheet" href="../css/cssAccountUser/log-in.css">
+<link rel="stylesheet" href="../css/cssLecturer/log-in.css">
 {{/section}}
 
 {{#if isAuth}}
@@ -17,9 +17,8 @@
       </div>
       <div class="modal-footer">
         <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
-        {{!-- <button type="button" class="btn btn-primary">Log out</button> --}}
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
-        {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          onclick="returnToPreviousPage()">Close</button>
       </div>
     </div>
   </div>
@@ -29,12 +28,12 @@
   <form class="modal-content animate" action="" method="POST">
     <div class="container">
       {{#if err_message}}
-        <div class="text-danger text-center"> {{err_message}}</div>
+      <div class="text-danger text-center"> {{err_message}}</div>
       {{/if}}
-      <label for="uname"><b>Username</b></label>
+      <label for="username"><b>Username</b></label>
       <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>
 
-      <label for="psw"><b>Password</b></label>
+      <label for="password"><b>Password</b></label>
       <input class="accountInput" type="password" placeholder="Enter Password" name="password" required>
 
       <button id="loginButton" type="submit">Login</button>
@@ -43,7 +42,7 @@
       </label>
     </div>
     <div class="signup">
-      <p>Don't have an account? <a href="/user/sign-up"><b>Sign up</b> </a></p>
+      <p>Don't have an account? <a href="/lecturer/sign-up"><b>Sign up</b> </a></p>
     </div>
     <div class="container" style="background-color:#f1f1f1">
       <span class="psw"> <a href="#">Forgot password?</a></span>
@@ -57,7 +56,7 @@
 <script>
   function returnToPreviousPage() {
     let url = "{{retUrl}}";
-    if(url.length === 0){
+    if (url.length === 0) {
       url = "/";
     }
     location.replace(url);

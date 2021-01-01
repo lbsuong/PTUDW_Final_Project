@@ -1,9 +1,9 @@
 {{#section 'css'}}
-<link rel="stylesheet" href="../css/cssAccountUser/sign-up.css">
+<link rel="stylesheet" href="../css/cssUser/sign-up.css">
 {{/section}}
 
 {{#if isAuth}}
-  <div class="container" tabindex="-1" role="dialog" style="width: 300px">
+<div class="container" tabindex="-1" role="dialog" style="width: 300px">
   <div class="modal-dialog animate" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -17,7 +17,8 @@
       </div>
       <div class="modal-footer">
         <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="returnToPreviousPage()">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          onclick="returnToPreviousPage()">Close</button>
       </div>
     </div>
   </div>
@@ -45,10 +46,13 @@
       <input class="accountInput" type="email" placeholder="Enter Email" name="email" required>
 
       <label for="password"><b>Password</b></label>
-      <input class="accountInput" type="password" placeholder="Enter Password" name="password" required>
+      <input id="password" class="accountInput" type="password" placeholder="Enter Password" name="password" required>
 
       <label for="psw-repeat"><b>Repeat Password</b></label>
-      <input class="accountInput" type="password" placeholder="Repeat Password" name="psw-repeat" required>
+      <input id="password_re" class="accountInput" type="password" placeholder="Repeat Password" required>
+
+      <div id="noti_err">{{#if err_message}} <div class='alert alert-danger animate text-center' role='alert'>
+          {{err_message}}</div> {{/if}} </div>
 
       <p class="text-center">By creating an account you agree to our <a href="/privacy" class="text-primary">Terms &
           Privacy</a>.</p>
@@ -66,15 +70,24 @@
 
 {{#section 'js'}}
 <script>
+  $('#frmSignUp').submit(function (event) {
+    const pass = $('#password').val();
+    const re_pass = $('#password_re').val();
+
+    if (pass.localeCompare(re_pass) !== 0) {
+      event.preventDefault();
+      $('#noti_err').html("<div class='alert alert-danger animate text-center' role='alert'>Password does not match</div>");
+    }
+  });
   function returnToPreviousPage() {
     let url = "{{retUrl}}";
-    if(url.length === 0){
+    if (url.length === 0) {
       url = "/";
     }
     location.replace(url);
   }
 
-  function goToSignUp(){
+  function goToSignUp() {
     location.replace("/account/sign-up");
   }
 </script>
