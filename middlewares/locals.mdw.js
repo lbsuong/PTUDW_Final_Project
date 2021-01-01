@@ -26,13 +26,15 @@ module.exports = function (app) {
       rows.forEach(function(value, index, array) {
         subCatList.push({
           id: value.id,
-          name: value.name
+          name: value.name,
+          level: value.level
         });
       });
 
       result.push({
         id: value.id,
         name: value.name,
+        level: value.level,
         subCat: subCatList
       });
     }),

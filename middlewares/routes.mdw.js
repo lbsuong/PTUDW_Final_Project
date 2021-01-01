@@ -32,5 +32,6 @@ module.exports = function(app) {
   app.use('/user', require('../routes/front/user.route'));
   app.use('/lecturer', require('../routes/front/lecturer.route'));
   app.use('/admin', require('../routes/front/admin.route'));
-
+  
+  app.use('/category', require('../routes/category.route'));
 }
