@@ -29,7 +29,7 @@ CREATE TABLE `moderator` (
 CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `isparent` BOOL NOT NULL,
+  `level` BOOL NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -85,9 +85,9 @@ CREATE TABLE `rating`(
 
 INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
 
-INSERT INTO `category` (`name`, `isparent`) VALUES ("IT", true);
-INSERT INTO `category` (`name`, `isparent`) VALUES ("Lập trình Web", false);
-INSERT INTO `category` (`name`, `isparent`) VALUES ("Lập trình thiết bị di động", false);
+INSERT INTO `category` (`name`, `level`) VALUES ("IT", 1);
+INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình Web", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình thiết bị di động", 2);
 
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 2);
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 3);
