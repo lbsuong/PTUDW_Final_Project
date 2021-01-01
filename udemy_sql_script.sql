@@ -20,7 +20,7 @@ CREATE TABLE `lecturer` (
   PRIMARY KEY (`username`)
 );
 
-CREATE TABLE `admin` (
+CREATE TABLE `moderator` (
   `username` VARCHAR(10) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL
@@ -29,14 +29,15 @@ CREATE TABLE `admin` (
 CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
+  `level` BOOL NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `subcat`(
   `parentid` INT NOT NULL,
   `subid` INT NOT NULL,
-  CONSTRAINT fk1 FOREIGN KEY (`parentid`) REFERENCES category(`id`) ON DELETE CASCADE,
-  CONSTRAINT fk2 FOREIGN KEY (`subid`) REFERENCES category(`id`) ON DELETE CASCADE
+  CONSTRAINT `fk1` FOREIGN KEY (`parentid`) REFERENCES category(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk2` FOREIGN KEY (`subid`) REFERENCES category(`id`) ON DELETE CASCADE
 );
   
 CREATE TABLE `course` (
@@ -82,15 +83,11 @@ CREATE TABLE `rating`(
 
 #--------------------------------------------------------------------------------
 
-INSERT INTO `admin` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
+INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
 
-INSERT INTO `category` (`name`) VALUES ("IT");
-INSERT INTO `category` (`name`) VALUES ("Lập trình Web");
-INSERT INTO `category` (`name`) VALUES ("Lập trình thiết bị di động");
+INSERT INTO `category` (`name`, `level`) VALUES ("IT", 1);
+INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình Web", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình thiết bị di động", 2);
 
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 2);
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 3);
-
-SELECT * FROM `category`;
-SELECT * FROM `subcat`;
-SELECT * FROM `moderator`;
