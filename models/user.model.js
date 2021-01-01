@@ -10,8 +10,13 @@ module.exports = {
     return rows[0];
   },
 
-  add(entity){
+  add(entity) {
     return db.add(entity, TBL_USERS);
   },
+
+  changePassword(newPass, id) {
+
+    return db.update(newPass, 'password', id, TBL_USERS);
+  }
 
 };

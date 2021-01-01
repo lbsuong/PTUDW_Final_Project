@@ -11,19 +11,20 @@ module.exports = function (app) {
     res.locals.username = req.session.username;
     res.locals.name = req.session.name;
     res.locals.retUrl = req.headers.referer;
-   
+    res.locals.picture = req.session.picture;
+
     next();
   })
 
-  app.use(async function(req, res, next) {
+  app.use(async function (req, res, next) {
     const result = [];
     allLevelOneCatID = await categoryModel.allCatIDByLevel(1);
 
-    allLevelOneCatID.forEach(async function(value, index, array) {
+    allLevelOneCatID.forEach(async function (value, index, array) {
       const subCatList = [];
       const rows = await categoryModel.subCatByID(value.id);
-      
-      rows.forEach(function(value, index, array) {
+
+      rows.forEach(function (value, index, array) {
         subCatList.push({
           id: value.id,
           name: value.name,
@@ -38,8 +39,8 @@ module.exports = function (app) {
         subCat: subCatList
       });
     }),
-    res.locals.category = result;
-    
+      res.locals.category = result;
+
     next();
   })
 }

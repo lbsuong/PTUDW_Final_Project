@@ -28,16 +28,18 @@
     </form>
     {{#if isAuth}}
     <a href="/user/cart" style="padding-left: 5px; padding-right: 5px">
-      <i class="fas fa-shopping-cart"></i>
+      <i class="fas fa-shopping-cart pr-2 pl-1"></i>
     </a>
-    <ul class="navbar-nav pr-4">
+    <ul class="navbar-nav">
       <li class="nav-item dropdown">
         <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">HI, <b>{{name}}</b></button>
+          aria-expanded="false">HI, <img src="{{#if picture}}{{picture}}{{else}} ../img/ava_default.jpg{{/if}}"
+            alt="Avatar">
+          <b>{{name}}</b></button>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="#">Account</a>
-          <a class="dropdown-item" href="#">My Courses</a>
-          <a class="dropdown-item" href="/user/sign-out">Log out</a>
+          <a class="dropdown-item" href="/user/profile"><i class="fas fa-user pr-3"></i> Account</a>
+          <a class="dropdown-item" href="#"><i class="fas fa-book-open pr-3"></i>My Courses</a>
+          <a class="dropdown-item" href="/user/sign-out"><i class="fas fa-sign-out-alt pr-3"></i>Log out</a>
         </div>
       </li>
     </ul>

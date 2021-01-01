@@ -7,6 +7,7 @@ CREATE TABLE `users` (
   `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
+  `picture` varchar(100),
   PRIMARY KEY (`username`)
 );
   
@@ -84,7 +85,7 @@ CREATE TABLE `rating`(
 #--------------------------------------------------------------------------------
 
 INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
-
+INSert into `users` (`username`, `password`, `name`) value("thesonvo", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW","Vo The Son");
 INSERT INTO `category` (`name`, `level`) VALUES ("IT", 1);
 INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình Web", 2);
 INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình thiết bị di động", 2);
