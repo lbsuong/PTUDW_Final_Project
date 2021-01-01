@@ -22,6 +22,7 @@ router.get('/sign-out', function (req, res) {
   req.session.authUser = null;
   req.session.permission = -1;
   req.session.isAuth = false;
+  req.session.picture = null;
 
   let url = '/';
   res.redirect(url);
@@ -59,6 +60,7 @@ router.post('/log-in', async function (req, res) {
   req.session.name = result.name;
   req.session.permission = 0;
   req.session.isAuth = true;
+  req.session.picture = result.picture;
 
   let url = '/';
   res.redirect('/');
@@ -87,9 +89,30 @@ router.post('/sign-up', async function (req, res) {
 });
 
 router.get('/profile', auth, async function (req, res) {
+  let result = await userModel.singleByUsername(req.session.username);
   res.render('vwUser/profile', {
     forUser: true,
+    profile: result,
   });
+  console.log(result);
+});
+
+router.post('/profile', auth, async function (req, res) {
+  console.log(req.body);
+  let result = await userModel.singleByUsername(req.session.username);
+  const correctPassword = bcrypt.compareSync(req.body.currPass, result.password);
+  if (correctPassword == false) {
+    // console.log("Logging failed");
+    return res.render('vwUser/profile', {
+      err_message: 'Wrong Password! Please try again!',
+      forUser: true,
+    });
+  }
+  const newPassword = bcrypt.hashSync(req.body.newPass, 10);
+  userModel.changePassword(newPassword, req.session.username);
+  res.redirect('vwUser/profile', {
+    suc_message: 'Password Changed Successfully!',
+  })
 })
 
 module.exports = router;

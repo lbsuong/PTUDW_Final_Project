@@ -1,47 +1,105 @@
 <div class="container" style="margin-top: 30px;">
-    <h1>Profile & settings</h1>
-    <hr>
-    <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home" role="tab"
-                aria-controls="pills-home" aria-selected="true">Account Profile</a>
-        </li>
+    <h1 class="pb-3 pl-5">Account & Settings</h1>
+    {{#if err_message}}
+    <div class='alert alert-danger animate text-center m-auto' style="max-width:500px;" role='alert'>{{err_message}}
+    </div>
+    {{/if}}
+    {{#if suc_message}}
+    <div class='alert alert-success animate text-center m-auto' style="max-width:500px;" role='alert'>{{suc_message}}
+    </div>
 
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home" role="tab"
-                aria-controls="pills-home" aria-selected="true">Account Security</a>
-        </li>
+    {{/if}}
 
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home" role="tab"
-                aria-controls="pills-home" aria-selected="true">Profile Picture</a>
+    <ul class="nav nav-pills mb-3 pl-5 m-auto" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#home" role="tab"
+                aria-controls="home" aria-selected="true">Account Infomation</a>
         </li>
-
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
-                aria-controls="pills-profile" aria-selected="false">My Courses</a>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-picture-tab" data-toggle="pill" href="#picture" role="tab"
+                aria-controls="picture" aria-selected="false">Account Picture</a>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#pills-contact" role="tab"
-                aria-controls="pills-contact" aria-selected="false"></a>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-security-tab" data-toggle="pill" href="#security" role="tab"
+                aria-controls="security" aria-selected="false">Account Security</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-course-tab" data-toggle="pill" href="#course" role="tab"
+                aria-controls="course" aria-selected="false">My Courses</a>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="pills-home-tab">
             <div class="card-body">
                 <div class="form-group">
-                    <label for="txtCatID">#</label>
-                    <input type="text" class="form-control" id="txtCatID" name="CatID" value="{{this.category.CatID}}"
-                        readonly>
+                    <label for="username">Your Username</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="username" name="username"
+                            value="{{profile.username}}" readonly>
+                        <a href="" class="btn btn-info ml-2" role="button" aria-disabled="true">Update</a>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="txtCatName">Category</label>
-                    <input type="text" class="form-control" id="txtCatName" name="CatName"
-                        value="{{this.category.CatName}}" autofocus>
+                    <label for="name">Your Full Name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="name" name="name" value="{{profile.name}}" readonly>
+                        <a href="" class="btn btn-info ml-2">Update</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name">Your Email</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="email" name="email" value="{{profile.email}}"
+                            readonly>
+                        <a href="" class="btn btn-info ml-2">Update</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">...</div>
-        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+        <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="pills-profile-tab">PROFILE _PIC
+        </div>
+
+        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="pills-security-tab">
+            <div class=" card-body m-auto" style="max-width: 700px;">
+                <form id="changePass" action="" method="POST">
+                    <div class="form-group">
+                        <label for="currPass" class="font-weight-bold">Enter Your Current Password</label>
+                        <input type="password" class="form-control" id="currPass" name="currPass"
+                            placeholder="Current Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPass" class="font-weight-bold">Enter Your New Password</label>
+                        <input type="password" class="form-control" id="newPass" name="newPass"
+                            placeholder="New Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="repeatPass" class="font-weight-bold">Repeat Your New Password</label>
+                        <input type="password" class="form-control" id="repeatPass" placeholder="Repeat Password"
+                            required>
+                    </div>
+                    <div id="noti_err"></div>
+
+                    <button type="submit" class="btn btn-outline-success">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="course" role="tabpanel" aria-labelledby="pills-course-tab">COURSE</div>
     </div>
 </div>
+
+
+{{#section 'js'}}
+<script>
+    $('#changePass').submit(function (event) {
+        const pass = $('#newPass').val();
+        const re_pass = $('#repeatPass').val();
+
+        if (pass.localeCompare(re_pass) !== 0) {
+            event.preventDefault();
+            $('#noti_err').html("<div class='alert alert-danger animate text-center' role='alert'>Password does not match</div>");
+        }
+    });
+</script>
+
+{{/section}}
