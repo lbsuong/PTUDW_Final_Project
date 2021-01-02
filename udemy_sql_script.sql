@@ -30,7 +30,7 @@ CREATE TABLE `moderator` (
 CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `level` BOOL NOT NULL,
+  `level` INT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -85,10 +85,22 @@ CREATE TABLE `rating`(
 #--------------------------------------------------------------------------------
 
 INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
-INSert into `users` (`username`, `password`, `name`) value("thesonvo", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW","Vo The Son");
+INSert into `users` (`username`, `password`, `name`, `email`) value("thesonvo", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "Vo The Son", "abc@gmail.com);
+
 INSERT INTO `category` (`name`, `level`) VALUES ("IT", 1);
 INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình Web", 2);
 INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình thiết bị di động", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Business", 1);
+INSERT INTO `category` (`name`, `level`) VALUES ("Entrepreneuship", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Communications", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Management", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Sales", 2);
+INSERT INTO `category` (`name`, `level`) VALUES ("Business Strategy", 2);
 
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 2);
 INSERT INTO `subcat` (`parentid`, `subid`) VALUES (1, 3);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (4, 5);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (4, 6);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (4, 7);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (4, 8);
+INSERT INTO `subcat` (`parentid`, `subid`) VALUES (4, 9);
