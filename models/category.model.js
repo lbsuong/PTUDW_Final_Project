@@ -5,14 +5,17 @@ const TBL_SUBCAT = 'subcat';
 
 module.exports = {
   all() {
-    return db.load(`select * from ${TBL_CATEGORY}`);
+    return db.load(`SELECT * FROM ${TBL_CATEGORY}`);
   },
 
   allCatIDByLevel(level) {
-    return db.load(`select * from ${TBL_CATEGORY} where level = ${level}`);
+    return db.load(`SELECT * FROM ${TBL_CATEGORY} WHERE LEVEL = ${level}`);
   },
 
   subCatByID(id) {
-    return db.load(`select id, name from (select * from ${TBL_SUBCAT} where parentid = ${id}) as T inner join ${TBL_CATEGORY} on T.subid = ${TBL_CATEGORY}.id`)
+    return db.load(`SELECT id, name 
+                    FROM (SELECT * FROM ${TBL_SUBCAT} WHERE parentid = ${id}) AS T
+                    INNER JOIN ${TBL_CATEGORY}
+                    ON T.subid = ${TBL_CATEGORY}.id`)
   }
 }

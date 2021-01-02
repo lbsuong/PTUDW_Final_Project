@@ -1,7 +1,15 @@
+const courseModel = require('../models/course.model');
+
 module.exports = function(app) {
-  app.get('/', function(req, res) {
+  app.get('/', async function(req, res) {
+    const topThreeMostPopularInWeek = await courseModel.topThreeMostPopularInWeek();
+    const topTenMostView = await courseModel.topTenMostView();
+    const topTenNewest = await courseModel.topTenNewest();
     res.render('home', {
       forUser: true,
+      topThreeMostPopularInWeek: topThreeMostPopularInWeek,
+      topTenMostView: topTenMostView,
+      topTenNewest: topTenNewest
     });
   });
 
