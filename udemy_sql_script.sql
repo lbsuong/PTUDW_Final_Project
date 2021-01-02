@@ -85,7 +85,7 @@ CREATE TABLE `rating`(
 #--------------------------------------------------------------------------------
 
 INSERT INTO `moderator` (`username`, `password`, `name`) VALUES ("admin", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "admin");
-INSert into `users` (`username`, `password`, `name`, `email`) value("thesonvo", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "Vo The Son", "abc@gmail.com);
+INSert into `users` (`username`, `password`, `name`, `email`) value("thesonvo", "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW", "Vo The Son", "abc@gmail.com");
 
 INSERT INTO `category` (`name`, `level`) VALUES ("IT", 1);
 INSERT INTO `category` (`name`, `level`) VALUES ("Lập trình Web", 2);
