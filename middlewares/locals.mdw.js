@@ -39,7 +39,7 @@ module.exports = function (app) {
         subCat: subCatList
       });
     }),
-      res.locals.category = result;
+    res.locals.category = result;
 
     next();
   })

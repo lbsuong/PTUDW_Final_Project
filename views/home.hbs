@@ -1,4 +1,5 @@
 {{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 <style>
   .carousel-item img {
     filter: brightness(70%);
@@ -16,6 +17,23 @@
 </style>
 {{/section}}
 
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+{{#each topTenMostView}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+{{/section}}
+
+
 <div class="container">
   <a href="/account/sign-up">SIGN OUT</a>
 </div>
@@ -32,7 +50,7 @@
     <div class="carousel-inner">
       {{#each topThreeMostPopularInWeek}}
       <div class="carousel-item {{#if @first}}active{{/if}}">
-        <a href="course/{{id}}"><img src="../public/img/thumbnail/big/{{id}}.jpg" class="d-block w-100"
+        <a href="course/{{id}}"><img src="../public/img/courses/{{id}}/big_thumbnail.jpg" class="d-block w-100"
             alt="{{title}}"></a>
         <div class="carousel-caption d-none d-md-block">
           <h5>{{title}}</h5>
@@ -59,14 +77,20 @@
     {{#each topTenMostView}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
-        <img src="../public/img/thumbnail/small/{{id}}.jpg" class="card-img-top imgBorder" alt="{{title}}">
+        <img src="../public/img/courses/{{id}}/small_thumnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <h6 class="card-subtitle mb-2 text-muted">{{name}}</h6>
+          <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+          <div class="rating{{id}}" style="display: inline-block;"></div>
+          <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
           <p class="card-text">{{tinydes}}</p>
         </div>
         <div class="card-footer">
-          Card footer
+          <div class="d-flex justify-content-center">
+            <a class="btn btn-primary mr-1" href="#" role="button">Link</a>
+            <button class="btn btn-success" type="submit">Button</button>
+          </div>
         </div>
       </div>
     </div>
@@ -78,14 +102,20 @@
     {{#each topTenNewest}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
-        <img src="../public/img/thumbnail/small/{{id}}.jpg" class="card-img-top imgBorder" alt="{{title}}">
+        <img src="../public/img/courses/{{id}}/small_thumnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <h6 class="card-subtitle mb-2 text-muted">{{name}}</h6>
+          <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+          <div class="rating{{id}}" style="display: inline-block;"></div>
+          <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
           <p class="card-text">{{tinydes}}</p>
         </div>
         <div class="card-footer">
-          Card footer
+          <div class="d-flex justify-content-center">
+            <a class="btn btn-primary mr-1" href="#" role="button">Link</a>
+            <button class="btn btn-success" type="submit">Button</button>
+          </div>
         </div>
       </div>
     </div>
