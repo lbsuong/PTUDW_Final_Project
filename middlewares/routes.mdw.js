@@ -1,15 +1,20 @@
 const courseModel = require('../models/course.model');
+const categoryModel = require('../models/category.model');
 
 module.exports = function(app) {
   app.get('/', async function(req, res) {
-    const topThreeMostPopularInWeek = await courseModel.topThreeMostPopularInWeek();
-    const topTenMostView = await courseModel.topTenMostView();
-    const topTenNewest = await courseModel.topTenNewest();
+    const topThreeMostPopularCoursesInWeek = await courseModel.topThreeMostPopularInWeek();
+    const topTenMostViewCourses = await courseModel.topTenMostView();
+    const topTenNewestCourses = await courseModel.topTenNewest();
+
+    const topTenMostCountCategories = await categoryModel.topTenMostCount();
+
     res.render('home', {
       forUser: true,
-      topThreeMostPopularInWeek: topThreeMostPopularInWeek,
-      topTenMostView: topTenMostView,
-      topTenNewest: topTenNewest
+      topThreeMostPopularCoursesInWeek: topThreeMostPopularCoursesInWeek,
+      topTenMostViewCourses: topTenMostViewCourses,
+      topTenNewestCourses: topTenNewestCourses,
+      topTenMostCountCategories: topTenMostCountCategories
     });
   });
 

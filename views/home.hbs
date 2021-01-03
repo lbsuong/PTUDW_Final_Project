@@ -20,7 +20,19 @@
 
 {{#section 'js'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
-{{#each topTenMostView}}
+{{#each topTenMostViewCourses}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+
+{{#each topTenNewestCourses}}
 <script>
   $(function () {
     $('.rating{{id}}').rateYo({
@@ -48,13 +60,31 @@
     </ol>
 
     <div class="carousel-inner">
-      {{#each topThreeMostPopularInWeek}}
+      {{#each topThreeMostPopularCoursesInWeek}}
       <div class="carousel-item {{#if @first}}active{{/if}}">
         <a href="course/{{id}}"><img src="../public/img/courses/{{id}}/big_thumbnail.jpg" class="d-block w-100"
             alt="{{title}}"></a>
         <div class="carousel-caption d-none d-md-block">
-          <h5>{{title}}</h5>
-          <p>{{tinydes}}</p>
+          <h5>{{title}} - {{lecturername}}</h5>
+          <h6>
+            <span style="vertical-align: middle;">Rated by students: </span>
+            <span class="text-warning" style="vertical-align: middle;">{{rate}}</span>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px"
+              xml:space="preserve" width="15px" height="15px" fill="#f39c12" style="margin-left: 0px;">
+              <polygon
+                points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 ">
+              </polygon>
+            </svg>
+            <span style="vertical-align: middle">({{format numrate}})</span>
+            <span style="vertical-align: middle"> | Category: <a href="category/{{id}}">{{categoryname}}</a></span>
+          </h6>
+          <p class="mb-1">{{tinydes}}</p>
+          <p>
+            <strong>Price:</strong>
+            <strong class="text-success">${{format_real_num promotionalprice}}</strong>
+            &nbsp;
+            <strong><del class="text-danger">(${{format_real_num originalprice}})</del></strong>
+          </p>
         </div>
       </div>
       {{/each}}
@@ -72,24 +102,37 @@
 </div>
 
 <div class="container">
-  <h4 class="mt-5 mb-3"><strong>Top 10 most view courses</strong></h4>
+  <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Top 10 most view courses</strong></h3>
   <div class="row">
-    {{#each topTenMostView}}
+    {{#each topTenMostViewCourses}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
         <img src="../public/img/courses/{{id}}/small_thumnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{name}}</h6>
+          <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
           <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
           <div class="rating{{id}}" style="display: inline-block;"></div>
           <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
           <p class="card-text">{{tinydes}}</p>
+          <p>
+            <strong>${{format_real_num promotionalprice}}</strong>
+            &nbsp;
+            <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
+          </p>
+          <p class="card-text"><small class="text-muted">Category: </small><a href="category/{{categoryid}}"
+              class="card-link"><small>{{categoryname}}</small></a></p>
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-center">
-            <a class="btn btn-primary mr-1" href="#" role="button">Link</a>
-            <button class="btn btn-success" type="submit">Button</button>
+            <a class="btn btn-primary mr-1" href="course/{{id}}" role="button">
+              <i class="fas fa-info-circle"></i>
+              Detail
+            </a>
+            <button class="btn btn-success" type="submit">
+              <i class="fas fa-cart-plus"></i>
+              Add to cart
+            </button>
           </div>
         </div>
       </div>
@@ -97,28 +140,43 @@
     {{/each}}
   </div>
   <hr>
-  <h4 class="mt-5 mb-3"><strong>Top 10 newest courses</strong></h4>
+  <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Top 10 newest courses</strong></h3>
   <div class="row">
-    {{#each topTenNewest}}
+    {{#each topTenNewestCourses}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
         <img src="../public/img/courses/{{id}}/small_thumnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{name}}</h6>
+          <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
           <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
           <div class="rating{{id}}" style="display: inline-block;"></div>
           <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
           <p class="card-text">{{tinydes}}</p>
+          <p class="card-text"><small class="text-muted">Category: </small><a href="#"
+              class="card-link"><small>{{categoryname}}</small></a></p>
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-center">
-            <a class="btn btn-primary mr-1" href="#" role="button">Link</a>
-            <button class="btn btn-success" type="submit">Button</button>
+            <a class="btn btn-primary mr-1" href="course/{{id}}" role="button">
+              <i class="fas fa-info-circle"></i>
+              Detail
+            </a>
+            <button class="btn btn-success" type="submit">
+              <i class="fas fa-cart-plus"></i>
+              Add to cart
+            </button>
           </div>
         </div>
       </div>
     </div>
+    {{/each}}
+  </div>
+  <hr>
+  <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Top categories</strong></h3>
+  <div class="mb-5">
+    {{#each topTenMostCountCategories}}
+    <a class="btn btn-info" href="category/{{id}}" role="button">{{name}}</a>
     {{/each}}
   </div>
 </div>

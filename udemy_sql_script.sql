@@ -31,6 +31,7 @@ CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `level` INT NOT NULL,
+  `count` INT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -53,7 +54,8 @@ CREATE TABLE `course` (
   `numview` INT NOT NULL,
   `rate` FLOAT NOT NULL,
   `numrate` INT NOT NULL,
-  `price` FLOAT NOT NULL,
+  `originalprice` FLOAT NOT NULL,
+  `promotionalprice` FLOAT NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`)
@@ -115,49 +117,49 @@ VALUES (
 
 #----------------------------------category--------------------------------------
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Development", 1);
+("Development", 1, 5);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Python", 2);
+("Python", 2, 4);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Machine Learning", 2);
+("Machine Learning", 2, 1);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Business", 1);
+("Business", 1, 0);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Entrepreneuship", 2);
+("Entrepreneuship", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Communications", 2);
+("Communications", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Management", 2);
+("Management", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Sales", 2);
+("Sales", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`)
+(`name`, `level`, `count`)
 VALUES
-("Business Strategy", 2);
+("Business Strategy", 2, 0);
 #--------------------------------------------------------------------------------
 
 
@@ -282,7 +284,8 @@ INSERT INTO `course` (
   `numview`,
   `rate`,
   `numrate`,
-  `price`
+  `originalprice`,
+  `promotionalprice`
 )
 VALUES (
   2,
@@ -302,6 +305,7 @@ Build a complete understanding of Python from the ground up!",
   1184493,
   4.6,
   338109,
+  129.99,
   9.99
 );
 
@@ -316,7 +320,8 @@ INSERT INTO `course` (
   `numview`,
   `rate`,
   `numrate`,
-  `price`
+  `originalprice`,
+  `promotionalprice`
 )
 VALUES (
   2,
@@ -339,6 +344,7 @@ Build an army of powerful Machine Learning models and know how to combine them t
   729703,
   4.5,
   138093,
+  129.99,
   9.99
 );
 
@@ -353,7 +359,8 @@ INSERT INTO `course` (
   `numview`,
   `rate`,
   `numrate`,
-  `price`
+  `originalprice`,
+  `promotionalprice`
 )
 VALUES (
   3,
@@ -381,6 +388,7 @@ Support Vector Machines",
   414917,
   4.6,
   92855,
+  129.99,
   9.99
 );
 
@@ -395,7 +403,8 @@ INSERT INTO `course` (
   `numview`,
   `rate`,
   `numrate`,
-  `price`
+  `originalprice`,
+  `promotionalprice`
 )
 VALUES (
   2,
@@ -414,6 +423,7 @@ Understand both Python 2 and Python 3.",
   268725,
   4.5,
   65451,
+  129.99,
   9.99
 );
 
@@ -428,7 +438,8 @@ INSERT INTO `course` (
   `numview`,
   `rate`,
   `numrate`,
-  `price`
+  `originalprice`,
+  `promotionalprice`
 )
 VALUES (
   2,
@@ -458,6 +469,7 @@ Learn GUIs (Graphical-User Interfaces)",
   207919,
   4.5,
   45246,
+  129.99,
   9.99
 );
 #--------------------------------------------------------------------------------

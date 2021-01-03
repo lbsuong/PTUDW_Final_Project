@@ -13,9 +13,20 @@ module.exports = {
   },
 
   subCatByID(id) {
-    return db.load(`SELECT id, name 
-                    FROM (SELECT * FROM ${TBL_SUBCAT} WHERE parentid = ${id}) AS T
-                    INNER JOIN ${TBL_CATEGORY}
-                    ON T.subid = ${TBL_CATEGORY}.id`)
+    return db.load(
+      `SELECT id, name 
+      FROM (SELECT * FROM ${TBL_SUBCAT} WHERE parentid = ${id}) AS T
+      INNER JOIN ${TBL_CATEGORY}
+      ON T.subid = ${TBL_CATEGORY}.id`
+    )
+  },
+
+  topTenMostCount() {
+    return db.load(
+      `SELECT *
+      FROM ${TBL_CATEGORY}
+      ORDER BY count DESC
+      LIMIT 10`
+    )
   }
 }
