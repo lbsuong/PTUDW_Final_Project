@@ -21,7 +21,7 @@ CREATE TABLE `lecturer` (
   PRIMARY KEY (`username`)
 );
 
-CREATE TABLE `moderator` (
+CREATE TABLE `admin` (
   `username` VARCHAR(30) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL
@@ -31,7 +31,7 @@ CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `level` INT NOT NULL,
-  `count` INT NOT NULL,
+  `countinaweek` INT NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -51,6 +51,7 @@ CREATE TABLE `course` (
   `fulldes` VARCHAR(1000) NOT NULL,
   `lastupdatedate` DATETIME NOT NULL,
   `numstudent` INT NOT NULL,
+  `numstudentinaweek` INT NOT NULL,
   `numview` INT NOT NULL,
   `rate` FLOAT NOT NULL,
   `numrate` INT NOT NULL,
@@ -88,8 +89,8 @@ CREATE TABLE `rating`(
 
 #--------------------------------------------------------------------------------
 
-#----------------------------------moderator-------------------------------------
-INSERT INTO `moderator` (
+#----------------------------------admin-----------------------------------------
+INSERT INTO `admin` (
   `username`,
   `password`,
   `name`
@@ -117,47 +118,47 @@ VALUES (
 
 #----------------------------------category--------------------------------------
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
-("Development", 1, 5);
+("Development", 1, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
-("Python", 2, 4);
+("Python", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
-("Machine Learning", 2, 1);
+("Machine Learning", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Business", 1, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Entrepreneuship", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Communications", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Management", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Sales", 2, 0);
 
 INSERT INTO `category`
-(`name`, `level`, `count`)
+(`name`, `level`, `countinaweek`)
 VALUES
 ("Business Strategy", 2, 0);
 #--------------------------------------------------------------------------------
@@ -269,6 +270,108 @@ VALUES (
   "012",
   "Ardit Sulce"
 );
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "alsweigart",
+  "a",
+  "Al Sweigart",
+  "alsweigart@gmail.com",
+  "012",
+  "Al Sweigart"
+);
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "andreineagoie",
+  "a",
+  "Andrei Neagoie",
+  "andreineagoie@gmail.com",
+  "012",
+  "Andrei Neagoie"
+);
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "ziyadyehia",
+  "a",
+  "Ziyad Yehia",
+  "ziyadyehia@gmail.com",
+  "012",
+  "Ziyad Yehia"
+);
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "coltsteele",
+  "a",
+  "Colt Steele",
+  "coltsteele@gmail.com",
+  "012",
+  "Colt Steele"
+);
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "zaidsabih",
+  "a",
+  "Zaid Sabih",
+  "zaidsabih@gmail.com",
+  "012",
+  "Zaid Sabih"
+);
+
+INSERT INTO `lecturer` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `bankid`,
+  `bankname`
+)
+VALUES (
+  "angelayu",
+  "a",
+  "Angela Yu",
+  "angelayu@gmail.com",
+  "012",
+  "Angela Yu"
+);
 #--------------------------------------------------------------------------------
 
 
@@ -281,6 +384,7 @@ INSERT INTO `course` (
   `fulldes`,
   `lastupdatedate`,
   `numstudent`,
+  `numstudentinaweek`,
   `numview`,
   `rate`,
   `numrate`,
@@ -303,6 +407,7 @@ Build a complete understanding of Python from the ground up!",
   "2020-12-1",
   1184493,
   1184493,
+  1184493,
   4.6,
   338109,
   129.99,
@@ -317,6 +422,7 @@ INSERT INTO `course` (
   `fulldes`,
   `lastupdatedate`,
   `numstudent`,
+  `numstudentinaweek`,
   `numview`,
   `rate`,
   `numrate`,
@@ -342,6 +448,7 @@ Build an army of powerful Machine Learning models and know how to combine them t
   "2020-12-2",
   729703,
   729703,
+  729703,
   4.5,
   138093,
   129.99,
@@ -356,6 +463,7 @@ INSERT INTO `course` (
   `fulldes`,
   `lastupdatedate`,
   `numstudent`,
+  `numstudentinaweek`,
   `numview`,
   `rate`,
   `numrate`,
@@ -386,6 +494,7 @@ Support Vector Machines",
   "2020-12-3",
   414917,
   414917,
+  414917,
   4.6,
   92855,
   129.99,
@@ -400,6 +509,7 @@ INSERT INTO `course` (
   `fulldes`,
   `lastupdatedate`,
   `numstudent`,
+  `numstudentinaweek`,
   `numview`,
   `rate`,
   `numrate`,
@@ -421,6 +531,7 @@ Understand both Python 2 and Python 3.",
   "2020-12-4",
   268725,
   268725,
+  268725,
   4.5,
   65451,
   129.99,
@@ -435,6 +546,7 @@ INSERT INTO `course` (
   `fulldes`,
   `lastupdatedate`,
   `numstudent`,
+  `numstudentinaweek`,
   `numview`,
   `rate`,
   `numrate`,
@@ -467,8 +579,375 @@ Learn GUIs (Graphical-User Interfaces)",
   "2020-12-5",
   207919,
   207919,
+  207919,
   4.5,
   45246,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Learning Python for Data Analysis and Visualization",
+  "joseportilla",
+  "Learn python and how to use it to analyze,visualize and present data. Includes tons of sample code and hours of video!",
+  "Have an intermediate skill level of Python programming.
+Use the Jupyter Notebook Environment.
+Use the numpy library to create and manipulate arrays.
+Use the pandas module with Python to create and structure data.
+Learn how to work with various data formats within python, including: JSON,HTML, and MS Excel Worksheets.
+Create data visualizations using matplotlib and the seaborn modules with python.
+Have a portfolio of various data analysis projects.",
+  "2020-12-5",
+  164854,
+  164854,
+  164854,
+  4.3,
+  15537,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Automate the Boring Stuff with Python Programming",
+  "alsweigart",
+  "A practical programming course for office workers, academics, and administrators who want to improve their productivity.",
+  "Automate tasks on their computer by writing simple Python programs.
+Write programs that can do text pattern recognition with \"regular expressions\".
+Programmatically generate and update Excel spreadsheets.
+Parse PDFs and Word documents.
+Crawl web sites and pull information from online sources.
+Write programs that send out email notifications.
+Use Python's debugging tools to quickly figure out bugs in your code.
+Programmatically control the mouse and keyboard to click and type for you.",
+  "2020-12-5",
+  772271,
+  772271,
+  772271,
+  4.6,
+  77623,
+  50.39,
+  10.79
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Python and Django Full Stack Web Developer Bootcamp",
+  "joseportilla",
+  "Learn to build websites with HTML , CSS , Bootstrap , Javascript , jQuery , Python 3 , and Django!",
+  "Create a fully functional web site using the Full-Stack with Django 1.11
+Learn how to use HTML to create website content
+Use CSS to create beautifully styled sites
+Learn how to take advantage of Bootstrap to quickly style sites
+Use Javascript to interact with sites on the Front-End
+Learn how to use jQuery to quickly work with the DOM
+Understand HTTP requests
+Create fantastic landing pages
+Learn the power of Python to code out your web applications
+Use Django as a back end for the websites
+Implement a full Models-Views-Templates structure for your site",
+  "2020-12-5",
+  140316,
+  140316,
+  140316,
+  4.6,
+  35933,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Python for Financial Analysis and Algorithmic Trading",
+  "joseportilla",
+  "Learn numpy , pandas , matplotlib , quantopian , finance , and more for algorithmic trading with Python!",
+  "Use NumPy to quickly work with Numerical Data
+Use Pandas for Analyze and Visualize Data
+Use Matplotlib to create custom plots
+Learn how to use statsmodels for Time Series Analysis
+Calculate Financial Statistics, such as Daily Returns, Cumulative Returns, Volatility, etc..
+Use Exponentially Weighted Moving Averages
+Use ARIMA models on Time Series Data
+Calculate the Sharpe Ratio
+Optimize Portfolio Allocations
+Understand the Capital Asset Pricing Model
+Learn about the Efficient Market Hypothesis
+Conduct algorithmic Trading on Quantopian",
+  "2020-12-5",
+  97305,
+  97305,
+  97305,
+  4.5,
+  14463,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Python for Financial Analysis and Algorithmic Trading",
+  "joseportilla",
+  "Learn numpy , pandas , matplotlib , quantopian , finance , and more for algorithmic trading with Python!",
+  "Use NumPy to quickly work with Numerical Data
+Use Pandas for Analyze and Visualize Data
+Use Matplotlib to create custom plots
+Learn how to use statsmodels for Time Series Analysis
+Calculate Financial Statistics, such as Daily Returns, Cumulative Returns, Volatility, etc..
+Use Exponentially Weighted Moving Averages
+Use ARIMA models on Time Series Data
+Calculate the Sharpe Ratio
+Optimize Portfolio Allocations
+Understand the Capital Asset Pricing Model
+Learn about the Efficient Market Hypothesis
+Conduct algorithmic Trading on Quantopian",
+  "2020-12-5",
+  97305,
+  97305,
+  97305,
+  4.5,
+  14463,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Complete Python Developer in 2021: Zero to Mastery",
+  "andreineagoie",
+  "How to become a Python 3 Developer and get hired! Build 12+ projects, learn Web Development, Machine Learning + more!",
+  "Become a professional Python Developer and get hired
+Master modern Python 3.9(latest) fundamentals as well as advanced topics",
+  "2020-12-5",
+  96474,
+  96474,
+  96474,
+  4.7,
+  23456,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "The Python Bible™ | Everything You Need to Program in Python",
+  "ziyadyehia",
+  "Build 11 Projects and go from Beginner to Pro in Python with the World's Most Fun Project-Based Python Course!",
+  "Gain a Solid & Unforgettable Understanding of the Python Programming Language.
+Gain the Python Skills Necessary to Learn In-Demand Topics, such as Data Science, Web Development, AI and more.",
+  "2020-12-5",
+  108906,
+  108906,
+  108906,
+  4.6,
+  30971,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "The Modern Python 3 Bootcamp",
+  "coltsteele",
+  "A Unique Interactive Python Experience With Nearly 200 Exercises and Quizzes",
+  "Learn all the coding fundamentals in Python!
+Work through nearly 200 exercises and quizzes!",
+  "2020-12-5",
+  79895,
+  79895,
+  79895,
+  4.7,
+  21478,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "Learn Python & Ethical Hacking From Scratch",
+  "zaidsabih",
+  "Start from 0 & learn both topics simultaneously from scratch by writing 20+ hacking programs",
+  "170+ videos on Python programming & ethical hacking
+Install hacking lab & needed software (on Windows, OS X and Linux)",
+  "2020-12-5",
+  68214,
+  68214,
+  68214,
+  4.6,
+  12156,
+  129.99,
+  9.99
+);
+
+INSERT INTO `course` (
+  `categoryid`,
+  `title`,
+  `lecturer`,
+  `tinydes`,
+  `fulldes`,
+  `lastupdatedate`,
+  `numstudent`,
+  `numstudentinaweek`,
+  `numview`,
+  `rate`,
+  `numrate`,
+  `originalprice`,
+  `promotionalprice`
+)
+VALUES (
+  2,
+  "100 Days of Code - The Complete Python Pro Bootcamp for 2021",
+  "angelayu",
+  "Master Python by building 100 projects in 100 days. Learn to build websites, games, apps, plus scraping and data science",
+  "Be able to program in Python professionally
+Master the Python programming language by building 100 projects over 100 days
+Create a portfolio of 100 Python projects to apply for developer jobs
+Be able to build fully fledged websites and web apps with Python
+Be able to use Python for data science and machine learning
+Build games like Blackjack, Pong and Snake using Python
+Build GUIs and Desktop applications with Python
+Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pandas, NumPy, Scikit Learn, Plotly, Matplotlib, Seaborn,",
+  "2020-12-5",
+  65022,
+  65022,
+  65022,
+  4.8,
+  10849,
   129.99,
   9.99
 );

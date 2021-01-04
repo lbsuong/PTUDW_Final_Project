@@ -1,0 +1,59 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  #thumbnail {
+    padding: 0px 10em 0px;
+    background-color: #F1F2F7;
+  }
+</style>
+{{/section}}
+
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script>
+  $(function () {
+    $('#rating').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: $('#rating').data('rate')
+    });
+  });
+</script>
+{{/section}}
+
+
+<div id="thumbnail">
+  <img class="w-100 h-100" src="../../public/img/courses/{{id}}/big_thumbnail.jpg" alt="{{title}}">
+</div>
+<div class="container mb-5 mt-4">
+  <h1>{{title}}</h1>
+  <h5>{{tinydes}}</h5>
+  <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+  <div data-rate="{{rate}}" id="rating" style="display: inline-block;"></div>
+  <span style="vertical-align: middle;">({{format numrate}} ratings) {{format numstudent}} students</span>
+  <div>Created by {{lecturername}}</div>
+  <div>Last updated {{format_date lastupdatedate}}</div>
+  <div>Price:
+    <strong>${{format_real_num promotionalprice}}</strong>
+    &nbsp;
+    <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
+  </div>
+  <div>
+    Category: <a href="/category/{{categoryid}}">{{categoryname}}</a>
+  </div>
+  <hr>
+  <div class="card mt-4">
+    <h5 class="card-header">What you will learn</h5>
+    <div class="card-body">
+      <div class="row">
+        {{#each (split_line fulldes)}}
+        <div class="col-sm-6">
+          <i class="fas fa-check"></i>
+          <span class="card-text">{{this}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

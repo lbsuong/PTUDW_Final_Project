@@ -13,8 +13,18 @@ module.exports = function(app) {
       format_real_num(val) {
         return numeral(val).format('0,0.00');
       },
+
       format(val) {
         return numeral(val).format('0,0');
+      },
+
+      format_date(val) {
+        let date = new Date(val);
+        return (date.getMonth() + 1) + "/" + date.getFullYear();
+      },
+
+      split_line(val) {
+        return val.split('\n');
       }
     }
   }));

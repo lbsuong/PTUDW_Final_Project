@@ -9,10 +9,10 @@
         <button class="dropdown-toggle mr-3" data-toggle="dropdown">Categories</button>
         <ul class="dropdown-menu">
           {{#each category}}
-          <li><a class="dropdown-item" href="category/{{id}}"> {{name}} &raquo </a>
+          <li><a class="dropdown-item" href="/category/{{id}}"> {{name}} &raquo </a>
             <ul class="submenu dropdown-menu">
               {{#each subCat}}
-              <li><a class="dropdown-item" href="category/{{id}}"> {{name}} </a></li>
+              <li><a class="dropdown-item" href="/category/{{id}}"> {{name}} </a></li>
               {{/each}}
             </ul>
           </li>
