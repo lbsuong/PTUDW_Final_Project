@@ -8,10 +8,8 @@ module.exports = function (app) {
     }
 
     res.locals.isAuth = req.session.isAuth;
-    res.locals.username = req.session.username;
-    res.locals.name = req.session.name;
-    res.locals.retUrl = req.headers.referer;
-    res.locals.picture = req.session.picture;
+    res.locals.level = req.session.level;
+    res.locals.profile = req.session.profile;
 
     next();
   })
@@ -39,7 +37,7 @@ module.exports = function (app) {
         subCat: subCatList
       });
     }),
-    res.locals.category = result;
+      res.locals.category = result;
 
     next();
   })
