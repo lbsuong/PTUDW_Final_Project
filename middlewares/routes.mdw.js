@@ -47,4 +47,5 @@ module.exports = function(app) {
   app.use('/admin', require('../routes/front/admin.route'));
   
   app.use('/category', require('../routes/category.route'));
+  app.use('/course', require('../routes/course.route'));
 }

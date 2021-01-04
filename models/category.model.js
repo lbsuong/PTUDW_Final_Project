@@ -25,8 +25,21 @@ module.exports = {
     return db.load(
       `SELECT *
       FROM ${TBL_CATEGORY}
-      ORDER BY count DESC
+      ORDER BY countinaweek DESC
       LIMIT 10`
     )
-  }
+  },
+
+  async singleByID(id) {
+    const rows = await db.load(
+      `SELECT *
+      FROM ${TBL_CATEGORY}
+      WHERE id = ${id}`
+    )
+    if (rows.length === 0) {
+      return null;
+    }
+
+    return rows[0];
+  },
 }
