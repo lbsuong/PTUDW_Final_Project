@@ -1,0 +1,64 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{/section}}
+
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+{{#each result}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+{{/section}}
+
+<div class="container mt-5 mb-5">
+  <h1 class="mb-5">Result:</h1>
+  {{#if result}}
+  <div class="row">
+    {{#each result}}
+    <div class="col-sm-4 mb-5 d-flex align-items-stretch">
+      <div class="card" style="width: 18rem;">
+        <img src="../public/img/courses/{{this.id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
+          alt="{{this.title}}">
+        <div class="card-body">
+          <h5 class="card-title">{{this.title}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{this.lecturername}}</h6>
+          <span class="text-danger" style="vertical-align: middle;"><strong>{{this.rate}}</strong></span>
+          <div class="rating{{this.id}}" style="display: inline-block;"></div>
+          <span style="vertical-align: middle; color: #6C757D">({{format this.numrate}})</span>
+          <p class="card-text">{{this.tinydes}}</p>
+          <p>
+            <strong>${{format_real_num this.promotionalprice}}</strong>
+            &nbsp;
+            <del style="color: #6C757D;">${{format_real_num this.originalprice}}</del>
+          </p>
+          <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{this.categoryid}}"
+              class="card-link"><small>{{this.categoryname}}</small></a></p>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-center">
+            <a class="btn btn-primary mr-1" href="/course/{{this.id}}" role="button">
+              <i class="fas fa-info-circle"></i>
+              Detail
+            </a>
+            <button class="btn btn-success" type="submit">
+              <i class="fas fa-cart-plus"></i>
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <h4 class="text-danger">No course has been found</h4>
+  {{/if}}
+</div>

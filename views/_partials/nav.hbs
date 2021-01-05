@@ -20,8 +20,8 @@
         </ul>
       </li>
     </ul>
-    <form id="frmSearch" class="d-flex flex-row input-group {{#if isAuth}}mr-3{{/if}}">
-      <input class="form-control" type="search" placeholder="Search for anything" aria-label="Search">
+    <form id="frmSearch" class="d-flex flex-row input-group {{#if isAuth}}mr-3{{/if}}" method="GET" action="/search">
+      <input class="form-control" type="search" placeholder="Search for anything" aria-label="Search" name="keywords">
       <button class="btn btn-outline-success" type="submit">
         <i class="fas fa-search"></i>
       </button>

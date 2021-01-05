@@ -32,7 +32,8 @@ CREATE TABLE `category` (
   `name` VARCHAR(45) NOT NULL,
   `level` INT NOT NULL,
   `countinaweek` INT NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FULLTEXT (`name`)
 );
 
 CREATE TABLE `subcat`(
@@ -59,7 +60,8 @@ CREATE TABLE `course` (
   `promotionalprice` FLOAT NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FULLTEXT (`title`)
 );
   
 CREATE TABLE `ownedcourse` (
@@ -161,6 +163,11 @@ INSERT INTO `category`
 (`name`, `level`, `countinaweek`)
 VALUES
 ("Business Strategy", 2, 0);
+
+INSERT INTO `category`
+(`name`, `level`, `countinaweek`)
+VALUES
+("Lập trình hướng đối tượng", 2, 0);
 #--------------------------------------------------------------------------------
 
 
@@ -199,6 +206,11 @@ INSERT INTO `subcat`
 (`parentid`, `subid`)
 VALUES
 (4, 9);
+
+INSERT INTO `subcat`
+(`parentid`, `subid`)
+VALUES
+(1, 10);
 #--------------------------------------------------------------------------------
 
 
@@ -952,3 +964,9 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   9.99
 );
 #--------------------------------------------------------------------------------
+
+SELECT *
+FROM category
+WHERE
+	MATCH(name)
+    AGAINST('python')

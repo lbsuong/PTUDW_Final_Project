@@ -1,1 +1,4 @@
-Thêm đếm lĩnh vực được đăng kí nhiều nhất trong tuần.
+-Thêm đếm lĩnh vực được đăng kí nhiều nhất trong tuần.
+-Đếm khoá học nổi bật nhất trong tuần.
+-Full text search tiếng việt lẫn tiếng anh.
+-Gợi ý 5 khoá học cùng lĩnh vực được mua nhiều nhất.

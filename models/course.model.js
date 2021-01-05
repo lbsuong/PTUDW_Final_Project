@@ -1,5 +1,7 @@
 const db = require('../utils/db');
 const categoryModel = require('../models/category.model');
+const config = require('../config/default.json');
+const { value } = require('numeral');
 
 const TBL_COURSE = 'course';
 const TBL_LECTURER = 'lecturer';
@@ -23,7 +25,7 @@ module.exports = {
     return rows[0];
   },
 
-  topThreeMostPopularInWeek() {
+  topMostPopularInAWeek(n) {
     return db.load(
       `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
@@ -31,12 +33,27 @@ module.exports = {
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
-      ORDER BY numstudent DESC
-      LIMIT 3`
+      ORDER BY numstudentinaweek DESC
+      LIMIT ${n}`
     );
   },
 
-  topTenMostView() {
+  topMostPopularByCategory(n, catId, except) {
+    return db.load(
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      FROM ${TBL_COURSE}
+      LEFT JOIN ${TBL_LECTURER}
+      ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
+      LEFT JOIN ${TBL_CATEGORY}
+      ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+      WHERE ${TBL_COURSE}.categoryid = ${catId}
+      AND ${TBL_COURSE}.id <> ${except}
+      ORDER BY numstudent DESC
+      LIMIT ${n}`
+    );
+  },
+
+  topMostView(n) {
     return db.load(
       `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
@@ -45,11 +62,11 @@ module.exports = {
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
       ORDER BY numview DESC
-      LIMIT 10`
+      LIMIT ${n}`
     );
   },
 
-  topTenNewest() {
+  topNewest(n) {
     return db.load(
       `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
@@ -58,7 +75,7 @@ module.exports = {
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
       ORDER BY id DESC
-      LIMIT 10`
+      LIMIT ${n}`
     );
   },
 
@@ -70,19 +87,24 @@ module.exports = {
     }
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
-      subcat.forEach(async function(value, index, array) {
-        // console.log(value);
+      if (subcat.length === null) {
+        return null;
+      }
+      for (i = 0; i < subcat.length; i++) {
         const temp = await db.load(
           `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
           FROM ${TBL_COURSE}
           LEFT JOIN ${TBL_CATEGORY}
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
-          WHERE ${TBL_COURSE}.categoryid = ${value.id}`
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
         );
-        temp.forEach(function(value, index, array) {
-          result.push(value);
-        });
-      });
+        if (temp.length === 0) {
+          return null;
+        }
+        for (j = 0; j < temp.length; j++) {
+          result.push(temp[j]);
+        }
+      }
     } else {
       const temp = await db.load(
         `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
@@ -94,9 +116,107 @@ module.exports = {
       if (temp.length === 0) {
         return null
       }
-      temp.forEach(function(value, index, array) {
-        result.push(value);
-      });
+      for (i = 0; i < temp.length; i++) {
+        result.push(temp[i]);
+      }
+    }
+    return result;
+  },
+
+  async countByCategoryID(id) {
+    const category = await categoryModel.singleByID(id);
+    let count = 0;
+    if (category === null) {
+      return null;
+    }
+
+    if (category.level === 1) {
+      const subcat = await categoryModel.subCatByID(id);
+      if (subcat.length === null) {
+        return null;
+      }
+
+      for (i = 0; i < subcat.length; i++) {
+        const temp = await db.load(
+          `SELECT COUNT(*) AS total
+          FROM ${TBL_COURSE}
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
+        );
+        if (temp.length === 0) {
+          return null;
+        }
+        count += temp[0].total;
+      }
+      return count;
+    } else {
+      const temp = await db.load(
+        `SELECT COUNT(*) AS total
+        FROM ${TBL_COURSE}
+        WHERE ${TBL_COURSE}.categoryid = ${id}`
+      );
+      if (temp.length === 0) {
+        return null
+      }
+      return temp[0].total;
+    }
+  },
+
+  async pageByCategoryID(id, offset) {
+    const total = await this.countByCategoryID(id);
+    if (offset >= total) {
+      return null;
+    }
+    const category = await categoryModel.singleByID(id);
+    const result = [];
+    if (category === null) {
+      return null;
+    }
+    if (category.level === 1) {
+      const subcat = await categoryModel.subCatByID(id);
+      if (subcat.length === null) {
+        return null;
+      }
+      let count = 0;
+      for (i = 0; i < subcat.length; i++) {
+        const temp = await db.load(
+          `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
+          FROM ${TBL_COURSE}
+          LEFT JOIN ${TBL_CATEGORY}
+          ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
+        );
+        if (temp.length === 0) {
+          return null;
+        }
+        let j = 0;
+        if (offset <= temp.length) {
+          j = offset
+        }
+        for (; j < temp.length; j++) {
+          if (count < config.pagination.limit) {
+            result.push(temp[j]);
+            count++;
+          }
+        }
+        if (count === config.pagination.limit) {
+          break;
+        }
+      }
+    } else {
+      const temp = await db.load(
+        `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
+        FROM ${TBL_COURSE}
+        LEFT JOIN ${TBL_CATEGORY}
+        ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+        WHERE ${TBL_COURSE}.categoryid = ${id}
+        LIMIT ${config.pagination.limit} OFFSET ${offset}`
+      );
+      if (temp.length === 0) {
+        return null
+      }
+      for (i = 0; i < temp.length; i++) {
+        result.push(temp[i]);
+      }
     }
     return result;
   },

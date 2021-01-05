@@ -3,13 +3,15 @@ const courseModel = require('../models/course.model');
 
 const router = express.Router();
 
-router.get('/:id', async function(req, res) {
+router.get('/:id', async function (req, res) {
   const id = req.params.id;
-  const result = await courseModel.singleByID(id);
+  const currentCourse = await courseModel.singleByID(id);
+  const topFiveMostPopularBySameCat = await courseModel.topMostPopularByCategory(5, currentCourse.categoryid, id);
   await courseModel.addOneViewByID(id);
 
   res.render('vwCourse/course', {
-    ...result
+    currentCourse,
+    topFiveMostPopularBySameCat
   });
 });
 
