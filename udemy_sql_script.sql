@@ -86,6 +86,14 @@ CREATE TABLE `rating`(
  PRIMARY KEY(`id`)
 );
 
+CREATE TABLE `cart` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `studentid` VARCHAR(30) NOT NULL,
+  `courseid` INT NOT NULL,
+  PRIMARY KEY(`id`),
+  CONSTRAINT `fk_ca_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ca_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
+);
 
 #--------------------------------------------------------------------------------
 
@@ -108,7 +116,7 @@ INSERT INTO `users` (
   `email`
 )
 VALUES (
-  "thesonvo",
+  "theson",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Vo The Son",
   "abc@gmail.com"

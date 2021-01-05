@@ -2,10 +2,14 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const userModel = require('../../models/user.model');
+const cartModel = require('../../models/cart.model');
+const courseModel = require('../../models/course.model');
 const auth = require('../../middlewares/auth.mdw');
 const { notify } = require('./lecturer.route');
 
 const router = express.Router();
+
+const profile_img_path = 'data/profile_img/';
 
 router.get('/log-in', function (req, res) {
   res.render('vwUser/log-in', {
@@ -28,19 +32,10 @@ router.get('/sign-out', function (req, res) {
   res.redirect(url);
 });
 
-router.get('/cart', function (req, res) {
-  if (req.session.isAuth) {
-    res.render('vwUser/cart', {
-      forUser: true,
-    });
-  } else {
-    res.redirect('/user/log-in')
-  }
-});
-
 router.post('/log-in', async function (req, res) {
   let result = await userModel.singleByUsername(req.body.username);
   if (result == null) {
+    console.log('render');
     return res.render('vwUser/log-in', {
       notify: {
         message: 'There was a problem logging in. Check your email and password or create an account.',
@@ -60,6 +55,19 @@ router.post('/log-in', async function (req, res) {
     });
   }
 
+  // LOAD CART
+  console.log(result.username);
+  let cartID = await cartModel.cartByUsername(req.body.username);
+  let courseCart = [];
+  if (cartID.length === 0) {
+    courseCart = null;
+  }
+
+  for (let i = 0; i < cartID.length; i++) {
+    let courseItem = await courseModel.singleByID(cartID[i].courseid);
+    courseCart.push(courseItem);
+  }
+  console.log(courseCart);
   req.session.isAuth = true;
   req.session.userLevel = {
     user: true,
@@ -71,7 +79,8 @@ router.post('/log-in', async function (req, res) {
     username: result.username,
     name: result.name,
     email: result.email,
-    picture: result.picture
+    picture: result.picture,
+    cart: courseCart,
   }
 
   let url = '/';
@@ -113,24 +122,36 @@ router.post('/profile', auth, async function (req, res) {
   let post_id = req.body.postId;
 
   // =========== CHANGE PICTURE ============
-  if (post_id == "picture") {
+  if (post_id == null) {
     console.log("CHANGING PICTURE!");
+    let filename = req.session.profile.username;
     const storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        cb(null, './public/img/')
+        cb(null, './public/data/profile_img/')
       },
       filename: function (req, file, cb) {
-        cb(null, file.originalname)
+        filename = filename.concat(file.originalname);
+        cb(null, filename);
       }
     });
     const upload = multer({ storage });
-    // upload.single('fuMain')(req, res, function (err) {
     upload.single('filename')(req, res, function (err) {
       console.log(req.body);
       if (err) {
-
+        return res.render('vwUser/profile', {
+          notify: {
+            message: "Something Went Wrong! Please Try Again",
+            err: true,
+          },
+          forUser: true,
+        })
       } else {
-        res.render('vwUser/profile', {
+        filename = profile_img_path.concat(filename);
+        console.log("Filename: ");
+        console.log(filename);
+        userModel.changePicture(filename, req.session.profile.username);
+        req.session.profile.picture = filename;
+        return res.render('vwUser/profile', {
           notify: {
             message: "Change Your Picture Successfully!",
             err: false,
@@ -145,7 +166,9 @@ router.post('/profile', auth, async function (req, res) {
 
   // =========== CHANGE PASSWORD ============ 
   if (post_id === "password") {
-    let result = await userModel.singleByUsername(req.session.username);
+    console.log("IAMHERE");
+    let result = await userModel.singleByUsername(req.session.profile.username);
+    console.log(result);
     const correctPassword = bcrypt.compareSync(req.body.currPass, result.password);
     if (correctPassword == false) {
       return res.render('vwUser/profile', {
@@ -157,7 +180,7 @@ router.post('/profile', auth, async function (req, res) {
       });
     }
     const newPassword = bcrypt.hashSync(req.body.newPass, 10);
-    userModel.changePassword(newPassword, req.session.username);
+    userModel.changePassword(newPassword, req.session.profile.username);
     res.render('vwUser/profile', {
       forUser: true,
       notify: {
