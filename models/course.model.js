@@ -87,7 +87,7 @@ module.exports = {
     }
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
-      if (subcat.length === null) {
+      if (subcat.length === 0) {
         return null;
       }
       for (i = 0; i < subcat.length; i++) {
@@ -98,9 +98,6 @@ module.exports = {
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
           WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
         );
-        if (temp.length === 0) {
-          return null;
-        }
         for (j = 0; j < temp.length; j++) {
           result.push(temp[j]);
         }
@@ -132,8 +129,8 @@ module.exports = {
 
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
-      if (subcat.length === null) {
-        return null;
+      if (subcat.length === 0) {
+        return count;
       }
 
       for (i = 0; i < subcat.length; i++) {
@@ -142,10 +139,9 @@ module.exports = {
           FROM ${TBL_COURSE}
           WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
         );
-        if (temp.length === 0) {
-          return null;
+        if (temp.length !== 0) {
+          count += temp[0].total;
         }
-        count += temp[0].total;
       }
       return count;
     } else {
@@ -154,9 +150,6 @@ module.exports = {
         FROM ${TBL_COURSE}
         WHERE ${TBL_COURSE}.categoryid = ${id}`
       );
-      if (temp.length === 0) {
-        return null
-      }
       return temp[0].total;
     }
   },
@@ -173,7 +166,7 @@ module.exports = {
     }
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
-      if (subcat.length === null) {
+      if (subcat.length === 0) {
         return null;
       }
       let count = 0;
@@ -185,9 +178,6 @@ module.exports = {
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
           WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
         );
-        if (temp.length === 0) {
-          return null;
-        }
         let j = 0;
         if (offset <= temp.length) {
           j = offset
