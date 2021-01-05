@@ -28,13 +28,17 @@
     </form>
     {{#if isAuth}}
     <a href="/user/cart" style="padding-left: 5px; padding-right: 5px">
-      <i class="fas fa-shopping-cart pr-2 pl-1"></i>
+      <button class="btn btn-light">{{#if profile.cart}} <span
+          class="badge badge-secondary float-right">{{profile.cart.length}}</span>{{/if}}<i
+          class="fas fa-shopping-cart pr-2 pl-1 text-primary d-inline float-left"></i></button>
     </a>
+
     <ul class="navbar-nav">
       <li class="nav-item dropdown">
         <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">HI, {{#if profile.picture}}<img class="img-thumbnail h-1 w-1" src="{{profile.picture}}"
-            alt="Avatar">{{else}}<i class="fas fa-user-circle"></i>{{/if}}
+          aria-expanded="false">HI, {{#if profile.picture}}<img class="img-thumbnail rounded-circle"
+            style="width: 30px; height: 30px;" src="../../{{profile.picture}}" alt="Avatar">{{else}}<i
+            class="fas fa-user-circle"></i>{{/if}}
           <b>{{profile.name}}</b></button>
         <div class="dropdown-menu dropdown-menu-right">
           <a class="dropdown-item" href="/user/profile"><i class="fas fa-user pr-3"></i> Account</a>

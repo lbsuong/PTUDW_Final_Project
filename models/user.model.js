@@ -1,6 +1,7 @@
 const db = require('../utils/db');
 
 const TBL_USERS = 'users';
+const PRI_KEY = 'username';
 
 module.exports = {
   async singleByUsername(username) {
@@ -15,8 +16,11 @@ module.exports = {
   },
 
   changePassword(newPass, id) {
+    return db.update(newPass, 'password', PRI_KEY, id, TBL_USERS);
+  },
 
-    return db.update(newPass, 'password', id, TBL_USERS);
+  changePicture(newPic, id) {
+    return db.update(newPic, 'picture', PRI_KEY, id, TBL_USERS);
   }
 
 };

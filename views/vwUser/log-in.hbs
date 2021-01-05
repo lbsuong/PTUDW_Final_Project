@@ -29,8 +29,8 @@
 <div id="id01">
   <form class="modal-content animate" action="" method="POST">
     <div class="container">
-      {{#if err_message}}
-      <div class="text-danger text-center"> {{err_message}}</div>
+      {{#if notify}}
+      <div class="alert alert-danger text-center"> {{notify.message}}</div>
       {{/if}}
       <label for="uname"><b>Username</b></label>
       <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>

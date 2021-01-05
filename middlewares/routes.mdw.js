@@ -3,9 +3,15 @@ const categoryModel = require('../models/category.model');
 
 module.exports = function (app) {
   app.get('/', async function (req, res) {
+<<<<<<< HEAD
     const topThreeMostPopularCoursesInWeek = await courseModel.topMostPopularInAWeek(3);
     const topTenMostViewCourses = await courseModel.topMostView(10);
     const topTenNewestCourses = await courseModel.topNewest(10);
+=======
+    const topThreeMostPopularCoursesInWeek = await courseModel.topThreeMostPopularInWeek();
+    const topTenMostViewCourses = await courseModel.topTenMostView();
+    const topTenNewestCourses = await courseModel.topTenNewest();
+>>>>>>> 37d1c92089f3b9c6f88c99b47990bde549584991
 
     const topTenMostCountCategories = await categoryModel.topMostCount(10);
 
@@ -42,7 +48,10 @@ module.exports = function (app) {
     res.render('privacy');
   })
 
+
+  app.use('/user/cart', require('../routes/cart.route'));
   app.use('/user', require('../routes/front/user.route'));
+
   app.use('/lecturer', require('../routes/front/lecturer.route'));
   app.use('/admin', require('../routes/front/admin.route'));
 

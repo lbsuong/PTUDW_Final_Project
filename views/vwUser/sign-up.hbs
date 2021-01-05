@@ -16,7 +16,7 @@
         <p>Please sign out before create new account</p>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" href="/account/sign-out"> Log out </a>
+        <a class="btn btn-primary" href="/user/sign-out"> Log out </a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"
           onclick="returnToPreviousPage()">Close</button>
       </div>
@@ -28,10 +28,9 @@
 <div id="id01">
   <form id="frmSignUp" class="modal-content animate" action="" method="POST">
     <div class="container">
-      {{#if err_message}}
-      <div class="text-danger text-center">
-        {{err_message}}
-        <hr>
+      {{#if notify}}
+      <div class="alert alert-danger text-center">
+        {{notify.message}}
       </div>
       {{/if}}
       <p class="text-center">Please fill in this form to create an account.</p>
