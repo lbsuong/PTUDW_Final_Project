@@ -1,7 +1,6 @@
 const db = require('../utils/db');
 const categoryModel = require('../models/category.model');
 const config = require('../config/default.json');
-const { value } = require('numeral');
 
 const TBL_COURSE = 'course';
 const TBL_LECTURER = 'lecturer';
@@ -88,7 +87,7 @@ module.exports = {
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
       if (subcat.length === 0) {
-        return null;
+        return result;
       }
       for (i = 0; i < subcat.length; i++) {
         const temp = await db.load(
@@ -111,7 +110,7 @@ module.exports = {
         WHERE ${TBL_COURSE}.categoryid = ${id}`
       );
       if (temp.length === 0) {
-        return null
+        return result;
       }
       for (i = 0; i < temp.length; i++) {
         result.push(temp[i]);

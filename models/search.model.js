@@ -19,7 +19,16 @@ module.exports = {
     return count[0].total;
   },
 
-  pageOnCourse(keywords, offset) {
+  pageOnCourse(keywords, offset, sortType) {
+    let column;
+    let sort;
+    if (sortType === 1) {
+      column = 'rate';
+      sort = 'DESC';
+    } else if (sortType === 2) {
+      column = 'promotionalprice';
+      sort = 'ASC';
+    }
     return db.load(
       `SELECT T.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM (SELECT *
@@ -31,6 +40,7 @@ module.exports = {
       ON T.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
       ON T.categoryid = ${TBL_CATEGORY}.id
+      ORDER BY T.${column} ${sort}
       LIMIT ${config.pagination.limit} OFFSET ${offset}`
     );
   },
@@ -53,23 +63,23 @@ module.exports = {
       if (category.level === 1) {
         subCat = await categoryModel.subCatByID(category.id)
         if (subCat.length === 0) {
-          break;
+          continue;
         }
         for (subCategory of subCat) {
-          const temp = await courseModel.allByCategoryID(subCategory.id);
-          if (temp === null) {
+          const allCoursesByCat = await courseModel.allByCategoryID(subCategory.id);
+          if (allCoursesByCat.length === 0) {
             continue;
           }
-          for (course of temp) {
+          for (course of allCoursesByCat) {
             count++;
           }
         }
       } else {
-        const temp = await courseModel.allByCategoryID(category.id);
-        if (temp === null) {
-          break;
+        const allCoursesByCat = await courseModel.allByCategoryID(category.id);
+        if (allCoursesByCat.length === 0) {
+          continue;
         }
-        for (course of temp) {
+        for (course of allCoursesByCat) {
           count++;
         }
       }
@@ -77,7 +87,7 @@ module.exports = {
     return count;
   },
 
-  async pageOnCategory(keywords, offset) {
+  async pageOnCategory(keywords, offset, sortType) {
     const searchResult = await db.load(
       `SELECT *
       FROM ${TBL_CATEGORY}
@@ -90,41 +100,49 @@ module.exports = {
       return null;
     }
 
+    let allCourses = [];
     let result = [];
     let count = 0;
     for (category of searchResult) {
       if (category.level === 1) {
         subCat = await categoryModel.subCatByID(category.id)
         if (subCat.length === 0) {
-          break;
+          continue;
         }
         for (subCategory of subCat) {
-          const temp = await courseModel.allByCategoryID(subCategory.id);
-          if (temp === null) {
+          const allCoursesByCat = await courseModel.allByCategoryID(subCategory.id);
+          if (allCoursesByCat.length === 0) {
             continue;
           }
-          let i = 0;
-          if (offset <= temp.length) {
-            i = offset;
-          }
-          for (; i < temp.length; i++) {
-            result.push(course);
-            count++;
-            if (count === config.pagination.limit) {
-              return result;
-            }
+          for (course of allCoursesByCat) {
+            allCourses.push(course);
           }
         }
       } else {
-        result = await courseModel.pageByCategoryID(category.id, offset);
-        if (result.length === 0) {
-          return null;
+        const allCoursesByCat = await courseModel.allByCategoryID(category.id, offset);
+        if (allCoursesByCat === null) {
+          continue;
         }
-        return result;
+        for (course of allCoursesByCat) {
+          allCourses.push(course);
+        }
       }
     }
-    if (result.length === 0) {
-      return null;
+    if (sortType === 1) {
+      allCourses.sort(function (a, b) {
+        return b.rate - a.rate;
+      });
+    } else if (sortType === 2) {
+      allCourses.sort(function (a, b) {
+        return a.promotionalprice - b.promotionalprice;
+      });
+    }
+    for (i = offset; i < allCourses.length; i++) {
+      result.push(allCourses[i]);
+      count++;
+      if (count === config.pagination.limit) {
+        break;
+      }
     }
     return result;
   }

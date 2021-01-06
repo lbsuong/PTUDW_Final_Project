@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get('/', async function (req, res) {
   const keywords = req.query.keywords;
-  const tab = req.query.tab || 'course';
+  const tab = req.query.tab || 'course-tab';
+  const sort = +req.query.sort || 1;
 
   let coursePage = +req.query.coursePage || 1;
   if (coursePage < 1) coursePage = 1;
@@ -21,7 +22,7 @@ router.get('/', async function (req, res) {
     }
     coursePageItems.push(item);
   }
-  const searchResultOnCourse = await searchModel.pageOnCourse(keywords, courseOffset);
+  const searchResultOnCourse = await searchModel.pageOnCourse(keywords, courseOffset, sort);
 
   let categoryPage = +req.query.categoryPage || 1;
   if (categoryPage < 1) categoryPage = 1;
@@ -36,11 +37,12 @@ router.get('/', async function (req, res) {
     }
     categoryPageItems.push(item);
   }
-  const searchResultOnCategory = await searchModel.pageOnCategory(keywords, categoryOffset);
+  const searchResultOnCategory = await searchModel.pageOnCategory(keywords, categoryOffset, sort);
 
   res.render('vwSearch/search', {
     keywords,
     tab,
+    sort,
     searchResultOnCourse,
     searchResultOnCategory,
     courseCurrentPage: coursePage,

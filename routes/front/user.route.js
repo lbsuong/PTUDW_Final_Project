@@ -5,7 +5,6 @@ const userModel = require('../../models/user.model');
 const cartModel = require('../../models/cart.model');
 const courseModel = require('../../models/course.model');
 const auth = require('../../middlewares/auth.mdw');
-const { notify } = require('./lecturer.route');
 
 const router = express.Router();
 
