@@ -130,7 +130,7 @@ module.exports = {
     if (category.level === 1) {
       const subcat = await categoryModel.subCatByID(id);
       if (subcat.length === 0) {
-        return count;
+        return 0;
       }
 
       for (i = 0; i < subcat.length; i++) {
@@ -143,15 +143,15 @@ module.exports = {
           count += temp[0].total;
         }
       }
-      return count;
     } else {
       const temp = await db.load(
         `SELECT COUNT(*) AS total
         FROM ${TBL_COURSE}
         WHERE ${TBL_COURSE}.categoryid = ${id}`
       );
-      return temp[0].total;
+      count = temp[0].total;
     }
+    return count;
   },
 
   async pageByCategoryID(id, offset) {

@@ -5,6 +5,18 @@
     padding: 0px 10em 0px;
     background-color: #F1F2F7;
   }
+
+  .whole-card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .additionalCourse:hover {
+    cursor: pointer;
+  }
 </style>
 {{/section}}
 
@@ -57,7 +69,7 @@
     Category: <a href="/category/{{currentCourse.categoryid}}">{{currentCourse.categoryname}}</a>
   </div>
   <hr>
-  <div class="card mt-4">
+  <div class="card mt-4 mb-4">
     <h5 class="card-header">What you will learn</h5>
     <div class="card-body">
       <div class="row">
@@ -72,41 +84,37 @@
   </div>
   {{#if topFiveMostPopularBySameCat}}
   <hr>
-  <h4 class="mb-3">Students also bought:</h4>
-  <div class="row">
+  <h4 class="mb-3"><strong>Students also bought:</strong></h4>
+  <div class="my-3">
     {{#each topFiveMostPopularBySameCat}}
-    <div class="col-sm-4 mb-5 d-flex align-items-stretch">
-      <div class="card" style="width: 18rem;">
-        <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
-        <div class="card-body">
-          <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
-          <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
-          <div class="rating{{id}}" style="display: inline-block;"></div>
-          <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
-          <p class="card-text">{{tinydes}}</p>
-          <p>
-            <strong>${{format_real_num promotionalprice}}</strong>
-            &nbsp;
-            <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
-          </p>
-          <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
-              class="card-link"><small>{{categoryname}}</small></a></p>
-        </div>
-        <div class="card-footer">
-          <div class="d-flex justify-content-center">
-            <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
-              <i class="fas fa-info-circle"></i>
-              Detail
-            </a>
-            <button class="btn btn-success" type="submit">
-              <i class="fas fa-cart-plus"></i>
-              Add to cart
-            </button>
-          </div>
-        </div>
+    <div class="row additionalCourse" onclick="location.href='/course/{{id}}';">
+      <div class="col-3">
+        <img src="../../public/img/courses/{{id}}/small_thumbnail.jpg" alt="{{title}}">
+      </div>
+      <div class="col-5">
+        <h5>{{title}}</h5>
+        <p class="mt-1 mb-0">Updated {{format_date lastupdatedate}}</p>
+      </div>
+      <div class="col-1">
+        <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px"
+          xml:space="preserve" width="15px" height="15px" fill="#f39c12" style="margin-left: 0px;">
+          <polygon
+            points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 ">
+          </polygon>
+        </svg>
+      </div>
+      <div class="col-2">
+        <i class="fas fa-user-friends"></i>
+        <span>{{format numstudent}}</span>
+      </div>
+      <div class="col-1">
+        <p class="text-right mb-0"><strong>${{format_real_num promotionalprice}}</strong></p>
+        <p class="text-right mb-0" style="color: #6C757D;"><del class="text-right">${{format_real_num
+            originalprice}}</del></p>
       </div>
     </div>
+    <hr>
     {{/each}}
   </div>
   {{/if}}

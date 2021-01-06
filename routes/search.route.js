@@ -1,39 +1,60 @@
 const express = require('express');
-const { searchOnCourse } = require('../models/search.model');
 const searchModel = require('../models/search.model');
+const config = require('../config/default.json');
 
 const router = express.Router();
 
 router.get('/', async function (req, res) {
   const keywords = req.query.keywords;
-  const searchResultOnCourse = await searchModel.searchOnCourse(keywords);
-  const searchResultOnCategory = await searchModel.searchOnCategory(keywords);
-  const result = [];
+  const tab = req.query.tab || 'course';
 
-  // console.log(searchResultOnCategory);
+  let coursePage = +req.query.coursePage || 1;
+  if (coursePage < 1) coursePage = 1;
+  const courseOffset = (coursePage - 1) * config.pagination.limit;
+  const courseTotal = await searchModel.countOnCourse(keywords);
+  const courseNPage = Math.ceil(courseTotal / config.pagination.limit);
+  const coursePageItems = [];
+  for (i = 1; i <= courseNPage; i++) {
+    const item = {
+      value: i,
+      isActive: i === coursePage
+    }
+    coursePageItems.push(item);
+  }
+  const searchResultOnCourse = await searchModel.pageOnCourse(keywords, courseOffset);
 
-  if (searchResultOnCourse !== null) {
-    for (i = 0; i < searchResultOnCourse.length; i++) {
-      result.push(searchResultOnCourse[i]);
+  let categoryPage = +req.query.categoryPage || 1;
+  if (categoryPage < 1) categoryPage = 1;
+  const categoryOffset = (categoryPage - 1) * config.pagination.limit;
+  const categoryTotal = await searchModel.countOnCategory(keywords);
+  const categoryNPage = Math.ceil(categoryTotal / config.pagination.limit);
+  const categoryPageItems = [];
+  for (i = 1; i <= categoryNPage; i++) {
+    const item = {
+      value: i,
+      isActive: i === categoryPage
     }
+    categoryPageItems.push(item);
   }
-  if (searchResultOnCategory !== null) {
-    for (i = 0; i < searchResultOnCategory.length; i++) {
-      duplicated = false;
-      for (j = 0; j < result.length; j++) {
-        if (result[j].id === searchResultOnCategory[i].id) {
-          duplicated = true;
-          break;
-        }
-      }
-      if (!duplicated) {
-        result.push(searchResultOnCategory[i]);
-      }
-    }
-  }
+  const searchResultOnCategory = await searchModel.pageOnCategory(keywords, categoryOffset);
 
   res.render('vwSearch/search', {
-    result
+    keywords,
+    tab,
+    searchResultOnCourse,
+    searchResultOnCategory,
+    courseCurrentPage: coursePage,
+    coursePageItems,
+    courseCanGoPrevious: coursePage > 1,
+    courseCanGoNext: coursePage < courseNPage,
+    coursePreviousPage: +coursePage - 1,
+    courseNextPage: +coursePage + 1,
+    categoryCurrentPage: categoryPage,
+    categoryPageItems,
+    categoryCanGoPrevious: categoryPage > 1,
+    categoryCanGoNext: categoryPage < categoryNPage,
+    categoryPreviousPage: +categoryPage - 1,
+    categoryNextPage: +categoryPage + 1
   });
 });
 

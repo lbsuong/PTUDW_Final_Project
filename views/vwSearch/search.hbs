@@ -5,7 +5,7 @@
 
 {{#section 'js'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
-{{#each result}}
+{{#each searchResultOnCourse}}
 <script>
   $(function () {
     $('.rating{{id}}').rateYo({
@@ -16,49 +16,170 @@
   });
 </script>
 {{/each}}
+
+{{#each searchResultOnCategory}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+
+<script>
+  $('#' + '{{tab}}' + '-tab').tab('show');
+</script>
 {{/section}}
 
+
 <div class="container mt-5 mb-5">
-  <h1 class="mb-5">Result:</h1>
-  {{#if result}}
-  <div class="row">
-    {{#each result}}
-    <div class="col-sm-4 mb-5 d-flex align-items-stretch">
-      <div class="card" style="width: 18rem;">
-        <img src="../public/img/courses/{{this.id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
-          alt="{{this.title}}">
-        <div class="card-body">
-          <h5 class="card-title">{{this.title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{this.lecturername}}</h6>
-          <span class="text-danger" style="vertical-align: middle;"><strong>{{this.rate}}</strong></span>
-          <div class="rating{{this.id}}" style="display: inline-block;"></div>
-          <span style="vertical-align: middle; color: #6C757D">({{format this.numrate}})</span>
-          <p class="card-text">{{this.tinydes}}</p>
-          <p>
-            <strong>${{format_real_num this.promotionalprice}}</strong>
-            &nbsp;
-            <del style="color: #6C757D;">${{format_real_num this.originalprice}}</del>
-          </p>
-          <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{this.categoryid}}"
-              class="card-link"><small>{{this.categoryname}}</small></a></p>
-        </div>
-        <div class="card-footer">
-          <div class="d-flex justify-content-center">
-            <a class="btn btn-primary mr-1" href="/course/{{this.id}}" role="button">
-              <i class="fas fa-info-circle"></i>
-              Detail
-            </a>
-            <button class="btn btn-success" type="submit">
-              <i class="fas fa-cart-plus"></i>
-              Add to cart
-            </button>
+  <ul class="nav nav-tabs" id="searchTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="course-tab" data-toggle="tab" href="#course" role="tab" aria-controls="home"
+        aria-selected="true">Course</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="category-tab" data-toggle="tab" href="#category" role="tab" aria-controls="profile"
+        aria-selected="false">Category</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="searchTabContent">
+    <div class="tab-pane fade mt-5" id="course" role="tabpanel" aria-labelledby="course-tab">
+      {{#if searchResultOnCourse}}
+      <div class="row">
+        {{#each searchResultOnCourse}}
+        <div class="col-sm-4 mb-5 d-flex align-items-stretch">
+          <div class="card" style="width: 18rem;">
+            <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
+            <div class="card-body">
+              <h5 class="card-title">{{title}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+              <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+              <div class="rating{{id}}" style="display: inline-block;"></div>
+              <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
+              <p class="card-text">{{tinydes}}</p>
+              <p class="card-text"><small class="text-muted">Category: </small><a href="#"
+                  class="card-link"><small>{{categoryname}}</small></a></p>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-center">
+                <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
+                  <i class="fas fa-info-circle"></i>
+                  Detail
+                </a>
+                <button class="btn btn-success" type="submit">
+                  <i class="fas fa-cart-plus"></i>
+                  Add to cart
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+        {{/each}}
       </div>
+      {{#if coursePageItems}}
+      <div class="col">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item {{#unless courseCanGoPrevious}}disabled{{/unless}}">
+              <a class="page-link"
+                href="?keywords={{keywords}}&coursePage={{coursePreviousPage}}&categoryPage={{categoryCurrentPage}}&tab=course"
+                tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            {{#each coursePageItems}}
+            {{#if isActive}}
+            <li class="page-item active">
+              <a class="page-link"
+                href="?keywords={{../keywords}}&coursePage={{value}}&categoryPage={{../categoryCurrentPage}}&tab=course">{{value}}</a>
+            </li>
+            {{else}}
+            <li class="page-item">
+              <a class="page-link"
+                href="?keywords={{../keywords}}&coursePage={{value}}&categoryPage={{../categoryCurrentPage}}&tab=course">{{value}}</a>
+            </li>
+            {{/if}}
+            {{/each}}
+            <li class="page-item {{#unless courseCanGoNext}}disabled{{/unless}}">
+              <a class="page-link"
+                href="?keywords={{keywords}}&coursePage={{courseNextPage}}&categoryPage={{categoryCurrentPage}}&tab=course">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      {{/if}}
+      {{else}}
+      <h4 class="text-danger">No course has been found</h4>
+      {{/if}}
     </div>
-    {{/each}}
+    <div class="tab-pane fade mt-5" id="category" role="tabpanel" aria-labelledby="category-tab">
+      {{#if searchResultOnCategory}}
+      <div class="row mt-5">
+        {{#each searchResultOnCategory}}
+        <div class="col-sm-4 mb-5 d-flex align-items-stretch">
+          <div class="card" style="width: 18rem;">
+            <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
+            <div class="card-body">
+              <h5 class="card-title">{{title}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+              <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+              <div class="rating{{id}}" style="display: inline-block;"></div>
+              <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
+              <p class="card-text">{{tinydes}}</p>
+              <p class="card-text"><small class="text-muted">Category: </small><a href="#"
+                  class="card-link"><small>{{categoryname}}</small></a></p>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-center">
+                <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
+                  <i class="fas fa-info-circle"></i>
+                  Detail
+                </a>
+                <button class="btn btn-success" type="submit">
+                  <i class="fas fa-cart-plus"></i>
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      {{#if categoryPageItems}}
+      <div class="col">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item {{#unless categoryCanGoPrevious}}disabled{{/unless}}">
+              <a class="page-link"
+                href="?keywords={{keywords}}&coursePage={{courseCurrentPage}}&categoryPage={{categoryPreviousPage}}&tab=category"
+                tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            {{#each categoryPageItems}}
+            {{#if isActive}}
+            <li class="page-item active">
+              <a class="page-link"
+                href="?keywords={{../keywords}}&coursePage={{../courseCurrentPage}}&categoryPage={{value}}&tab=category">{{value}}</a>
+            </li>
+            {{else}}
+            <li class="page-item">
+              <a class="page-link"
+                href="?keywords={{../keywords}}&coursePage={{../courseCurrentPage}}&categoryPage={{value}}&tab=category">{{value}}</a>
+            </li>
+            {{/if}}
+            {{/each}}
+            <li class="page-item {{#unless categoryCanGoNext}}disabled{{/unless}}">
+              <a class="page-link"
+                href="?keywords={{keywords}}&coursePage={{courseCurrentPage}}&categoryPage={{categoryNextPage}}&tab=category">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      {{/if}}
+      {{else}}
+      <h4 class="text-danger">No course has been found</h4>
+      {{/if}}
+    </div>
   </div>
-  {{else}}
-  <h4 class="text-danger">No course has been found</h4>
-  {{/if}}
 </div>
