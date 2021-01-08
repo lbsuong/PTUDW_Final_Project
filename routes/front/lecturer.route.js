@@ -161,6 +161,7 @@ router.post('/profile', auth.lecturer, async function (req, res) {
 router.get("/create", auth.lecturer, function (req, res) {
     res.render("vwLecturer/create", {
         forLecturer: true,
+        hihi: false,
     })
 });
 
