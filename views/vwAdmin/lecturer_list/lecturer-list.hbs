@@ -1,11 +1,17 @@
 {{#if message}}
-<div class="card mb-2">
-  <div class="card-body">
-    <p class="text-success text-center mb-0"><strong>{{message}}</strong></p>
+<div class="container">
+  <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+    <strong>
+      {{message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 </div>
 {{/if}}
 
+{{#if lecturerList}}
 <table class="table table-hover">
   <thead>
     <tr>
@@ -31,6 +37,9 @@
     {{/each}}
   </tbody>
 </table>
+{{else}}
+<h4 class="text-danger">No lecturer has been found</h4>
+{{/if}}
 
 <div class="container mb-5">
   <div class="row">
@@ -65,6 +74,4 @@
     </ul>
   </nav>
 </div>
-{{else}}
-<h4 class="text-danger">No lecturer has been found</h4>
 {{/if}}

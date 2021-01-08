@@ -1,13 +1,12 @@
-{{#section 'js'}}
-<script>
-  $('#lecturers-list-link').tab('show');
-</script>
-{{/section}}
-
 {{#if err_message}}
-<div class="card mb-2">
-  <div class="card-body">
-    <p class="text-danger text-center mb-0">{{err_message}}</p>
+<div class="container">
+  <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+    <strong>
+      {{err_message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 </div>
 {{/if}}
@@ -43,7 +42,8 @@
         <label for="bankname">Bank Name</label>
         <input type="bankname" class="form-control" id="bankname" name="bankname" required>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Create</button>
+      <a class="btn btn-danger" href="/admin/lecturer-list" role="button">Cancel</a>
     </form>
   </div>
 </div>

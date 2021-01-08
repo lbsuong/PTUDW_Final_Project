@@ -57,10 +57,13 @@
     <input type="hidden" name="coursePage" id="coursePage" value="{{courseCurrentPage}}">
     <input type="hidden" name="categoryPage" id="categoryPage" value="{{categoryCurrentPage}}">
     <input type="hidden" name="tab" id="tab" value="{{tab}}">
-    <div class="container mb-3">
+    <div class="container input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="sort">Sort by</label>
+      </div>
       <select class="custom-select w-50" name="sort" id="sort" aria-label="Sort By">
-        <option value="1">Sắp xếp theo điểm đánh giá giảm dần</option>
-        <option value="2">Sắp xếp theo giá tăng dần</option>
+        <option value="1">Rating Descending</option>
+        <option value="2">Price Ascending</option>
       </select>
     </div>
 

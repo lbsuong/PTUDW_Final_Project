@@ -4,5 +4,8 @@
   },
   "paginationOnLecturer": {
     "limit": 10
+  },
+  "paginationOnCategory": {
+    "limit": 10
   }
 }
