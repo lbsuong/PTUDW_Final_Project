@@ -24,11 +24,11 @@ module.exports = function (app) {
     })
   });
 
-  app.get('/admin', function (req, res) {
-    res.render('vwAdmin/home', {
-      forAdmin: true,
-    })
-  });
+  // app.get('/admin/', function (req, res) {
+  //   res.render(`vwAdmin/${DEFAULT_ADMIN_PAGE}`, {
+  //     forAdmin: true,
+  //   })
+  // });
 
   app.get('/redirect', function (req, res) {
     if (req.headers.referer) {

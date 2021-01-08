@@ -16,8 +16,22 @@
 <body>
   {{> nav}}
 
-  <div style="min-height: 90vh;"> {{{body}}}</div>
-
+  <div style="min-height: 90vh;">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-3">
+          <div class="list-group">
+            <a id="lecturers-list-link" href="/admin/lecturer-list" class="list-group-item list-group-item-action">
+              Lecturer List
+            </a>
+          </div>
+        </div>
+        <div class="col-9">
+          {{{body}}}
+        </div>
+      </div>
+    </div>
+  </div>
 
   {{> footer}}
 
@@ -28,6 +42,9 @@
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
     crossorigin="anonymous"></script>
   <script src="/public/js/nav.js"></script>
+  <script>
+    $('#{{tabID}}').tab('show');
+  </script>
   {{{_sections.js}}}
 </body>
 

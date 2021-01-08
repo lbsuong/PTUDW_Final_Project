@@ -68,18 +68,15 @@
   <div>
     Category: <a href="/category/{{currentCourse.categoryid}}">{{currentCourse.categoryname}}</a>
   </div>
+  <button class="btn btn-success mt-3" type="submit">
+    <i class="fas fa-cart-plus"></i>
+    Add to cart
+  </button>
   <hr>
   <div class="card mt-4 mb-4">
     <h5 class="card-header">What you will learn</h5>
     <div class="card-body">
-      <div class="row">
-        {{#each (split_line currentCourse.fulldes)}}
-        <div class="col-sm-6">
-          <i class="fas fa-check"></i>
-          <span class="card-text">{{this}}</span>
-        </div>
-        {{/each}}
-      </div>
+      {{{currentCourse.fulldes}}}
     </div>
   </div>
   {{#if topFiveMostPopularBySameCat}}
@@ -89,7 +86,7 @@
     {{#each topFiveMostPopularBySameCat}}
     <div class="row additionalCourse" onclick="location.href='/course/{{id}}';">
       <div class="col-3">
-        <img src="../../public/img/courses/{{id}}/small_thumbnail.jpg" alt="{{title}}">
+        <img src="/public/img/courses/{{id}}/small_thumbnail.jpg" alt="{{title}}">
       </div>
       <div class="col-5">
         <h5>{{title}}</h5>

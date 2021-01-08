@@ -82,7 +82,7 @@
             {{#each searchResultOnCourse}}
             <div class="col-sm-4 mb-5 d-flex align-items-stretch">
               <div class="card" style="width: 18rem;">
-                <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
+                <img src="/public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
                   alt="{{title}}">
                 <div class="card-body">
                   <h5 class="card-title">{{title}}</h5>
@@ -96,7 +96,7 @@
                     &nbsp;
                     <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
                   </p>
-                  <p class="card-text"><small class="text-muted">Category: </small><a href="#"
+                  <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
                       class="card-link"><small>{{categoryname}}</small></a></p>
                 </div>
                 <div class="card-footer">
@@ -151,7 +151,7 @@
             {{#each searchResultOnCategory}}
             <div class="col-sm-4 mb-5 d-flex align-items-stretch">
               <div class="card" style="width: 18rem;">
-                <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
+                <img src="/public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder"
                   alt="{{title}}">
                 <div class="card-body">
                   <h5 class="card-title">{{title}}</h5>
@@ -165,7 +165,7 @@
                     &nbsp;
                     <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
                   </p>
-                  <p class="card-text"><small class="text-muted">Category: </small><a href="#"
+                  <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
                       class="card-link"><small>{{categoryname}}</small></a></p>
                 </div>
                 <div class="card-footer">

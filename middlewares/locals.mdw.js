@@ -1,4 +1,3 @@
-const { value } = require('numeral');
 const categoryModel = require('../models/category.model');
 
 module.exports = function (app) {

@@ -1,0 +1,70 @@
+{{#if message}}
+<div class="card mb-2">
+  <div class="card-body">
+    <p class="text-success text-center mb-0"><strong>{{message}}</strong></p>
+  </div>
+</div>
+{{/if}}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Bank ID</th>
+      <th scope="col">Bank Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each lecturerList}}
+    <tr>
+      <th scope="row">{{username}}</th>
+      <td>{{name}}</td>
+      <td>{{email}}</td>
+      <td>{{bankid}}</td>
+      <td>{{bankname}}</td>
+      <td><a class="btn" href="/admin/lecturer-list/edit/{{username}}" role="button"><i class="fas fa-edit"></i></a>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col text-center">
+      <a class="btn btn-success" href="/admin/lecturer-list/create-lecturer-account" role="button">Create new
+        account</a>
+    </div>
+  </div>
+</div>
+
+{{#if pageItems}}
+<div class="col">
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item {{#unless canGoPrevious}}disabled{{/unless}}">
+        <a class="page-link" href="?page={{previousPage}}" tabindex="-1" aria-disabled="true">Previous</a>
+      </li>
+      {{#each pageItems}}
+      {{#if isActive}}
+      <li class="page-item active">
+        <a class="page-link" href="?page={{value}}">{{value}}</a>
+      </li>
+      {{else}}
+      <li class="page-item">
+        <a class="page-link" href="?page={{value}}">{{value}}</a>
+      </li>
+      {{/if}}
+      {{/each}}
+      <li class="page-item {{#unless canGoNext}}disabled{{/unless}}">
+        <a class="page-link" href="?page={{nextPage}}">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+{{else}}
+<h4 class="text-danger">No lecturer has been found</h4>
+{{/if}}

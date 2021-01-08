@@ -1,5 +1,8 @@
 {
   "pagination": {
     "limit": 6
+  },
+  "paginationOnLecturer": {
+    "limit": 10
   }
 }

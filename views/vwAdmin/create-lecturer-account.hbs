@@ -1,0 +1,49 @@
+{{#section 'js'}}
+<script>
+  $('#lecturers-list-link').tab('show');
+</script>
+{{/section}}
+
+{{#if err_message}}
+<div class="card mb-2">
+  <div class="card-body">
+    <p class="text-danger text-center mb-0">{{err_message}}</p>
+  </div>
+</div>
+{{/if}}
+
+<div class="card">
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="bankid">Bank ID</label>
+        <input type="number" class="form-control" id="bankid" name="bankid" required>
+      </div>
+      <div class="form-group">
+        <label for="bankname">Bank Name</label>
+        <input type="bankname" class="form-control" id="bankname" name="bankname" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
