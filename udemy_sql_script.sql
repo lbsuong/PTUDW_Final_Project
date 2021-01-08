@@ -14,6 +14,7 @@ CREATE TABLE `users` (
 CREATE TABLE `lecturer` (
   `username` VARCHAR(30) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
+  `picture` VARCHAR(100),
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `bankid` BIGINT NOT NULL,

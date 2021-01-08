@@ -4,7 +4,7 @@ const auth = require('../middlewares/auth.mdw');
 
 const router = express.Router();
 
-router.get('/', auth, async function (req, res) {
+router.get('/', auth.user, async function (req, res) {
     let cart = await cartModel.cartByUsername(req.session.profile.username);
     res.render('vwUser/cart', {
         forUser: true,

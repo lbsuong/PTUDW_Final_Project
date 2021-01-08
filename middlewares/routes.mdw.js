@@ -42,6 +42,14 @@ module.exports = function (app) {
     res.render('privacy');
   })
 
+  app.get('/general/sign-out', function (req, res) {
+    req.session.isAuth = false;
+    req.session.profile = null;
+    req.session.userLevel = null;
+
+    let url = '/';
+    res.redirect(url);
+  });
 
   app.use('/user/cart', require('../routes/cart.route'));
   app.use('/user', require('../routes/front/user.route'));

@@ -22,14 +22,6 @@ router.get('/sign-up', function (req, res) {
   });
 });
 
-router.get('/sign-out', function (req, res) {
-  req.session.isAuth = false;
-  req.session.profile = null;
-  req.session.userLevel = null;
-
-  let url = '/';
-  res.redirect(url);
-});
 
 router.post('/log-in', async function (req, res) {
   let result = await userModel.singleByUsername(req.body.username);
@@ -68,7 +60,7 @@ router.post('/log-in', async function (req, res) {
   }
   console.log(courseCart);
   req.session.isAuth = true;
-  req.session.userLevel = {
+  req.session.level = {
     user: true,
     admin: false,
     lecturer: false,
@@ -110,13 +102,13 @@ router.post('/sign-up', async function (req, res) {
   res.redirect('/');
 });
 
-router.get('/profile', auth, async function (req, res) {
+router.get('/profile', auth.user, async function (req, res) {
   res.render('vwUser/profile', {
     forUser: true,
   });
 });
 
-router.post('/profile', auth, async function (req, res) {
+router.post('/profile', auth.user, async function (req, res) {
   console.log(req.body);
   let post_id = req.body.postId;
 

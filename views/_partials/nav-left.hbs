@@ -1,0 +1,53 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="../../public/css/cssLecturer/nav-left.css">
+{{/section}}
+
+<div id="mySidenav" class="sidenav" onmouseover="openNav()" onmouseleave="closeNav()">
+    <div class="mt-5">
+        <a href="/lecturer">
+            <i class="fas fa-home"></i>
+            <div class="content">Home</div>
+        </a>
+        {{#if isAuth}}
+
+        <a href="/lecturer/profile">
+            <i class="fas fa-user-circle"></i>
+            <div class="content">Account</div>
+        </a>
+
+        <a href="/lecturer/course">
+            <i class="fas fa-book"></i>
+            <div class="content">Course</div>
+        </a>
+        <a href="/lecturer/performance">
+            <i class="fas fa-chart-bar"></i>
+            <div class="content">Performance</div>
+        </a>
+        <a href="/lecturer/payment">
+            <i class="far fa-credit-card"></i>
+            <div class="content">Payment</div>
+        </a>
+
+        <a href="/general/sign-out">
+            <i class="fas fa-sign-out-alt"></i>
+            <div class="content">Log Out</div>
+        </a>
+        {{/if}}
+    </div>
+</div>
+
+{{#section 'js'}}
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "200px";
+        document.getElementById("main").style.marginLeft = "250px";
+        $(".content").css("display", "block");
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "60px";
+        document.getElementById("main").style.marginLeft = "150px";
+        $(".content").css("display", "none");
+    }
+</script>
+{{/section}}

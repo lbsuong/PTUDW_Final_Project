@@ -3,6 +3,7 @@ const config = require('../config/default.json');
 const bcrypt = require('bcryptjs');
 
 const TBL_LECTURER = 'lecturer';
+const PRI_KEY = 'username';
 
 module.exports = {
   all() {
@@ -48,5 +49,9 @@ module.exports = {
   deleteAccount(username) {
     const condition = { username: username };
     return db.del(condition, TBL_LECTURER);
-  }
+  },
+
+  changePassword(newPass, id) {
+    return db.update(newPass, 'password', PRI_KEY, id, TBL_LECTURER);
+  },
 };
