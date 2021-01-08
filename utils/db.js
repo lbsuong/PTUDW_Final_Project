@@ -1,4 +1,3 @@
-const { table } = require('console');
 const mysql = require('mysql');
 const util = require('util');
 
@@ -15,6 +14,7 @@ const pool = mysql.createPool({
 const pool_query = util.promisify(pool.query).bind(pool);
 
 module.exports = {
+  pool_query,
   load: sql => pool_query(sql),
   add: (entity, tableName) => pool_query(`insert into ${tableName} set ?`, entity),
   del: (condition, tableName) => pool_query(`delete from ${tableName} where ?`, condition),

@@ -1,0 +1,60 @@
+{{#section 'js'}}
+<script>
+  if ($('#catLevelGroupSelection').val() === '1') {
+    $('#parentCategorySelect').addClass('d-none');
+  }
+  $('#catLevelGroupSelection').on('change', function (e) {
+    const value = $(this).val();
+    if (value === '1') {
+      $('#parentCategorySelect').addClass('d-none');
+    } else if (value === '2') {
+      $('#parentCategorySelect').removeClass('d-none');
+    }
+  });
+</script>
+{{/section}}
+
+{{#if err_message}}
+<div class="container">
+  <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+    <strong>
+      {{err_message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+{{/if}}
+
+<div class="card">
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-group">
+        <label for="categoryname">Category Name</label>
+        <input type="text" class="form-control" id="categoryname" name="categoryname" required>
+      </div>
+      <div class="input-group form-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="catLevelGroupSelection">Level</label>
+        </div>
+        <select class="custom-select" id="catLevelGroupSelection" name="level">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <div id="parentCategorySelect" class="input-group form-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="parentCatGroupSelection">Parent Category</label>
+        </div>
+        <select class="custom-select" id="parentCatGroupSelection" name="parentid">
+          {{#each allParentCategories}}
+          <option value="{{id}}" {{#if @first}}selected{{/if}}>{{name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Create</button>
+      <a class="btn btn-danger" href="/admin/category-list" role="button">Cancel</a>
+    </form>
+  </div>
+</div>

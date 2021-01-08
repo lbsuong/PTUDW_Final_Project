@@ -39,9 +39,7 @@ CREATE TABLE `category` (
 
 CREATE TABLE `subcat`(
   `parentid` INT NOT NULL,
-  `subid` INT NOT NULL,
-  CONSTRAINT `fk1` FOREIGN KEY (`parentid`) REFERENCES category(`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk2` FOREIGN KEY (`subid`) REFERENCES category(`id`) ON DELETE CASCADE
+  `subid` INT NOT NULL
 );
   
 CREATE TABLE `course` (
@@ -973,9 +971,3 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   9.99
 );
 #--------------------------------------------------------------------------------
-
-SELECT *
-FROM category
-WHERE
-	MATCH(name)
-    AGAINST('python')

@@ -1,0 +1,74 @@
+{{#section 'js'}}
+<script>
+  if ($('#catLevelGroupSelection').val() === '1') {
+    $('#parentCategorySelect').addClass('d-none');
+  }
+  $('#catLevelGroupSelection').on('change', function (e) {
+    const value = $(this).val();
+    if (value === '1') {
+      $('#parentCategorySelect').addClass('d-none');
+    } else if (value === '2') {
+      $('#parentCategorySelect').removeClass('d-none');
+    }
+  });
+</script>
+{{/section}}
+
+{{#if err_message}}
+<div class="container">
+  <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+    <strong>
+      {{err_message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+{{/if}}
+
+<div class="card">
+  <div class="card-body">
+    <form method="POST" class="d-inline">
+      <div class="form-group">
+        <label for="categoryname">Category Name</label>
+        <input type="text" class="form-control" id="categoryname" name="categoryname" value="{{targetCategory.name}}"
+          required>
+      </div>
+      <div class="input-group form-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="catLevelGroupSelection">Level</label>
+        </div>
+        <select class="custom-select" id="catLevelGroupSelection" name="level">
+          {{#each level}}
+          {{#if isSelected}}
+          <option value="{{value}}" selected>{{value}}</option>
+          {{else}}
+          <option value="{{value}}">{{value}}</option>
+          {{/if}}
+          {{/each}}
+        </select>
+      </div>
+      <div id="parentCategorySelect" class="input-group form-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="parentCatGroupSelection">Parent Category</label>
+        </div>
+        <select class="custom-select" id="parentCatGroupSelection" name="parentid">
+          {{#each allParentCategories}}
+          {{#if isSelected}}
+          <option value="{{id}}" selected>{{name}}</option>
+          {{else}}
+          <option value="{{id}}">{{name}}</option>
+          {{/if}}
+          {{/each}}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Apply</button>
+      <a class="btn btn-danger" href="/admin/category-list" role="button">Cancel</a>
+    </form>
+    <form action="/admin/category-list/delete" method="POST" class="d-inline float-right">
+      <input type="hidden" id="idWantToDelete" name="idWantToDelete" value="{{targetCategory.id}}">
+      <button type="submit" class="btn btn-danger float-right">Delete Account</button>
+    </form>
+  </div>
+</div>
