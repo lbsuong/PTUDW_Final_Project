@@ -226,5 +226,25 @@ module.exports = {
       id: id
     };
     await db.patch(entity, condition, TBL_COURSE);
+  },
+
+  async countOnCourse() {
+    const result = await db.load(`SELECT COUNT(*) AS total FROM ${TBL_COURSE}`);
+    if (result.length === 0) {
+      return null;
+    }
+    return result[0].total;
+  },
+
+  pageOnCourse(offset) {
+    return db.load(
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      FROM ${TBL_COURSE}
+      LEFT JOIN ${TBL_LECTURER}
+      ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
+      LEFT JOIN ${TBL_CATEGORY}
+      ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+      LIMIT ${config.pagination.limit} OFFSET ${offset}`
+    );
   }
 }

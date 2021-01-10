@@ -48,8 +48,7 @@
 
 
 <div id="thumbnail">
-  <img class="w-100 h-100" src="../../public/img/courses/{{currentCourse.id}}/big_thumbnail.jpg"
-    alt="{{currentCourse.title}}">
+  <img class="w-100 h-100" src="{{currentCourse.bigthumbnaillink}}" alt="{{currentCourse.title}}">
 </div>
 <div class="container mb-2 mt-4">
   <h1>{{currentCourse.title}}</h1>
@@ -67,6 +66,9 @@
   </div>
   <div>
     Category: <a href="/category/{{currentCourse.categoryid}}">{{currentCourse.categoryname}}</a>
+  </div>
+  <div>
+    Status: <strong>{{currentCourse.status}}</strong>
   </div>
   <button class="btn btn-success mt-3" type="submit">
     <i class="fas fa-cart-plus"></i>
@@ -86,7 +88,7 @@
     {{#each topFiveMostPopularBySameCat}}
     <div class="row additionalCourse" onclick="location.href='/course/{{id}}';">
       <div class="col-3">
-        <img src="/public/img/courses/{{id}}/small_thumbnail.jpg" alt="{{title}}">
+        <img src="{{smallthumbnaillink}}" alt="{{title}}">
       </div>
       <div class="col-5">
         <h5>{{title}}</h5>

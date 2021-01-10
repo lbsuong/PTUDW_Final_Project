@@ -25,7 +25,8 @@ CREATE TABLE `lecturer` (
 CREATE TABLE `admin` (
   `username` VARCHAR(30) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
-  `name` VARCHAR(45) NOT NULL
+  `name` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(100) NOT NULL
 );
   
 CREATE TABLE `category` (
@@ -49,6 +50,8 @@ CREATE TABLE `course` (
   `lecturer` VARCHAR(30) NOT NULL,
   `tinydes` VARCHAR(500) NOT NULL,
   `fulldes` VARCHAR(1000) NOT NULL,
+  `bigthumbnaillink` VARCHAR(100),
+  `smallthumbnaillink` VARCHAR(100),
   `lastupdatedate` DATETIME NOT NULL,
   `numstudent` INT NOT NULL,
   `numstudentinaweek` INT NOT NULL,
@@ -57,6 +60,7 @@ CREATE TABLE `course` (
   `numrate` INT NOT NULL,
   `originalprice` FLOAT NOT NULL,
   `promotionalprice` FLOAT NOT NULL,
+  `status` VARCHAR(10) NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`),
@@ -96,20 +100,49 @@ CREATE TABLE `cart` (
   CONSTRAINT `fk_ca_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
 );
 
+CREATE TABLE `section` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `course_section` (
+  `courseid` INT NOT NULL,
+  `sectionid` INT NOT NULL
+);
+
+CREATE TABLE `lecture` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45),
+  `contentlink` VARCHAR(100),
+  `contenttype` VARCHAR(10),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `section_lecture` (
+  `sectionid` INT NOT NULL,
+  `lectureid` INT NOT NULL
+);
+
 #--------------------------------------------------------------------------------
 
 #----------------------------------admin-----------------------------------------
 INSERT INTO `admin` (
   `username`,
   `password`,
-  `name`
+  `name`,
+  `email`
 )
 VALUES (
   "admin",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
-  "admin"
+  "admin",
+  "admin@gmail.com"
 );
+#--------------------------------------------------------------------------------
 
+
+#----------------------------------users-----------------------------------------
 INSERT INTO `users` (
   `username`,
   `password`,
@@ -401,6 +434,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -408,7 +443,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -423,6 +459,8 @@ Understand complex topics, like decorators.
 Understand how to use both the Jupyter Notebook and create .py files
 Get an understanding of how to create GUIs in the Jupyter Notebook system!
 Build a complete understanding of Python from the ground up!",
+  "/public/courses/1/big_thumbnail.jpg",
+  "/public/courses/1/small_thumbnail.jpg",
   "2020-12-1",
   1184493,
   1184493,
@@ -430,7 +468,8 @@ Build a complete understanding of Python from the ground up!",
   4.6,
   338109,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -439,6 +478,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -446,7 +487,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -464,6 +506,8 @@ Handle specific topics like Reinforcement Learning, NLP and Deep Learning
 Handle advanced techniques like Dimensionality Reduction
 Know which Machine Learning model to choose for each type of problem
 Build an army of powerful Machine Learning models and know how to combine them to solve any problem",
+  "/public/courses/2/big_thumbnail.jpg",
+  "/public/courses/2/small_thumbnail.jpg",
   "2020-12-2",
   729703,
   729703,
@@ -471,7 +515,8 @@ Build an army of powerful Machine Learning models and know how to combine them t
   4.5,
   138093,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -480,6 +525,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -487,7 +534,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   3,
@@ -510,6 +558,8 @@ Random Forest and Decision Trees
 Natural Language Processing and Spam Filters
 Neural Networks
 Support Vector Machines",
+  "/public/courses/3/big_thumbnail.jpg",
+  "/public/courses/3/small_thumbnail.jpg",
   "2020-12-3",
   414917,
   414917,
@@ -517,7 +567,8 @@ Support Vector Machines",
   4.6,
   92855,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -526,6 +577,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -533,7 +586,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -547,6 +601,8 @@ Add the Python Object-Oriented Programming (OOP) skills to your résumé.
 Understand how to create your own Python programs.
 Learn Python from experienced professional software developers.
 Understand both Python 2 and Python 3.",
+  "/public/courses/4/big_thumbnail.jpg",
+  "/public/courses/4/small_thumbnail.jpg",
   "2020-12-4",
   268725,
   268725,
@@ -554,7 +610,8 @@ Understand both Python 2 and Python 3.",
   4.5,
   65451,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -563,6 +620,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -570,7 +629,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -595,6 +655,8 @@ Analyze and visualize data
 Use Python to schedule programs based on computer events.
 Learn OOP (Object-Oriented Programming)
 Learn GUIs (Graphical-User Interfaces)",
+  "/public/courses/5/big_thumbnail.jpg",
+  "/public/courses/5/small_thumbnail.jpg",
   "2020-12-5",
   207919,
   207919,
@@ -602,7 +664,8 @@ Learn GUIs (Graphical-User Interfaces)",
   4.5,
   45246,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -611,6 +674,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -618,7 +683,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -632,6 +698,8 @@ Use the pandas module with Python to create and structure data.
 Learn how to work with various data formats within python, including: JSON,HTML, and MS Excel Worksheets.
 Create data visualizations using matplotlib and the seaborn modules with python.
 Have a portfolio of various data analysis projects.",
+  "/public/courses/6/big_thumbnail.jpg",
+  "/public/courses/6/small_thumbnail.jpg",
   "2020-12-5",
   164854,
   164854,
@@ -639,7 +707,8 @@ Have a portfolio of various data analysis projects.",
   4.3,
   15537,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -648,6 +717,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -655,7 +726,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -670,6 +742,8 @@ Crawl web sites and pull information from online sources.
 Write programs that send out email notifications.
 Use Python's debugging tools to quickly figure out bugs in your code.
 Programmatically control the mouse and keyboard to click and type for you.",
+  "/public/courses/7/big_thumbnail.jpg",
+  "/public/courses/7/small_thumbnail.jpg",
   "2020-12-5",
   772271,
   772271,
@@ -677,7 +751,8 @@ Programmatically control the mouse and keyboard to click and type for you.",
   4.6,
   77623,
   50.39,
-  10.79
+  10.79,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -686,6 +761,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -693,7 +770,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -711,6 +789,8 @@ Create fantastic landing pages
 Learn the power of Python to code out your web applications
 Use Django as a back end for the websites
 Implement a full Models-Views-Templates structure for your site",
+  "/public/courses/8/big_thumbnail.jpg",
+  "/public/courses/8/small_thumbnail.jpg",
   "2020-12-5",
   140316,
   140316,
@@ -718,7 +798,8 @@ Implement a full Models-Views-Templates structure for your site",
   4.6,
   35933,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -727,6 +808,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -734,7 +817,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -753,6 +837,8 @@ Optimize Portfolio Allocations
 Understand the Capital Asset Pricing Model
 Learn about the Efficient Market Hypothesis
 Conduct algorithmic Trading on Quantopian",
+  "/public/courses/9/big_thumbnail.jpg",
+  "/public/courses/9/small_thumbnail.jpg",
   "2020-12-5",
   97305,
   97305,
@@ -760,7 +846,8 @@ Conduct algorithmic Trading on Quantopian",
   4.5,
   14463,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -769,6 +856,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -776,7 +865,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -795,6 +885,8 @@ Optimize Portfolio Allocations
 Understand the Capital Asset Pricing Model
 Learn about the Efficient Market Hypothesis
 Conduct algorithmic Trading on Quantopian",
+  "/public/courses/10/big_thumbnail.jpg",
+  "/public/courses/10/small_thumbnail.jpg",
   "2020-12-5",
   97305,
   97305,
@@ -802,7 +894,8 @@ Conduct algorithmic Trading on Quantopian",
   4.5,
   14463,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -811,6 +904,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -818,7 +913,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -827,6 +923,8 @@ VALUES (
   "How to become a Python 3 Developer and get hired! Build 12+ projects, learn Web Development, Machine Learning + more!",
   "Become a professional Python Developer and get hired
 Master modern Python 3.9(latest) fundamentals as well as advanced topics",
+  "/public/courses/11/big_thumbnail.jpg",
+  "/public/courses/11/small_thumbnail.jpg",
   "2020-12-5",
   96474,
   96474,
@@ -834,7 +932,8 @@ Master modern Python 3.9(latest) fundamentals as well as advanced topics",
   4.7,
   23456,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -843,6 +942,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -850,7 +951,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -859,6 +961,8 @@ VALUES (
   "Build 11 Projects and go from Beginner to Pro in Python with the World's Most Fun Project-Based Python Course!",
   "Gain a Solid & Unforgettable Understanding of the Python Programming Language.
 Gain the Python Skills Necessary to Learn In-Demand Topics, such as Data Science, Web Development, AI and more.",
+  "/public/courses/12/big_thumbnail.jpg",
+  "/public/courses/12/small_thumbnail.jpg",
   "2020-12-5",
   108906,
   108906,
@@ -866,7 +970,8 @@ Gain the Python Skills Necessary to Learn In-Demand Topics, such as Data Science
   4.6,
   30971,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -875,6 +980,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -882,7 +989,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -891,6 +999,8 @@ VALUES (
   "A Unique Interactive Python Experience With Nearly 200 Exercises and Quizzes",
   "Learn all the coding fundamentals in Python!
 Work through nearly 200 exercises and quizzes!",
+  "/public/courses/13/big_thumbnail.jpg",
+  "/public/courses/13/small_thumbnail.jpg",
   "2020-12-5",
   79895,
   79895,
@@ -898,7 +1008,8 @@ Work through nearly 200 exercises and quizzes!",
   4.7,
   21478,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -907,6 +1018,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -914,7 +1027,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -923,6 +1037,8 @@ VALUES (
   "Start from 0 & learn both topics simultaneously from scratch by writing 20+ hacking programs",
   "170+ videos on Python programming & ethical hacking
 Install hacking lab & needed software (on Windows, OS X and Linux)",
+  "/public/courses/14/big_thumbnail.jpg",
+  "/public/courses/14/small_thumbnail.jpg",
   "2020-12-5",
   68214,
   68214,
@@ -930,7 +1046,8 @@ Install hacking lab & needed software (on Windows, OS X and Linux)",
   4.6,
   12156,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
 );
 
 INSERT INTO `course` (
@@ -939,6 +1056,8 @@ INSERT INTO `course` (
   `lecturer`,
   `tinydes`,
   `fulldes`,
+  `bigthumbnaillink`,
+  `smallthumbnaillink`,
   `lastupdatedate`,
   `numstudent`,
   `numstudentinaweek`,
@@ -946,7 +1065,8 @@ INSERT INTO `course` (
   `rate`,
   `numrate`,
   `originalprice`,
-  `promotionalprice`
+  `promotionalprice`,
+  `status`
 )
 VALUES (
   2,
@@ -961,6 +1081,8 @@ Be able to use Python for data science and machine learning
 Build games like Blackjack, Pong and Snake using Python
 Build GUIs and Desktop applications with Python
 Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pandas, NumPy, Scikit Learn, Plotly, Matplotlib, Seaborn,",
+  "/public/courses/15/big_thumbnail.jpg",
+  "/public/courses/15/small_thumbnail.jpg",
   "2020-12-5",
   65022,
   65022,
@@ -968,6 +1090,131 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   4.8,
   10849,
   129.99,
-  9.99
+  9.99,
+  "incomplete"
+);
+#--------------------------------------------------------------------------------
+
+
+#----------------------------------section---------------------------------------
+INSERT INTO `section` (
+  `name`
+)
+VALUES (
+  "Course Orientation"
+);
+
+INSERT INTO `section` (
+  `name`
+)
+VALUES (
+  "An introduction to Web Development"
+);
+#--------------------------------------------------------------------------------
+
+
+#----------------------------------course_section--------------------------------
+INSERT INTO `course_section` (
+  `courseid`,
+  `sectionid`
+)
+VALUES (
+  1,
+  1
+);
+
+INSERT INTO `course_section` (
+  `courseid`,
+  `sectionid`
+)
+VALUES (
+  1,
+  2
+);
+#--------------------------------------------------------------------------------
+
+
+#----------------------------------lecture---------------------------------------
+INSERT INTO `lecture` (
+  `name`,
+  `contentlink`,
+  `contenttype`
+)
+VALUE (
+  "The new version of the course is here",
+  "/public/courses/1/section/1/1.html",
+  "document"
+);
+
+INSERT INTO `lecture` (
+  `name`,
+  `contentlink`,
+  `contenttype`
+)
+VALUE (
+  "Welcome to the course",
+  "/public/courses/1/section/1/2.mp4",
+  "video"
+);
+
+INSERT INTO `lecture` (
+  `name`,
+  `contentlink`,
+  `contenttype`
+)
+VALUE (
+  "Course Change Log",
+  "/public/courses/1/section/2/1.html",
+  "document"
+);
+
+INSERT INTO `lecture` (
+  `name`,
+  `contentlink`,
+  `contenttype`
+)
+VALUE (
+  "This is an absolute MONSTER!!!",
+  "/public/courses/1/section/2/2.mp4",
+  "video"
+);
+#--------------------------------------------------------------------------------
+
+
+#----------------------------------section_lecture-------------------------------
+INSERT INTO `section_lecture` (
+  `sectionid`,
+  `lectureid`
+)
+VALUES (
+  1,
+  1
+);
+
+INSERT INTO `section_lecture` (
+  `sectionid`,
+  `lectureid`
+)
+VALUES (
+  1,
+  2
+);
+
+INSERT INTO `section_lecture` (
+  `sectionid`,
+  `lectureid`
+)
+VALUES (
+  2,
+  3
+);
+
+INSERT INTO `section_lecture` (
+  `sectionid`,
+  `lectureid`
+)
+VALUES (
+  2,
+  4
 );
 #--------------------------------------------------------------------------------

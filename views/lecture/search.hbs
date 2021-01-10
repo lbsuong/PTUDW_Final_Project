@@ -1,0 +1,221 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{/section}}
+
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+{{#each searchResultOnCourse}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+
+{{#each searchResultOnCategory}}
+<script>
+  $(function () {
+    $('.rating{{id}}').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: {{ rate }}
+    });
+  });
+</script>
+{{/each}}
+
+<script>
+  $('#' + '{{tab}}').tab('show');
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('#tab').val(e.target.id)
+  });
+  $('#frmSearchResult .course-page-link').on('click', function (e) {
+    e.preventDefault();
+    $('#coursePage').val($(this).data('page'));
+    $('#frmSearchResult').submit();
+  });
+  $('#frmSearchResult .category-page-link').on('click', function (e) {
+    e.preventDefault();
+    $('#categoryPage').val($(this).data('page'));
+    $('#frmSearchResult').submit();
+  });
+  $('#sort').val('{{sort}}');
+  $('#sort').on('change', function (e) {
+    $('#frmSearchResult').submit();
+  });
+</script>
+{{/section}}
+
+<div class="container mt-5 mb-5">
+  <form id="frmSearchResult" action="/search" method="GET">
+    <input type="hidden" name="keywords" id="keywords" value="{{keywords}}">
+    <input type="hidden" name="coursePage" id="coursePage" value="{{courseCurrentPage}}">
+    <input type="hidden" name="categoryPage" id="categoryPage" value="{{categoryCurrentPage}}">
+    <input type="hidden" name="tab" id="tab" value="{{tab}}">
+    <div class="container input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="sort">Sort by</label>
+      </div>
+      <select class="custom-select w-50" name="sort" id="sort" aria-label="Sort By">
+        <option value="1">Rating Descending</option>
+        <option value="2">Price Ascending</option>
+      </select>
+    </div>
+
+    <div class="container">
+      <ul class="nav nav-tabs" id="searchTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="course-tab" data-toggle="tab" href="#course" role="tab" aria-controls="home"
+            aria-selected="true">Course</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="category-tab" data-toggle="tab" href="#category" role="tab" aria-controls="profile"
+            aria-selected="false">Category</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="searchTabContent">
+        <div class="tab-pane fade mt-5" id="course" role="tabpanel" aria-labelledby="course-tab">
+          {{#if searchResultOnCourse}}
+          <div class="row">
+            {{#each searchResultOnCourse}}
+            <div class="col-sm-4 mb-5 d-flex align-items-stretch">
+              <div class="card" style="width: 18rem;">
+                <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
+                <div class="card-body">
+                  <h5 class="card-title">{{title}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+                  <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+                  <div class="rating{{id}}" style="display: inline-block;"></div>
+                  <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
+                  <p class="card-text">{{tinydes}}</p>
+                  <p>
+                    <strong>${{format_real_num promotionalprice}}</strong>
+                    &nbsp;
+                    <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
+                  </p>
+                  <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
+                      class="card-link"><small>{{categoryname}}</small></a></p>
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex justify-content-center">
+                    <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
+                      <i class="fas fa-info-circle"></i>
+                      Detail
+                    </a>
+                    <button class="btn btn-success" type="submit">
+                      <i class="fas fa-cart-plus"></i>
+                      Add to cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          {{#if coursePageItems}}
+          <div class="col">
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li class="page-item {{#unless courseCanGoPrevious}}disabled{{/unless}}">
+                  <a class="page-link course-page-link" data-page={{coursePreviousPage}} href="" tabindex="-1"
+                    aria-disabled="true">Previous</a>
+                </li>
+                {{#each coursePageItems}}
+                {{#if isActive}}
+                <li class="page-item active">
+                  <a class="page-link course-page-link" data-page={{value}} href="">{{value}}</a>
+                </li>
+                {{else}}
+                <li class="page-item">
+                  <a class="page-link course-page-link" data-page={{value}} href="">{{value}}</a>
+                </li>
+                {{/if}}
+                {{/each}}
+                <li class="page-item {{#unless courseCanGoNext}}disabled{{/unless}}">
+                  <a class="page-link course-page-link" data-page={{courseNextPage}} href="">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          {{/if}}
+          {{else}}
+          <h4 class="text-danger">No course has been found</h4>
+          {{/if}}
+        </div>
+        <div class="tab-pane fade mt-5" id="category" role="tabpanel" aria-labelledby="category-tab">
+          {{#if searchResultOnCategory}}
+          <div class="row mt-5">
+            {{#each searchResultOnCategory}}
+            <div class="col-sm-4 mb-5 d-flex align-items-stretch">
+              <div class="card" style="width: 18rem;">
+                <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
+                <div class="card-body">
+                  <h5 class="card-title">{{title}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+                  <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
+                  <div class="rating{{id}}" style="display: inline-block;"></div>
+                  <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
+                  <p class="card-text">{{tinydes}}</p>
+                  <p>
+                    <strong>${{format_real_num promotionalprice}}</strong>
+                    &nbsp;
+                    <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
+                  </p>
+                  <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
+                      class="card-link"><small>{{categoryname}}</small></a></p>
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex justify-content-center">
+                    <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
+                      <i class="fas fa-info-circle"></i>
+                      Detail
+                    </a>
+                    <button class="btn btn-success" type="submit">
+                      <i class="fas fa-cart-plus"></i>
+                      Add to cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          {{#if categoryPageItems}}
+          <div class="col">
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li class="page-item {{#unless categoryCanGoPrevious}}disabled{{/unless}}">
+                  <a class="page-link category-page-link" data-page={{categoryPreviousPage}} href="" tabindex="-1"
+                    aria-disabled="true">Previous</a>
+                </li>
+                {{#each categoryPageItems}}
+                {{#if isActive}}
+                <li class="page-item active">
+                  <a class="page-link category-page-link" data-page={{value}} href="">{{value}}</a>
+                </li>
+                {{else}}
+                <li class="page-item">
+                  <a class="page-link category-page-link" data-page={{value}} href="">{{value}}</a>
+                </li>
+                {{/if}}
+                {{/each}}
+                <li class="page-item {{#unless categoryCanGoNext}}disabled{{/unless}}">
+                  <a class="page-link category-page-link" data-page={{categoryNextPage}} href="">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          {{/if}}
+          {{else}}
+          <h4 class="text-danger">No course has been found</h4>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

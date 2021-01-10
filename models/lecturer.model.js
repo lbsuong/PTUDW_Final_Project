@@ -33,16 +33,8 @@ module.exports = {
       LIMIT ${config.paginationOnLecturer.limit} OFFSET ${offset}`);
   },
 
-  changeProfile(username, newInfo) {
-    const condition = { username: username };
-    const newEntity = {
-      username: username,
-      password: bcrypt.hashSync(newInfo.password, 10),
-      name: newInfo.name,
-      email: newInfo.email,
-      bankid: newInfo.bankid,
-      bankname: newInfo.bankname
-    };
+  changeProfile(newEntity) {
+    const condition = { username: newEntity.username };
     return db.patch(newEntity, condition, TBL_LECTURER);
   },
 

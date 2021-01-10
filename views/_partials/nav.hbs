@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow" style="z-index: 2;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow" style="z-index: 10;">
   <a href={{#if isAuth}} {{#if level.user}} "/" {{else if level.lecturer}} "/lecturer" {{else if level.admin}} "/admin"
     {{/if}} {{else}}"/"{{/if}}>
     <img src="/public/img/udemy-logo.svg" alt="Udemy" width="110" height="32" class="mr-3">
@@ -10,12 +10,14 @@
         <button class="dropdown-toggle mr-3" data-toggle="dropdown">Categories</button>
         <ul class="dropdown-menu">
           {{#each category}}
-          <li><a class="dropdown-item" href="/category/{{id}}"> {{name}} &raquo </a>
+          <li><a class="dropdown-item" href="/category/{{id}}"> {{name}} {{#if subCat}}&raquo{{/if}} </a>
+            {{#if subCat}}
             <ul class="submenu dropdown-menu">
               {{#each subCat}}
               <li><a class="dropdown-item" href="/category/{{id}}"> {{name}} </a></li>
               {{/each}}
             </ul>
+            {{/if}}
           </li>
           {{/each}}
         </ul>

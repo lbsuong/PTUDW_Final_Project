@@ -59,7 +59,7 @@
       {{#each topThreeMostPopularCoursesInWeek}}
       <div class="carousel-item {{#if @first}}active{{/if}}">
         <a href="/course/{{id}}">
-          <img src="../public/img/courses/{{id}}/big_thumbnail.jpg" class="d-block w-100 h-100" alt="{{title}}">
+          <img src="{{bigthumbnaillink}}" class="d-block w-100 h-100" alt="{{title}}">
         </a>
         <div class="carousel-caption d-none d-md-block">
           <h5>{{title}} - {{lecturername}}</h5>
@@ -104,7 +104,7 @@
     {{#each topTenMostViewCourses}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
-        <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
+        <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
@@ -142,7 +142,7 @@
     {{#each topTenNewestCourses}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
       <div class="card" style="width: 18rem;">
-        <img src="../public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
+        <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
           <h5 class="card-title">{{title}}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>

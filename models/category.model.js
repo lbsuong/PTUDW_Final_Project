@@ -160,5 +160,13 @@ module.exports = {
       return true;
     }
     return false;
+  },
+
+  async getLastID() {
+    const result = await db.load(`SELECT * FROM ${TBL_CATEGORY} WHERE id = (SELECT MAX(id) FROM ${TBL_CATEGORY})`)
+    if (result.length === 0) {
+      return null;
+    }
+    return result[0].id;
   }
 }

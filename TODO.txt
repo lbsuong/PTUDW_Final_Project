@@ -1,2 +1,4 @@
 -Thêm đếm lĩnh vực được đăng kí nhiều nhất trong tuần.
 -Đếm khoá học nổi bật nhất trong tuần.
+-Thêm link của big_thumbnail và small_thumbnail vào course.
+-Làm view lession.

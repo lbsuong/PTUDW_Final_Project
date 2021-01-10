@@ -2,10 +2,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const adminModel = require('../../models/admin.model');
 const lecturerModel = require('../../models/lecturer.model');
+const userModel = require('../../models/user.model');
+const courseModel = require('../../models/course.model');
 const config = require('../../config/default.json');
 const categoryModel = require('../../models/category.model');
 
-const DEFAULT_ADMIN_PAGE = 'lecturer-list';
+const DEFAULT_ADMIN_PAGE = 'user-list';
 
 const router = express.Router();
 
@@ -39,6 +41,95 @@ router.post('/log-in', async function (req, res) {
 
     res.redirect(`/admin/${DEFAULT_ADMIN_PAGE}`);
 });
+
+
+//----------------------------category-list-------------------------------
+
+router.get('/user-list', async function (req, res) {
+    let message;
+    if (req.query.result === '1') {
+        message = 'Account has been changed';
+    } else if (req.query.result === '2') {
+        message = 'Account has been deleted';
+    } else {
+        message = null;
+    }
+    let page = +req.query.page || 1;
+    if (page < 1) page = 1;
+    const offset = (page - 1) * config.paginationOnUser.limit;
+    const total = await userModel.countOnUser();
+    const nPage = Math.ceil(total / config.paginationOnUser.limit);
+    const pageItems = [];
+    for (i = 1; i <= nPage; i++) {
+        const item = {
+            value: i,
+            isActive: i === page
+        }
+        pageItems.push(item);
+    }
+    const userList = await userModel.pageOnUser(offset);
+
+    res.render('vwAdmin/user_list/user-list', {
+        layout: 'admin-layout.hbs',
+        forAdmin: true,
+        userList,
+        tabID: 'users-list-link',
+        message,
+        pageItems,
+        canGoPrevious: page > 1,
+        canGoNext: page < nPage,
+        previousPage: +page - 1,
+        nextPage: +page + 1
+    });
+});
+
+router.get('/user-list/edit/:username', async function (req, res) {
+    const username = req.params.username;
+    const user = await userModel.singleByUsername(username);
+    res.render('vwAdmin/user_list/edit-user-account', {
+        layout: 'admin-layout.hbs',
+        forAdmin: true,
+        tabID: 'users-list-link',
+        user
+    });
+});
+
+router.post('/user-list/edit/:username', async function (req, res) {
+    if (req.body.password !== req.body.confirmPassword) {
+        const user = await userModel.singleByUsername(req.params.username);
+        return res.render('vwAdmin/user_list/edit-user-account', {
+            layout: 'admin-layout.hbs',
+            forAdmin: true,
+            tabID: 'users-list-link',
+            err_message: 'Password does not match',
+            user
+        });
+    }
+    let newProfile = {};
+    if (req.body.password === '') {
+        newProfile = {
+            username: req.params.username,
+            name: req.body.name,
+            email: req.body.email,
+        }
+    } else {
+        newProfile = {
+            username: req.params.username,
+            password: bcrypt.hashSync(req.body.password, 10),
+            name: req.body.name,
+            email: req.body.email,
+        }
+    }
+    await userModel.changeProfile(newProfile);
+    res.redirect('/admin/user-list' + '?result=1');
+});
+
+router.post('/user-list/delete', async function (req, res) {
+    await userModel.deleteAccount(req.body.usernameWantToDelete);
+    res.redirect('/admin/user-list' + '?result=2')
+});
+
+//------------------------------------------------------------------------
 
 
 //----------------------------lecturer-list-------------------------------
@@ -83,41 +174,6 @@ router.get('/lecturer-list', async function (req, res) {
     });
 });
 
-router.get('/lecturer-list/edit/:username', async function (req, res) {
-    const username = req.params.username;
-    const lecturer = await lecturerModel.singleByUsername(username);
-    res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
-        layout: 'admin-layout.hbs',
-        forAdmin: true,
-        tabID: 'lecturers-list-link',
-        lecturer
-    });
-});
-
-router.post('/lecturer-list/edit/:username', async function (req, res) {
-    if (req.body.password !== req.body.confirmPassword) {
-        const lecturer = await lecturerModel.singleByUsername(req.params.username);
-        return res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
-            layout: 'admin-layout.hbs',
-            forAdmin: true,
-            tabID: 'lecturers-list-link',
-            err_message: 'Password does not match',
-            lecturer
-        });
-    }
-
-    const username = req.params.username;
-    const newInfo = {
-        password: req.body.password,
-        name: req.body.name,
-        email: req.body.email,
-        bankid: req.body.bankid,
-        bankname: req.body.bankname
-    }
-    await lecturerModel.changeProfile(username, newInfo);
-    res.redirect('/admin/lecturer-list' + '?result=2');
-});
-
 router.get('/lecturer-list/create-lecturer-account', function (req, res) {
     res.render('vwAdmin/lecturer_list/create-lecturer-account', {
         layout: 'admin-layout.hbs',
@@ -153,6 +209,51 @@ router.post('/lecturer-list/create-lecturer-account', async function (req, res) 
         bankname: req.body.bankname
     });
     res.redirect('/admin/lecturer-list' + '?result=1');
+});
+
+router.get('/lecturer-list/edit/:username', async function (req, res) {
+    const username = req.params.username;
+    const lecturer = await lecturerModel.singleByUsername(username);
+    res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
+        layout: 'admin-layout.hbs',
+        forAdmin: true,
+        tabID: 'lecturers-list-link',
+        lecturer
+    });
+});
+
+router.post('/lecturer-list/edit/:username', async function (req, res) {
+    if (req.body.password !== req.body.confirmPassword) {
+        const lecturer = await lecturerModel.singleByUsername(req.params.username);
+        return res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
+            layout: 'admin-layout.hbs',
+            forAdmin: true,
+            tabID: 'lecturers-list-link',
+            err_message: 'Password does not match',
+            lecturer
+        });
+    }
+    let newProfile = {};
+    if (req.body.password === '') {
+        newProfile = {
+            username: req.params.username,
+            name: req.body.name,
+            email: req.body.email,
+            bankid: req.body.bankid,
+            bankname: req.body.bankname
+        }
+    } else {
+        newProfile = {
+            username: req.params.username,
+            password: bcrypt.hashSync(req.body.password, 10),
+            name: req.body.name,
+            email: req.body.email,
+            bankid: req.body.bankid,
+            bankname: req.body.bankname
+        }
+    }
+    await lecturerModel.changeProfile(newProfile);
+    res.redirect('/admin/lecturer-list' + '?result=2');
 });
 
 router.post('/lecturer-list/delete', async function (req, res) {
@@ -249,7 +350,7 @@ router.post('/category-list/create-category', async function (req, res) {
         countinaweek: 0
     });
     if (level === 2) {
-        const newCategoryID = await categoryModel.countOnCategory();
+        const newCategoryID = await categoryModel.getLastID();
         await categoryModel.addCategoryRelationship({
             parentid: +req.body.parentid,
             subid: +newCategoryID
@@ -261,7 +362,7 @@ router.post('/category-list/create-category', async function (req, res) {
 router.get('/category-list/edit/:id', async function (req, res) {
     let err_message = null;
     if (req.query.err === '1') {
-        err_message = 'There are courses in this category. You cannot delete this.';
+        err_message = 'There are courses in this category. You cannot delete this category.';
     }
 
     const id = +req.params.id;
@@ -371,6 +472,49 @@ router.post('/category-list/delete', async function (req, res) {
     }
     await categoryModel.deleteCategory(id);
     res.redirect('/admin/category-list' + '?result=3')
+});
+
+//------------------------------------------------------------------------
+
+
+//----------------------------course-list-------------------------------
+
+router.get('/course-list', async function (req, res) {
+    let message;
+    if (req.query.result === '1') {
+        message = 'Course has been changed';
+    } else if (req.query.result === '2') {
+        message = 'Course has been deleted';
+    } else {
+        message = null;
+    }
+    let page = +req.query.page || 1;
+    if (page < 1) page = 1;
+    const offset = (page - 1) * config.pagination.limit;
+    const total = await courseModel.countOnCourse();
+    const nPage = Math.ceil(total / config.pagination.limit);
+    const pageItems = [];
+    for (i = 1; i <= nPage; i++) {
+        const item = {
+            value: i,
+            isActive: i === page
+        }
+        pageItems.push(item);
+    }
+    const courseList = await courseModel.pageOnCourse(offset);
+
+    res.render('vwAdmin/course_list/course-list', {
+        layout: 'admin-layout.hbs',
+        forAdmin: true,
+        courseList,
+        tabID: 'courses-list-link',
+        message,
+        pageItems,
+        canGoPrevious: page > 1,
+        canGoNext: page < nPage,
+        previousPage: +page - 1,
+        nextPage: +page + 1
+    });
 });
 
 //------------------------------------------------------------------------

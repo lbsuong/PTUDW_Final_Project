@@ -1,6 +1,8 @@
 const courseModel = require('../models/course.model');
 const categoryModel = require('../models/category.model');
 
+const DEFAULT_ADMIN_PAGE = 'user-list';
+
 module.exports = function (app) {
   app.get('/', async function (req, res) {
     const topThreeMostPopularCoursesInWeek = await courseModel.topMostPopularInAWeek(3);
@@ -24,11 +26,13 @@ module.exports = function (app) {
     })
   });
 
-  // app.get('/admin/', function (req, res) {
-  //   res.render(`vwAdmin/${DEFAULT_ADMIN_PAGE}`, {
-  //     forAdmin: true,
-  //   })
-  // });
+  app.get('/admin', function (req, res) {
+    if (req.session.permission === 2 && req.session.isAuth) {
+      res.redirect(`/admin/${DEFAULT_ADMIN_PAGE}`);
+    } else {
+      res.redirect(`/admin/log-in`);
+    }
+  });
 
   app.get('/redirect', function (req, res) {
     if (req.headers.referer) {
