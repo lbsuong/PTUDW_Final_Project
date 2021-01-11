@@ -7,7 +7,7 @@ const TBL_COURSE = 'course';
 
 module.exports = {
   all() {
-    return db.load(`SELECT * FROM ${TBL_CATEGORY}`);
+    return db.load(`SELECT * FROM ${TBL_CATEGORY} WHERE level = '2'`);
   },
 
   allCategoryAtLevel(level) {

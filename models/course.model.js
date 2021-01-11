@@ -23,7 +23,9 @@ module.exports = {
 
     return rows[0];
   },
-
+  addCourse(entity) {
+    return db.add(entity, TBL_COURSE);
+  },
   topMostPopularInAWeek(n) {
     return db.load(
       `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid

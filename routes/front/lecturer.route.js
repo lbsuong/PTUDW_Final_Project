@@ -1,9 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const lecturerModel = require('../../models/lecturer.model');
+const categoryModel = require('../../models/category.model');
 const auth = require('../../middlewares/auth.mdw');
-
+const func = require('../../middlewares/function.mdw');
+const courseModel = require('../../models/course.model');
 const router = express.Router();
+
+const course_bigthum_path = './public/courses/big_thumbnail/';
+const course_smallthum_path = './public/courses/small_thumbnail/';
 
 router.get('/log-in', function (req, res) {
     res.render('vwLecturer/log-in', {
@@ -23,7 +29,10 @@ router.post('/log-in', async function (req, res) {
     console.log(result);
     if (result == null) {
         return res.render('vwLecturer/log-in', {
-            err_message: 'There was a problem logging in. Check your email and password or create an account.',
+            notify: {
+                message: 'There was a problem logging in. Check your email and password or create an account.',
+                err: true,
+            },
             forLecturer: true,
         });
     }
@@ -31,7 +40,10 @@ router.post('/log-in', async function (req, res) {
     console.log(correctPassword);
     if (correctPassword == false) {
         return res.render('vwLecturer/log-in', {
-            err_message: 'There was a problem logging in. Check your email and password or create an account.',
+            notify: {
+                message: 'There was a problem logging in. Check your email and password or create an account.',
+                err: true,
+            },
             forLecturer: true,
         });
     }
@@ -158,11 +170,65 @@ router.post('/profile', auth.lecturer, async function (req, res) {
     // ==========================================
 });
 
-router.get("/create", auth.lecturer, function (req, res) {
+router.get("/create", auth.lecturer, async function (req, res) {
+    let listCat = await categoryModel.all();
     res.render("vwLecturer/create", {
         forLecturer: true,
-        hihi: false,
+        listCat,
     })
 });
 
+
+router.post('/create', auth.lecturer, function (req, res) {
+    let rand = func.random(5);
+    console.log(course_bigthum_path);
+    let big_thumbnail_path = '/public/courses/big_thumbnail/';
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, course_bigthum_path);
+        },
+        filename: function (req, file, cb) {
+            let filename = req.session.profile.username.concat(rand).concat(file.originalname);
+            big_thumbnail_path = big_thumbnail_path.concat(filename);
+            cb(null, filename);
+        }
+    });
+    const upload = multer({ storage });
+    upload.single('bigthumbnaillink')(req, res, function (err) {
+        console.log(req.body);
+        if (err) {
+            console.log(err);
+        } else {
+            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+            let newCourse = {
+                categoryid: req.body.categoryid,
+                title: req.body.title,
+                lecturer: req.session.profile.username,
+                tinydes: req.body.tinydes,
+                fulldes: req.body.fulldes,
+                bigthumbnaillink: big_thumbnail_path,
+                smallthumbnaillink: big_thumbnail_path,
+                lastupdatedate: date,
+                numstudent: 0,
+                numstudentinaweek: 0,
+                numview: 0,
+                rate: 0,
+                numrate: 0,
+                originalprice: req.body.originalprice,
+                promotionalprice: req.body.promotionalprice,
+                status: "incomplete",
+            }
+            courseModel.addCourse(newCourse);
+
+            res.redirect('/lecturer/create');
+        }
+    });
+});
+
+router.get('/payment', auth.lecturer, function (req, res) {
+    res.render('vwLecturer/payment', {
+        forLecturer: true,
+    });
+})
 module.exports = router;

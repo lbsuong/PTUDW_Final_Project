@@ -1,10 +1,19 @@
+{{#section 'js'}}
+<script>
+    tinymce.init({
+        selector: '#fulldes'
+    });
+</script>
+{{/section}}
+
 {{>nav-left}}
+
 <div class="container mt-5" id="main" style="margin-left: 150px; max-width: 80vw;">
     <div class="card">
         <div class="card-header">
             <h1 class="text-center">CREATE YOUR NEW COURSE</h1>
         </div>
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
 
                 <div class="form-group">
@@ -15,16 +24,20 @@
                     <div class="col">
                         <label for="categoryid">Select Course Category</label>
                         <select class="form-control" name="categoryid" id="categoryid">
+                            {{!-- <option value="1">HIHI</option>
                             <option value="1">HIHI</option>
                             <option value="1">HIHI</option>
-                            <option value="1">HIHI</option>
-                            <option value="1">HIHI</option>
+                            <option value="1">HIHI</option> --}}
+                            {{#each listCat}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
 
                     <div class="col">
-                        <label for="thumbail">Upload Course Thumbail Picture</label>
-                        <input type="file" name="thumbail" id="thumbail" accept="image/*" required>
+                        <label for="bigthumbnaillink">Upload Course Thumbail Picture</label>
+                        <br>
+                        <input type="file" name="bigthumbnaillink" id="bigthumbnaillink" accept="image/*" required>
                     </div>
                 </div>
                 <div class="form-group pt-3">
@@ -33,7 +46,8 @@
                 </div>
                 <div class="form-group">
                     <label for="fulldes">Enter Full Description</label>
-                    <input class="form-control" type="text" name="fulldes" id="fulldes" required>
+                    {{!-- <input type="text" name="fulldes" id="fulldes" required> --}}
+                    <textarea class="form-control" name="fulldes" id="fulldes"></textarea>
                 </div>
                 <div class="row">
                     <div class="col">
