@@ -4,6 +4,12 @@ module.exports = function (app) {
   app.use(async function (req, res, next) {
     if (typeof (req.session.isAuth) === 'undefined') {
       req.session.isAuth = false;
+      req.session.level = {
+        admin: false,
+        lecturer: false,
+        user: false,
+      };
+      req.session.profile = null;
     }
 
     res.locals.isAuth = req.session.isAuth;

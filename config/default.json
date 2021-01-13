@@ -10,5 +10,8 @@
   },
   "paginationOnUser": {
     "limit": 10
+  },
+  "paginationOnLecHome": {
+    "limit": 3
   }
 }

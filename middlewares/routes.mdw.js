@@ -1,5 +1,7 @@
 const courseModel = require('../models/course.model');
 const categoryModel = require('../models/category.model');
+const rateModel = require('../models/rate.model');
+const config = require('../config/default.json');
 
 const DEFAULT_ADMIN_PAGE = 'user-list';
 
@@ -20,10 +22,53 @@ module.exports = function (app) {
     });
   });
 
-  app.get('/lecturer', function (req, res) {
-    res.render('vwLecturer/home', {
-      forLecturer: true,
-    })
+  app.get('/lecturer', async function (req, res) {
+    if (req.session.isAuth && req.session.level.lecturer) {
+      const limit = config.paginationOnLecHome.limit;
+      let c_page = +req.query.c || 1;
+      if (c_page < 1) c_page = 1;
+
+      let pr = +req.query.r || 1;
+      if (pr < 1) pr = 1;
+
+      const c_offset = (c_page - 1) * limit;
+      const c_total = await courseModel.countCourseByLecID(req.session.profile.username);
+      const c_npage = Math.ceil(c_total / limit);
+      const c_pageItems = [];
+
+      for (i = 1; i <= c_npage; i++) {
+        const item = {
+          value: i,
+          isActive: i === c_page,
+        }
+        c_pageItems.push(item);
+      }
+      const course = await courseModel.pageOnCourseByLecID(req.session.profile.username, limit, c_offset);
+
+      // Load review
+      // let result;
+      // if (req.session.isAuth === true && req.session.level.lecturer) {
+      //   result = await rateModel.recentlyById(req.session.profile.username);
+      // } else {
+      //   result = null;
+      // }
+
+      // Load course
+      res.render('vwLecturer/home', {
+        forLecturer: true,
+        course,
+        c_pageItems,
+        c_canGoPrevious: c_page > 1,
+        c_canGoNext: c_page < c_npage,
+        c_previousPage: +c_page - 1,
+        c_nextPage: +c_page + 1
+      })
+    }
+    else {
+      res.render('vwLecturer/home', {
+        forLecturer: true,
+      })
+    }
   });
 
   app.get('/admin', function (req, res) {

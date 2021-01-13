@@ -1,12 +1,47 @@
 {{>nav-left}}
-<div class="container mt-5" id="main" style="margin-left: 150px; max-width: 80vw;">
-    <div class="card">
-        <div class="card-header">
-            <h1>Payment & Invoice</h1>
-        </div>
+<div id="main" class="mt-5">
+    <div class="m-auto" style="max-width: 80vw;">
+        <div class="card">
+            <div class="card-header">
+                <h1>Payment & Invoice</h1>
+            </div>
+            <form action="" method="POST">
+                <div class="card-body">
 
-        <div class="card-body">
+                    <div class="form-group">
+                        <label for="bankid">Your Bank ID</label>
+                        <input class="form-control" id="bankid" type="number" name="bankid" value="{{payment.bankid}}"
+                            disabled required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bankname">Your Bank Name</label>
+                        <input class="form-control" type="text" id="bankname" name="bankname"
+                            value="{{payment.bankname}}" disabled required>
+                    </div>
 
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" style="margin-left: 45%"
+                                onclick="edit()">EDIT</button>
+                        </div>
+
+                        <div class="col">
+                            <button type="submit" id="subbtn" class="btn btn-primary" style="margin-left: 45%"
+                                disabled>SAVE</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<script>
+    function edit() {
+        console.log("IAMHERE!");
+        $('#bankid').prop('disabled', false);
+        $('#bankname').prop('disabled', false);
+        $('#subbtn').prop('disabled', false);
+    };
+</script>

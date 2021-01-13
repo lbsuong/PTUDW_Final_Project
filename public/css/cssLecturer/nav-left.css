@@ -31,7 +31,7 @@
 
 #main {
     transition: margin-left .5s;
-    padding: 20px;
+    margin-left: 60px;
 }
 
 .sidenav .closebtn {

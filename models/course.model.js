@@ -248,5 +248,23 @@ module.exports = {
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
       LIMIT ${config.pagination.limit} OFFSET ${offset}`
     );
+  },
+
+  pageOnCourseByLecID(id, limit, offset) {
+    return db.load(
+      `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.name AS categoryname 
+    FROM ${TBL_COURSE}
+    LEFT JOIN ${TBL_CATEGORY}
+    ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+    WHERE ${TBL_COURSE}.lecturer = '${id}'
+    LIMIT ${limit} OFFSET ${offset}`);
+  },
+
+  async countCourseByLecID(id) {
+    const result = await db.load(`SELECT COUNT(*) AS total FROM ${TBL_COURSE} WHERE lecturer = '${id}'`);
+    if (result.length === 0) {
+      return null;
+    }
+    return result[0].total;
   }
 }

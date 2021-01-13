@@ -66,7 +66,19 @@ CREATE TABLE `course` (
   PRIMARY KEY (`id`),
   FULLTEXT (`title`)
 );
-  
+
+CREATE TABLE `lesson`(
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `course` INT NOT NULL,
+  `title` VARCHAR(100) NOT NULL,
+  `rank` INT NOT NULL, 
+  `detail` VARCHAR(500) NOT NULL,
+  `date` DATETIME NOT NULL,
+  `video` VARCHAR(100) NOT NULL,
+  CONSTRAINT `fk_l_1` FOREIGN KEY (`course`) REFERENCES `course`(`id`) ON DELETE CASCADE,
+  PRIMARY KEY(`id`)
+);
+
 CREATE TABLE `ownedcourse` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userid` VARCHAR(30) NOT NULL,
@@ -80,14 +92,17 @@ CREATE TABLE `ownedcourse` (
 CREATE TABLE `rating`(
  `id` INT NOT NULL AUTO_INCREMENT,
  `courseid` INT NOT NULL,
+ `lecturer` VARCHAR(30) NOT NULL,
  `studentid` VARCHAR(30) NOT NULL,
  `paidid` INT NOT NULL,
  `rate` INT NOT NULL,
  `ratedetail` VARCHAR(500) NOT NULL,
  `hidden` boolean NOT NULL,
+ `date` DATETIME NOT NULL,
  CONSTRAINT `fk_r_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
  CONSTRAINT `fk_r_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE,
  CONSTRAINT `fk_r_3` FOREIGN KEY (`paidid`) REFERENCES `ownedcourse`(`id`) ON DELETE CASCADE,
+ CONSTRAINT `fk_r_4` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
  PRIMARY KEY(`id`)
 );
 

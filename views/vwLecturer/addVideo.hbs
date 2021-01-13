@@ -1,0 +1,46 @@
+{{#section 'js'}}
+<script>
+    tinymce.init({
+        selector: '#detail',
+        readonly: 0,
+    });
+</script>
+{{/section}}
+
+<div id="main">
+    <div class="m-auto pt-5" style="width: 80%; ">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>CREATE A LESSON</h1>
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="title"><b>Enter Lesson Title</b></label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Lesson Title"
+                            required>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="rank"><b>Enter Lesson Numerical Order</b></label>
+                            <input type="number" class="form-control" name="rank" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="video"><b>Choose Lesson Video</b></label>
+                            <input type="file" class="form-control" name="video" id="video"
+                                accept="video/mp4,video/x-m4v,video/*" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail"><b>Type Lesson Detail</b></label>
+                        <textarea name="detail" id="detail"></textarea>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-primary">UPLOAD LESSON</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
