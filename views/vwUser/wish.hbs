@@ -1,0 +1,55 @@
+<div class="container mt-5 mb-5" style="min-width: 80vw; min-height: 80vh">
+    {{!-- VIEW WISH ZONE --}}
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h1>Wish List</h1>
+            </div>
+
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tbody>
+                        {{#unless wish.length}}
+                        <h3 class="text-center">There are nothing in your wish list... <a href="/">Let shopping</a>
+                        </h3>
+                        {{/unless}}
+                        {{#each wish}}
+                        <tr class="d-flex align-items-center">
+                            <th scope="row"></th>
+                            <td>
+                                <img class="rounded border" style="height: 100px;" src="{{this.smallthumbnaillink}}"
+                                    alt="thumbnail">
+                            </td>
+                            <td>
+                                <p class="d-inline-block"><b>{{this.title}}</b></p>
+                                <p>{{this.tinydes}}</p>
+                            </td>
+
+                            <td>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="id" id="id" value="{{this.id}}">
+                                    <button class="btn btn-danger" title="Remove"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <div>
+                                    <strong>${{format_real_num promotionalprice}}</strong>
+                                    &nbsp;
+                                    <br>
+                                    <del style="color: #6C757D;">${{format_real_num
+                                        originalprice}}</del>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer">
+                <h5>See your cart <a href="/user/cart">here</a></h5>
+            </div>
+        </div>
+    </div>
+</div>

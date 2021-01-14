@@ -283,6 +283,28 @@ router.get('/course/:id', auth.lecturer, async function (req, res) {
     })
 });
 
+router.post('/course/:id', auth.lecturer, async function (req, res) {
+    const courseid = req.params.id;
+    const courseDetail = await lecturerModel.getOwnCourse(req.session.profile.username, courseid);
+    if (courseDetail === null) {
+        return res.render('refuse', {
+            forLecturer: true,
+        });
+    }
+    newCourse = {
+        id: courseid,
+        title: req.body.title,
+        tinydes: req.body.tinydes,
+        originalprice: req.body.originalprice,
+        categoryid: req.body.categoryid,
+        status: req.body.status,
+        fulldes: req.body.fulldes,
+    }
+    await courseModel.changeInfo(newCourse);
+    let url = '/lecturer/course/'.concat(courseid);
+    res.redirect(url);
+});
+
 router.get('/course/:id/add', auth.lecturer, async function (req, res) {
     const courseid = req.params.id;
     const courseDetail = await lecturerModel.getOwnCourse(req.session.profile.username, courseid);

@@ -11,33 +11,55 @@
                 <div>
                     <table class="table table-striped">
                         <tbody>
-                            {{#each profile.cart}}
-                            <tr>
+                            {{#unless profile.cart}}
+                            <h3 class="text-center">There are nothing in your cart... <a href="/">Let shopping</a> </h3>
+                            {{/unless}}
+                            {{#each cart}}
+                            <tr class="d-flex align-items-center">
                                 <th scope="row"></th>
                                 <td>
-                                    <img class="rounded border" style="height: 100px;"
-                                        src="../../public/img/courses/{{this.id}}/small_thumbnail.jpg" alt="thumbnail">
+                                    <img class="rounded border" style="height: 100px;" src="{{this.smallthumbnaillink}}"
+                                        alt="thumbnail">
                                 </td>
                                 <td>
                                     <p class="d-inline-block"><b>{{this.title}}</b></p>
                                     <p>{{this.tinydes}}</p>
                                 </td>
-                                <td><a href="">Remove</a>
-                                    <a href="">Move to wishlist</a>
+
+                                <td>
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="postid" value="remove">
+                                        <input type="hidden" name="id" value="{{this.id}}">
+                                        <button class="btn btn-danger" title="Remove"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                    <br>
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="postid" value="wishlist">
+                                        <input type="hidden" name="id" value="{{id}}">
+                                        <button class="btn btn-primary" title="Move to Wishlist"><i
+                                                class="fas fa-clipboard-check"></i></button>
+                                    </form>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <strong>${{format_real_num promotionalprice}}</strong>
+                                        &nbsp;
+                                        <br>
+                                        <del style="color: #6C757D;">${{format_real_num
+                                            originalprice}}</del>
+                                    </div>
                                 </td>
                             </tr>
                             {{/each}}
                         </tbody>
                     </table>
                 </div>
-
-                {{!-- WISH LIST --}}
-                <div>
-                </div>
             </div>
 
             <div class="card-footer">
-                <h5>You might also like</h5>
+                <h5>See your Wishlist <a href="/user/wish">here</a></h5>
             </div>
         </div>
     </div>
@@ -47,16 +69,28 @@
             <div class="card-header text-center">
                 <h2>Check Out</h2>
             </div>
-            <div class="card-body">
-                <h3>Total</h3>
-            </div>
-            <div class="card-footer">
-
-            </div>
+            <form action="" method="POST">
+                <div class="card-body">
+                    <h3>Total</h3>
+                    <div>
+                        <h2><strong style="font-size:150% ;">${{format_real_num promotionalprice}}</strong></h2>
+                        &nbsp;
+                        <br>
+                        <h3><del style="color: #6C757D; font-size: 120%;">${{format_real_num originalprice}}</del>
+                        </h3>
+                    </div>
+                    <hr>
+                    <input class="form-control" type="text" name="voucher" placeholder="Enter Voucher">
+                </div>
+                <div class="card-footer text-center">
+                    <input type="hidden" name="postid" value="checkout">
+                    {{#if originalprice}}
+                    <button type="submit" class="btn btn-primary">CHECK OUT</button>
+                    {{else}}
+                    <button type="button" class="btn btn-primary" disabled>CHECK OUT</button>
+                    {{/if}}
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-{{#section 'js'}}
-
-{{/section}}

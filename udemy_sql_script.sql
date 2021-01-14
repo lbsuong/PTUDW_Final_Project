@@ -60,7 +60,7 @@ CREATE TABLE `course` (
   `numrate` INT NOT NULL,
   `originalprice` FLOAT NOT NULL,
   `promotionalprice` FLOAT NOT NULL,
-  `status` VARCHAR(10) NOT NULL,
+  `status` boolean NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`),
@@ -113,6 +113,16 @@ CREATE TABLE `cart` (
   PRIMARY KEY(`id`),
   CONSTRAINT `fk_ca_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ca_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
+);
+
+
+CREATE TABLE `wish` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `studentid` VARCHAR(30) NOT NULL,
+  `courseid` INT NOT NULL,
+  PRIMARY KEY(`id`),
+  CONSTRAINT `fk_wi_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_wi_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
 );
 
 CREATE TABLE `section` (
