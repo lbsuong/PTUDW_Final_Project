@@ -1,0 +1,167 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  #thumbnail {
+    padding: 0px 10em 0px;
+  }
+
+  .whole-card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .additionalCourse:hover {
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  tinymce.init({
+    selector: '#fulldes',
+    readonly: 0,
+  });
+</script>
+{{/section}}
+
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script>
+  $(function () {
+    $('#rating').rateYo({
+      starWidth: '15px',
+      readOnly: true,
+      rating: $('#rating').data('rate')
+    });
+  });
+</script>
+
+<script>
+  function enableAll() {
+    console.log("IAMHERE!");
+    $(".fix_content").prop('disabled', false);
+    tinymce.init({
+      selector: '#fulldes',
+    });
+  }
+</script>
+{{/section}}
+
+{{>nav-left}}
+<div id="main">
+  {{!-- COURSE INFORMATION ZONE --}}
+  <div class="float-left d-inline-block" style="width: 60%;">
+    <div id="thumbnail" class="d-block">
+      <img class="w-100 h-100" style="max-height: 40vh;" src="{{currentCourse.bigthumbnaillink}}"
+        alt="{{currentCourse.title}}">
+    </div>
+
+    <div class="m-auto d-block" style="width: 95%; padding-top: 10px;">
+      <form action="" method="POST">
+        <h3>
+          <input class="form-control font-weight-bold fix_content text-center" style="font-size: 100%;" type="text"
+            name="title" value="{{currentCourse.title}}" disabled required>
+        </h3>
+        <h5>
+          <input class="form-control fix_content text-center" type="text" name="tinydes"
+            value="{{currentCourse.tinydes}}" disabled required>
+        </h5>
+        <span class="text-danger" style="vertical-align: middle;"><strong>{{currentCourse.rate}}</strong></span>
+        <div data-rate="{{currentCourse.rate}}" id="rating" style="display: inline-block;"></div>
+        <span style="vertical-align: middle;">({{format currentCourse.numrate}} ratings) {{format
+          currentCourse.numstudent}}
+          students</span>
+        <div>Last updated {{format_date currentCourse.lastupdatedate}}</div>
+        <div class="form-inline">
+          <div>Price:
+            <strong class="d-inline-block">$</strong>
+            <input class="form-control fix_content" type="number" name="originalprice"
+              value="{{format_real_num currentCourse.promotionalprice}}" disabled required>
+          </div>
+          &nbsp;
+          <del style="color: #6C757D;">$
+            <input class="form-control fix_content" type="text" value="{{format_real_num currentCourse.originalprice}}"
+              disabled>
+          </del>
+        </div>
+
+        <div class="form-inline pt-2">
+          Category:
+          <select class="form-control pr-2 fix_content" name="categoryid" id="categoryid" disabled required>
+            {{#each listCat}}
+            <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-inline pt-2">
+          Status:
+          <select class="form-control mr-2 fix_content" name="status" id="status" disabled required>
+            {{#if currentCourse.status}}
+            <option value="{{currentCourse.status}}">Complete</option>
+            <option value="0">Incomplete</option>
+            {{else}}
+            <option value="{{currentCourse.status}}">Incomplete</option>
+            <option value="0">Complete</option>
+            {{/if}}
+          </select>
+        </div>
+        <hr>
+        <div class="card mt-4 mb-4">
+          <h5 class="card-header">Full Description</h5>
+          <div class="card-body">
+            <textarea class="form-control fix_content" name="fulldes" id="fulldes" disabled
+              required>{{currentCourse.fulldes}}</textarea>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-footer text-center">
+            <button class="btn btn-danger text-center mr-5" type="button" onclick="enableAll()">EDIT</button>
+            <button type="submit" class="btn btn-primary fix_content ml-5" disabled>SAVE</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {{!-- LESSON LIST ZONE --}}
+  <div class="float-right" style="width: 40%">
+    <div class="card position-fixed m-auto" style="width: 35%; max-height: 90vh;">
+      <div class="card-header">
+        <h1>COURSE'S VIDEO</h1>
+      </div>
+
+      <div class="card-body" style="overflow:auto;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each lesson}}
+            <tr>
+              <th scope="row">{{this.rank}}</th>
+              <td>{{this.title}}</td>
+              <td>{{format_date this.date}}</td>
+              <td>
+                <button type="button" class="btn btn-light"><i class="fas fa-trash text-danger"></i></button>
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer text-center">
+        <a class="btn btn-primary text-center" href="/lecturer/course/{{currentCourse.id}}/add">Add New Video</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{/section}}
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script>
+  $(function () {
+    $('#rating').rateYo({
+      starWidth: '40px'
+    });
+  });
+  $(function () {
+    $("#rating").rateYo()
+      .on("rateyo.change", function (e, data) {
+        var rating = data.rating;
+        $(this).next().text(rating);
+        $('#star').val(rating);
+      });
+  });
+</script>
+{{/section}}
+
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 90vh;">
+  {{#if err_message}}
+  <form method="POST">
+    <div class="card">
+      <div class="card-header">
+        <h3>We would like to hear your feedback</h3>
+      </div>
+      <div class="card-body text-center">
+        <div>
+          <div id="rating" class="m-auto"></div>
+          <div id="counter" class="m-auto">0</div>
+          <div class="dropdown-divider"></div>
+          <input id="star" type="hidden" name="star">
+          <textarea class="form-control" style="resize: none;" name="comment"></textarea>
+        </div>
+      </div>
+      <div class="card-footer text-center ">
+        <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+    </div>
+  </form>
+  {{else}}
+  <h4 class="text-danger">You're already rated. <a href="/course/{{course.id}}">Click here to go back to the course</a>
+  </h4>
+  {{/if}}
+</div>

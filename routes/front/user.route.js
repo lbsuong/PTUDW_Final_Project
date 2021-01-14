@@ -5,6 +5,8 @@ const userModel = require('../../models/user.model');
 const cartModel = require('../../models/cart.model');
 const courseModel = require('../../models/course.model');
 const auth = require('../../middlewares/auth.mdw');
+const lecturerModel = require('../../models/lecturer.model');
+const config = require('../../config/default.json');
 
 const router = express.Router();
 
@@ -181,6 +183,37 @@ router.post('/profile', auth.user, async function (req, res) {
     });
   }
   // ==========================================
-})
+});
+
+router.get('/lecturer/:username', async function (req, res) {
+  const username = req.params.username;
+  const lecturer = await lecturerModel.singleByUsername(username);
+
+  let page = +req.query.page || 1;
+  if (page < 1) page = 1;
+  const offset = (page - 1) * config.pagination.limit;
+
+  const total = await courseModel.countCourseByLecID(username);
+  const nPage = Math.ceil(total / config.pagination.limit);
+  const pageItems = [];
+  for (i = 1; i <= nPage; i++) {
+    const item = {
+      value: i,
+      isActive: i === page
+    }
+    pageItems.push(item);
+  }
+  const courses = await courseModel.pageOnCourseByLecID(username, config.pagination.limit, offset);
+
+  res.render('vwLecturer/about', {
+    lecturer,
+    courses,
+    pageItems,
+    canGoPrevious: page > 1,
+    canGoNext: page < nPage,
+    previousPage: +page - 1,
+    nextPage: +page + 1
+  });
+});
 
 module.exports = router;

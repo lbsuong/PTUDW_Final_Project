@@ -72,7 +72,7 @@ module.exports = function (app) {
   });
 
   app.get('/admin', function (req, res) {
-    if (req.session.permission === 2 && req.session.isAuth) {
+    if (req.session.level.admin && req.session.isAuth) {
       res.redirect(`/admin/${DEFAULT_ADMIN_PAGE}`);
     } else {
       res.redirect(`/admin/log-in`);

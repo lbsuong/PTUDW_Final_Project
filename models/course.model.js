@@ -5,6 +5,7 @@ const config = require('../config/default.json');
 const TBL_COURSE = 'course';
 const TBL_LECTURER = 'lecturer';
 const TBL_CATEGORY = 'category';
+const TBL_OWNEDCOURSE = 'ownedcourse';
 
 module.exports = {
   async singleByID(id) {
@@ -252,8 +253,10 @@ module.exports = {
 
   pageOnCourseByLecID(id, limit, offset) {
     return db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.name AS categoryname 
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
     FROM ${TBL_COURSE}
+    LEFT JOIN ${TBL_LECTURER}
+    ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
     LEFT JOIN ${TBL_CATEGORY}
     ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
     WHERE ${TBL_COURSE}.lecturer = '${id}'
@@ -266,5 +269,13 @@ module.exports = {
       return null;
     }
     return result[0].total;
+  },
+
+  async userHasOwnedCourse(username, courseid) {
+    const result = await db.load(`SELECT * FROM ${TBL_OWNEDCOURSE} WHERE userid = '${username}' AND courseid = ${courseid}`);
+    if (result.length === 0) {
+      return false;
+    }
+    return true;
   }
 }

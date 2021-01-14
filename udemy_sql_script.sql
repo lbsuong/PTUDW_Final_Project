@@ -72,9 +72,9 @@ CREATE TABLE `lesson`(
   `course` INT NOT NULL,
   `title` VARCHAR(100) NOT NULL,
   `rank` INT NOT NULL, 
-  `detail` VARCHAR(500) NOT NULL,
+  `detail` VARCHAR(1000) NOT NULL,
   `date` DATETIME NOT NULL,
-  `video` VARCHAR(100) NOT NULL,
+  `video` VARCHAR(1000) NOT NULL,
   CONSTRAINT `fk_l_1` FOREIGN KEY (`course`) REFERENCES `course`(`id`) ON DELETE CASCADE,
   PRIMARY KEY(`id`)
 );
@@ -92,17 +92,12 @@ CREATE TABLE `ownedcourse` (
 CREATE TABLE `rating`(
  `id` INT NOT NULL AUTO_INCREMENT,
  `courseid` INT NOT NULL,
- `lecturer` VARCHAR(30) NOT NULL,
  `studentid` VARCHAR(30) NOT NULL,
- `paidid` INT NOT NULL,
  `rate` INT NOT NULL,
  `ratedetail` VARCHAR(500) NOT NULL,
- `hidden` boolean NOT NULL,
  `date` DATETIME NOT NULL,
  CONSTRAINT `fk_r_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
  CONSTRAINT `fk_r_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE,
- CONSTRAINT `fk_r_3` FOREIGN KEY (`paidid`) REFERENCES `ownedcourse`(`id`) ON DELETE CASCADE,
- CONSTRAINT `fk_r_4` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
  PRIMARY KEY(`id`)
 );
 
@@ -113,30 +108,6 @@ CREATE TABLE `cart` (
   PRIMARY KEY(`id`),
   CONSTRAINT `fk_ca_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ca_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
-);
-
-CREATE TABLE `section` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45),
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `course_section` (
-  `courseid` INT NOT NULL,
-  `sectionid` INT NOT NULL
-);
-
-CREATE TABLE `lecture` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45),
-  `contentlink` VARCHAR(100),
-  `contenttype` VARCHAR(10),
-  PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `section_lecture` (
-  `sectionid` INT NOT NULL,
-  `lectureid` INT NOT NULL
 );
 
 #--------------------------------------------------------------------------------
@@ -1107,129 +1078,5 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   129.99,
   9.99,
   "incomplete"
-);
-#--------------------------------------------------------------------------------
-
-
-#----------------------------------section---------------------------------------
-INSERT INTO `section` (
-  `name`
-)
-VALUES (
-  "Course Orientation"
-);
-
-INSERT INTO `section` (
-  `name`
-)
-VALUES (
-  "An introduction to Web Development"
-);
-#--------------------------------------------------------------------------------
-
-
-#----------------------------------course_section--------------------------------
-INSERT INTO `course_section` (
-  `courseid`,
-  `sectionid`
-)
-VALUES (
-  1,
-  1
-);
-
-INSERT INTO `course_section` (
-  `courseid`,
-  `sectionid`
-)
-VALUES (
-  1,
-  2
-);
-#--------------------------------------------------------------------------------
-
-
-#----------------------------------lecture---------------------------------------
-INSERT INTO `lecture` (
-  `name`,
-  `contentlink`,
-  `contenttype`
-)
-VALUE (
-  "The new version of the course is here",
-  "/public/courses/1/section/1/1.html",
-  "document"
-);
-
-INSERT INTO `lecture` (
-  `name`,
-  `contentlink`,
-  `contenttype`
-)
-VALUE (
-  "Welcome to the course",
-  "/public/courses/1/section/1/2.mp4",
-  "video"
-);
-
-INSERT INTO `lecture` (
-  `name`,
-  `contentlink`,
-  `contenttype`
-)
-VALUE (
-  "Course Change Log",
-  "/public/courses/1/section/2/1.html",
-  "document"
-);
-
-INSERT INTO `lecture` (
-  `name`,
-  `contentlink`,
-  `contenttype`
-)
-VALUE (
-  "This is an absolute MONSTER!!!",
-  "/public/courses/1/section/2/2.mp4",
-  "video"
-);
-#--------------------------------------------------------------------------------
-
-
-#----------------------------------section_lecture-------------------------------
-INSERT INTO `section_lecture` (
-  `sectionid`,
-  `lectureid`
-)
-VALUES (
-  1,
-  1
-);
-
-INSERT INTO `section_lecture` (
-  `sectionid`,
-  `lectureid`
-)
-VALUES (
-  1,
-  2
-);
-
-INSERT INTO `section_lecture` (
-  `sectionid`,
-  `lectureid`
-)
-VALUES (
-  2,
-  3
-);
-
-INSERT INTO `section_lecture` (
-  `sectionid`,
-  `lectureid`
-)
-VALUES (
-  2,
-  4
 );
 #--------------------------------------------------------------------------------

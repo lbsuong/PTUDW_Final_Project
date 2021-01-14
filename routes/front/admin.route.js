@@ -6,6 +6,7 @@ const userModel = require('../../models/user.model');
 const courseModel = require('../../models/course.model');
 const config = require('../../config/default.json');
 const categoryModel = require('../../models/category.model');
+const auth = require('../../middlewares/auth.mdw');
 
 const DEFAULT_ADMIN_PAGE = 'user-list';
 
@@ -17,6 +18,11 @@ router.get('/log-in', function (req, res) {
     });
 });
 
+router.get('/profile', auth.admin, function (req, res) {
+    res.render('vwAdmin/profile', {
+        forAdmin: true,
+    })
+});
 router.post('/log-in', async function (req, res) {
     let result = await adminModel.singleByUsername(req.body.username);
     if (result === null) {
@@ -34,10 +40,18 @@ router.post('/log-in', async function (req, res) {
             forAdmin: true,
         });
     }
-    req.session.username = result.username;
-    req.session.name = result.name;
-    req.session.permission = 2;
     req.session.isAuth = true;
+    req.session.profile = {
+        username: result.username,
+        name: result.name,
+        email: result.email,
+        picture: null,
+    };
+    req.session.level = {
+        admin: true,
+        lecturer: false,
+        user: false,
+    }
 
     res.redirect(`/admin/${DEFAULT_ADMIN_PAGE}`);
 });
@@ -45,7 +59,7 @@ router.post('/log-in', async function (req, res) {
 
 //----------------------------category-list-------------------------------
 
-router.get('/user-list', async function (req, res) {
+router.get('/user-list', auth.admin, async function (req, res) {
     let message;
     if (req.query.result === '1') {
         message = 'Account has been changed';
@@ -83,7 +97,7 @@ router.get('/user-list', async function (req, res) {
     });
 });
 
-router.get('/user-list/edit/:username', async function (req, res) {
+router.get('/user-list/edit/:username', auth.admin, async function (req, res) {
     const username = req.params.username;
     const user = await userModel.singleByUsername(username);
     res.render('vwAdmin/user_list/edit-user-account', {
@@ -94,7 +108,7 @@ router.get('/user-list/edit/:username', async function (req, res) {
     });
 });
 
-router.post('/user-list/edit/:username', async function (req, res) {
+router.post('/user-list/edit/:username', auth.admin, async function (req, res) {
     if (req.body.password !== req.body.confirmPassword) {
         const user = await userModel.singleByUsername(req.params.username);
         return res.render('vwAdmin/user_list/edit-user-account', {
@@ -124,7 +138,7 @@ router.post('/user-list/edit/:username', async function (req, res) {
     res.redirect('/admin/user-list' + '?result=1');
 });
 
-router.post('/user-list/delete', async function (req, res) {
+router.post('/user-list/delete', auth.admin, async function (req, res) {
     await userModel.deleteAccount(req.body.usernameWantToDelete);
     res.redirect('/admin/user-list' + '?result=2')
 });
@@ -134,7 +148,7 @@ router.post('/user-list/delete', async function (req, res) {
 
 //----------------------------lecturer-list-------------------------------
 
-router.get('/lecturer-list', async function (req, res) {
+router.get('/lecturer-list', auth.admin, async function (req, res) {
     let message;
     if (req.query.result === '1') {
         message = 'Account has been created successfully';
@@ -174,7 +188,7 @@ router.get('/lecturer-list', async function (req, res) {
     });
 });
 
-router.get('/lecturer-list/create-lecturer-account', function (req, res) {
+router.get('/lecturer-list/create-lecturer-account', auth.admin, function (req, res) {
     res.render('vwAdmin/lecturer_list/create-lecturer-account', {
         layout: 'admin-layout.hbs',
         forAdmin: true,
@@ -182,7 +196,7 @@ router.get('/lecturer-list/create-lecturer-account', function (req, res) {
     });
 });
 
-router.post('/lecturer-list/create-lecturer-account', async function (req, res) {
+router.post('/lecturer-list/create-lecturer-account', auth.admin, async function (req, res) {
     const isExisted = await lecturerModel.singleByUsername(req.body.username);
     if (isExisted) {
         return res.render('vwAdmin/lecturer_list/create-lecturer-account', {
@@ -211,7 +225,7 @@ router.post('/lecturer-list/create-lecturer-account', async function (req, res) 
     res.redirect('/admin/lecturer-list' + '?result=1');
 });
 
-router.get('/lecturer-list/edit/:username', async function (req, res) {
+router.get('/lecturer-list/edit/:username', auth.admin, async function (req, res) {
     const username = req.params.username;
     const lecturer = await lecturerModel.singleByUsername(username);
     res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
@@ -222,7 +236,7 @@ router.get('/lecturer-list/edit/:username', async function (req, res) {
     });
 });
 
-router.post('/lecturer-list/edit/:username', async function (req, res) {
+router.post('/lecturer-list/edit/:username', auth.admin, async function (req, res) {
     if (req.body.password !== req.body.confirmPassword) {
         const lecturer = await lecturerModel.singleByUsername(req.params.username);
         return res.render('vwAdmin/lecturer_list/edit-lecturer-account', {
@@ -256,7 +270,7 @@ router.post('/lecturer-list/edit/:username', async function (req, res) {
     res.redirect('/admin/lecturer-list' + '?result=2');
 });
 
-router.post('/lecturer-list/delete', async function (req, res) {
+router.post('/lecturer-list/delete', auth.admin, async function (req, res) {
     await lecturerModel.deleteAccount(req.body.usernameWantToDelete);
     res.redirect('/admin/lecturer-list' + '?result=3')
 });
@@ -266,7 +280,7 @@ router.post('/lecturer-list/delete', async function (req, res) {
 
 //----------------------------category-list-------------------------------
 
-router.get('/category-list', async function (req, res) {
+router.get('/category-list', auth.admin, async function (req, res) {
     let message;
     if (req.query.result === '1') {
         message = 'Category has been created successfully';
@@ -314,7 +328,7 @@ router.get('/category-list', async function (req, res) {
     });
 });
 
-router.get('/category-list/create-category', async function (req, res) {
+router.get('/category-list/create-category', auth.admin, async function (req, res) {
     const allParentCategories = await categoryModel.allCatIDByLevel(1);
     res.render('vwAdmin/category_list/create-category', {
         layout: 'admin-layout.hbs',
@@ -324,7 +338,7 @@ router.get('/category-list/create-category', async function (req, res) {
     });
 });
 
-router.post('/category-list/create-category', async function (req, res) {
+router.post('/category-list/create-category', auth.admin, async function (req, res) {
     if (req.body.parentid === undefined && req.body.level === '2') {
         return res.render('vwAdmin/category_list/create-category', {
             layout: 'admin-layout.hbs',
@@ -359,7 +373,7 @@ router.post('/category-list/create-category', async function (req, res) {
     res.redirect('/admin/category-list' + '?result=1');
 });
 
-router.get('/category-list/edit/:id', async function (req, res) {
+router.get('/category-list/edit/:id', auth.admin, async function (req, res) {
     let err_message = null;
     if (req.query.err === '1') {
         err_message = 'There are courses in this category. You cannot delete this category.';
@@ -400,7 +414,7 @@ router.get('/category-list/edit/:id', async function (req, res) {
     });
 });
 
-router.post('/category-list/edit/:id', async function (req, res) {
+router.post('/category-list/edit/:id', auth.admin, async function (req, res) {
     if (req.body.parentid === undefined && req.body.level === '2') {
         return res.render('vwAdmin/category_list/edit-category', {
             layout: 'admin-layout.hbs',
@@ -453,7 +467,7 @@ router.post('/category-list/edit/:id', async function (req, res) {
     res.redirect('/admin/category-list' + '?result=2');
 });
 
-router.post('/category-list/delete', async function (req, res) {
+router.post('/category-list/delete', auth.admin, async function (req, res) {
     const id = +req.body.idWantToDelete
     const canBeDeleted = await categoryModel.canBeDeleted(id);
     const targetCategory = await categoryModel.singleByID(id);
@@ -479,7 +493,7 @@ router.post('/category-list/delete', async function (req, res) {
 
 //----------------------------course-list-------------------------------
 
-router.get('/course-list', async function (req, res) {
+router.get('/course-list', auth.admin, async function (req, res) {
     let message;
     if (req.query.result === '1') {
         message = 'Course has been changed';

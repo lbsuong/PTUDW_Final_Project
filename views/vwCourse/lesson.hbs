@@ -1,0 +1,38 @@
+{{#section 'css'}}
+<style>
+  .noShadow:focus {
+    box-shadow: none;
+  }
+</style>
+{{/section}}
+
+
+{{#if lesson}}
+<div class="mb-5">
+  {{#if lesson.video}}
+  <video id="player" class="w-100" playsinline controls>
+    <source src="{{lesson.video}}" type="video/mp4" />
+  </video>
+  {{/if}}
+  {{#if lesson.detail}}
+  <div class="card mt-3">
+    <div class="card-header">
+      <h4><strong>Description</strong></h4>
+    </div>
+    <div class="card-body">
+      {{{lesson.detail}}}
+    </div>
+  </div>
+  {{/if}}
+</div>
+<hr>
+{{#each allLesson}}
+<a href="/course/{{../course.id}}/lesson/{{this.id}}"
+  class="list-group-item list-group-item-action {{#if this.isActive}}active{{/if}}">
+  {{this.id}}. {{this.title}}
+</a>
+{{/each}}
+</div>
+{{else}}
+<h4 class="text-danger mt-5">No lecture has been found</h4>
+{{/if}}
