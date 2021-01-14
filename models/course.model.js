@@ -57,7 +57,7 @@ module.exports = {
 
   topMostView(n) {
     return db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      `SELECT ${TBL_COURSE}.*,${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
@@ -70,7 +70,7 @@ module.exports = {
 
   topNewest(n) {
     return db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      `SELECT ${TBL_COURSE}.*,${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
@@ -94,10 +94,12 @@ module.exports = {
       }
       for (i = 0; i < subcat.length; i++) {
         const temp = await db.load(
-          `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
+          `SELECT ${TBL_COURSE}.*,${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
           FROM ${TBL_COURSE}
           LEFT JOIN ${TBL_CATEGORY}
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+          LEFT JOIN ${TBL_LECTURER} ON
+          ${TBL_LECTURER}.username = ${TBL_COURSE}.lecturer
           WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
         );
         for (j = 0; j < temp.length; j++) {
@@ -106,10 +108,12 @@ module.exports = {
       }
     } else {
       const temp = await db.load(
-        `SELECT ${TBL_COURSE}.*, ${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
+        `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername,${TBL_CATEGORY}.id AS categoryid, ${TBL_CATEGORY}.name AS categoryname
         FROM ${TBL_COURSE}
         LEFT JOIN ${TBL_CATEGORY}
         ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+        LEFT JOIN ${TBL_LECTURER} ON
+        ${TBL_LECTURER}.username = ${TBL_COURSE}.lecturer
         WHERE ${TBL_COURSE}.categoryid = ${id}`
       );
       if (temp.length === 0) {
@@ -277,5 +281,10 @@ module.exports = {
       return false;
     }
     return true;
+  },
+
+  changeInfo(newEntity) {
+    const condition = { id: newEntity.id };
+    return db.patch(newEntity, condition, TBL_COURSE);
   }
 }

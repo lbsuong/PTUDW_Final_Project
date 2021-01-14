@@ -94,12 +94,17 @@ module.exports = function (app) {
   app.get('/general/sign-out', function (req, res) {
     req.session.isAuth = false;
     req.session.profile = null;
-    req.session.userLevel = null;
+    req.session.level = {
+      user: false,
+      admin: false,
+      lecturer: false,
+    };
 
     let url = '/';
     res.redirect(url);
   });
 
+  app.use('/user/wish', require('../routes/front/wish.route'));
   app.use('/user/cart', require('../routes/cart.route'));
   app.use('/user', require('../routes/front/user.route'));
 

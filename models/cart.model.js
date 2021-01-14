@@ -5,7 +5,12 @@ module.exports = {
     async cartByUsername(username) {
         return result = await db.load(`SELECT * FROM ${TBL_CART} WHERE studentid = '${username}'`);
     },
-
+    deleteByCourseID(courseid) {
+        condition = {
+            courseid: courseid
+        };
+        return db.del(condition, TBL_CART);
+    },
     addCourse(entity) {
         try {
             db.add(entity, TBL_CART);

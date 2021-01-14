@@ -64,21 +64,22 @@ router.get('/:id/lesson/:lessonid', auth.user, async function (req, res) {
 
 router.get('/:id/rate', auth.user, async function (req, res) {
   const id = +req.params.id;
+  let err_message = null;
   if (req.session.isAuth) {
     const result = await courseModel.userHasOwnedCourse(req.session.profile.username, id)
     if (!result) {
       return res.redirect(`/course/${id}`);
     }
   }
+  const course = await courseModel.singleByID(id);
   if (rateModel.isAlreadyRated(req.session.profile.username)) {
+    err_message = 'You\'re already rated.';
     return res.render('vwCourse/rate', {
       layout: 'course-layout.hbs',
       course,
       err_message
     });
   }
-
-  const course = await courseModel.singleByID(id);
 
   res.render('vwCourse/rate', {
     layout: 'course-layout.hbs',

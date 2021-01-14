@@ -1,1 +1,45 @@
-<h1>you do not have permission to access this page</h1>
+{{#section 'css'}}
+<link rel="icon" href="../../public/img/favicon-32x32.png">
+<style>
+    body {
+        height: 100vh;
+        color: #18B4D1;
+        background-color: #2C2E3B;
+    }
+
+    .error_code {
+        font-size: 8em;
+    }
+
+    .error_detail {
+        font-size: 3em;
+    }
+</style>
+
+{{/section}}
+
+<div class="container h-100">
+    <div class="h-100 row align-items-center m-auto">
+        <div class="col text-center">
+            <h1 class="error_code">Permission Denied</h1>
+            <p class="error_detail">You Do Not Have Permission To Access This Page</p>
+            <div>
+                <a class="btn btn-primary mr-3" href="/" role="button">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    Home
+                </a>
+                <a class="btn btn-secondary" href="javascript:;" role="button">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!--
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" {{!--
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" --}}

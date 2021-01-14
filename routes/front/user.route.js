@@ -4,9 +4,11 @@ const multer = require('multer');
 const userModel = require('../../models/user.model');
 const cartModel = require('../../models/cart.model');
 const courseModel = require('../../models/course.model');
+const wishModel = require('../../models/wish.model');
 const auth = require('../../middlewares/auth.mdw');
 const lecturerModel = require('../../models/lecturer.model');
 const config = require('../../config/default.json');
+const ownedModel = require('../../models/owned.model');
 
 const router = express.Router();
 
@@ -49,18 +51,7 @@ router.post('/log-in', async function (req, res) {
   }
 
   // LOAD CART
-  console.log(result.username);
-  let cartID = await cartModel.cartByUsername(req.body.username);
-  let courseCart = [];
-  if (cartID.length === 0) {
-    courseCart = null;
-  }
 
-  for (let i = 0; i < cartID.length; i++) {
-    let courseItem = await courseModel.singleByID(cartID[i].courseid);
-    courseCart.push(courseItem);
-  }
-  console.log(courseCart);
   req.session.isAuth = true;
   req.session.level = {
     user: true,
@@ -73,7 +64,6 @@ router.post('/log-in', async function (req, res) {
     name: result.name,
     email: result.email,
     picture: result.picture,
-    cart: courseCart,
   }
 
   let url = '/';
@@ -215,5 +205,37 @@ router.get('/lecturer/:username', async function (req, res) {
     nextPage: +page + 1
   });
 });
+router.get('/course', auth.user, async function (req, res) {
+  const limit = 12;
+  let c_page = +req.query.c || 1;
+  if (c_page < 1) c_page = 1;
+
+  const c_offset = (c_page - 1) * limit;
+  const c_total = await ownedModel.countByUsername(req.session.profile.username);
+  const c_npage = Math.ceil(c_total / limit);
+
+  const c_pageItems = [];
+
+  for (i = 1; i <= c_npage; i++) {
+    const item = {
+      value: i,
+      isActive: i === c_page,
+    }
+    c_pageItems.push(item);
+  }
+  // Load course
+  let course = await ownedModel.singleByUsername(req.session.profile.username, limit, c_offset);
+  console.log(course);
+  res.render('vwUser/course', {
+    forUser: true,
+    course,
+    c_pageItems,
+    c_canGoPrevious: c_page > 1,
+    c_canGoNext: c_page < c_npage,
+    c_previousPage: +c_page - 1,
+    c_nextPage: +c_page + 1
+  })
+});
+
 
 module.exports = router;

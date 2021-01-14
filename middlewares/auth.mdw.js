@@ -37,10 +37,14 @@ module.exports = {
     }
     else {
       if (req.session.level.user == true) {
-        return res.redirect('/');
+        return res.render('refuse', {
+          forUser: true,
+        });
       }
       if (req.session.level.lecturer == true) {
-        return res.redirect('/lecturer');
+        return res.render('refuse', {
+          forLecturer: true,
+        });
       }
     }
     next();

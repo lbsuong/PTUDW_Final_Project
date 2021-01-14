@@ -1,5 +1,5 @@
 const categoryModel = require('../models/category.model');
-
+const cartModel = require('../models/cart.model');
 module.exports = function (app) {
   app.use(async function (req, res, next) {
     if (typeof (req.session.isAuth) === 'undefined') {
@@ -15,7 +15,15 @@ module.exports = function (app) {
     res.locals.isAuth = req.session.isAuth;
     res.locals.level = req.session.level;
     res.locals.profile = req.session.profile;
-
+    if (req.session.isAuth && req.session.level.user) {
+      let cartID = await cartModel.cartByUsername(req.session.profile.username);
+      if (cartID.length === 0) {
+        req.session.profile.cart = null;
+      }
+      else {
+        req.session.profile.cart = cartID.length;
+      }
+    }
     next();
   })
 

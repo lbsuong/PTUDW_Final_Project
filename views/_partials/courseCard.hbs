@@ -1,9 +1,9 @@
-<div class="col-sm-4 mb-5 d-flex align-items-stretch justify-content-center">
-    <div class="card ml-auto mr-auto" style="width: 18rem;">
+<div class="col-sm-4 mb-5 d-flex align-items-stretch">
+    <div class="card" style="width: 18rem;">
         <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
         <div class="card-body">
             <h5 class="card-title">{{title}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted"><a href="/user/lecturer/{{lecturerid}}">{{lecturername}}</a></h6>
             <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
             <div class="rating{{id}}" style="display: inline-block;"></div>
             <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>

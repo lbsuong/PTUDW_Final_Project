@@ -40,6 +40,7 @@ router.get('/', async function (req, res) {
   const searchResultOnCategory = await searchModel.pageOnCategory(keywords, categoryOffset, sort);
 
   res.render('vwSearch/search', {
+    forUser: true,
     keywords,
     tab,
     sort,

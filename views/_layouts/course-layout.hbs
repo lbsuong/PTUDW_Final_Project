@@ -26,14 +26,14 @@
     </a>
     <span class="mr-3">|</span>
     <p class="d-inline mb-0" style="vertical-align: middle;">{{course.title}}</p>
-    {{#if err_message}}
+    {{#unless err_message}}
     <a href="/course/{{course.id}}/rate" class="float-right mr-3">
       <p class="d-inline mb-0" style="vertical-align: middle;">
         Click here to rate:
         <i class="far fa-star"></i>
       </p>
     </a>
-    {{/if}}
+    {{/unless}}
   </div>
   <div class="container">
     {{{body}}}

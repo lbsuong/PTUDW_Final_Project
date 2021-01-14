@@ -70,10 +70,22 @@
   <div>
     Status: <strong>{{status}}</strong>
   </div>
-  <button class="btn btn-success mt-3" type="submit">
-    <i class="fas fa-cart-plus"></i>
-    Add to cart
-  </button>
+  {{#if level.user}}
+  <form class=" d-inline-block" action="/user/cart/add" method="POST">
+    <input type="hidden" name="id" value="{{currentCourse.id}}">
+    <button class="btn btn-success mt-3" type="submit">
+      <i class="fas fa-cart-plus"></i>
+      Add to cart
+    </button>
+  </form>
+
+  <form class="d-inline-block" action="/user/wish/add" method="POST">
+    <input type="hidden" name="id" value="{{currentCourse.id}}">
+    <button class="btn btn-primary mt-3">
+      <i class="fas fa-clipboard-check"></i> Add to Wishlist
+    </button>
+  </form>
+  {{/if}}
   <hr>
   <div class="card mt-4 mb-4">
     <h5 class="card-header">What you will learn</h5>

@@ -44,7 +44,7 @@
     </div>
   </form>
   {{else}}
-  <h4 class="text-danger">You're already rated. <a href="/course/{{course.id}}">Click here to go back to the course</a>
+  <h4 class="text-danger">{{err_message}} <a href="/course/{{course.id}}">Click here to go back to the course</a>
   </h4>
   {{/if}}
 </div>
