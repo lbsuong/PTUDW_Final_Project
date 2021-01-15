@@ -2,7 +2,7 @@ const exphbs = require('express-handlebars');
 const hbs_sections = require('express-handlebars-sections');
 const numeral = require('numeral');
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.engine('hbs', exphbs({
     defaultLayout: 'main.hbs',
     extname: 'hbs',
@@ -21,6 +21,11 @@ module.exports = function(app) {
       format_date(val) {
         let date = new Date(val);
         return (date.getMonth() + 1) + "/" + date.getFullYear();
+      },
+
+      format_full_date(val) {
+        let date = new Date(val);
+        return (date.getDay() + "/" + date.getMonth() + 1) + "/" + date.getFullYear();
       },
 
       split_line(val) {

@@ -12,7 +12,12 @@ module.exports = {
     },
 
     allByCourse(courseid) {
-        return db.load(`SELECT * FROM ${TBL_LESSON} WHERE course = '${courseid}'`);
+        return db.load(
+            `SELECT *
+            FROM ${TBL_LESSON}
+            WHERE course = ${courseid}
+            ORDER BY \`rank\` ASC`
+        );
     },
 
     addLesson(entity) {

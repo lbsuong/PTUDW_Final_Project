@@ -204,7 +204,7 @@ router.post('/create', auth.lecturer, function (req, res) {
                 numrate: 0,
                 originalprice: req.body.originalprice,
                 promotionalprice: req.body.promotionalprice,
-                status: "incomplete",
+                status: 0,
             }
             courseModel.addCourse(newCourse);
 

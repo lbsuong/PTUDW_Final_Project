@@ -93,7 +93,7 @@ CREATE TABLE `rating`(
  `id` INT NOT NULL AUTO_INCREMENT,
  `courseid` INT NOT NULL,
  `studentid` VARCHAR(30) NOT NULL,
- `rate` INT NOT NULL,
+ `rate` FLOAT NOT NULL,
  `ratedetail` VARCHAR(500) NOT NULL,
  `date` DATETIME NOT NULL,
  CONSTRAINT `fk_r_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
@@ -118,6 +118,12 @@ CREATE TABLE `wish` (
   PRIMARY KEY(`id`),
   CONSTRAINT `fk_wi_1` FOREIGN KEY (`courseid`) REFERENCES `course`(`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_wi_2` FOREIGN KEY (`studentid`) REFERENCES `users`(`username`) ON DELETE CASCADE
+);
+
+CREATE TABLE `progress` (
+  `username` VARCHAR(30) NOT NULL,
+  `courseid` INT NOT NULL,
+  `lessonid` INT NOT NULL
 );
 
 #--------------------------------------------------------------------------------
@@ -149,6 +155,45 @@ VALUES (
   "theson",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Vo The Son",
+  "abc@gmail.com"
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`
+)
+VALUES (
+  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "a",
+  "abc@gmail.com"
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`
+)
+VALUES (
+  "b",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "b",
+  "abc@gmail.com"
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`
+)
+VALUES (
+  "c",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "c",
   "abc@gmail.com"
 );
 #--------------------------------------------------------------------------------
@@ -261,7 +306,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "joseportilla",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Jose Portilla",
   "joseportilla@gmail.com",
   "123",
@@ -278,7 +323,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "kirilleremenko",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Kirill Eremenko",
   "kirilleremenko@gmail.com",
   "456",
@@ -295,7 +340,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "timbuchalka",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Tim Buchalka",
   "timbuchalka@gmail.com",
   "789",
@@ -312,7 +357,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "arditsulce",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Ardit Sulce",
   "arditsulce@gmail.com",
   "012",
@@ -329,7 +374,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "alsweigart",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Al Sweigart",
   "alsweigart@gmail.com",
   "012",
@@ -346,7 +391,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "andreineagoie",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Andrei Neagoie",
   "andreineagoie@gmail.com",
   "012",
@@ -363,7 +408,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "ziyadyehia",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Ziyad Yehia",
   "ziyadyehia@gmail.com",
   "012",
@@ -380,7 +425,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "coltsteele",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Colt Steele",
   "coltsteele@gmail.com",
   "012",
@@ -397,7 +442,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "zaidsabih",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Zaid Sabih",
   "zaidsabih@gmail.com",
   "012",
@@ -414,7 +459,7 @@ INSERT INTO `lecturer` (
 )
 VALUES (
   "angelayu",
-  "a",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Angela Yu",
   "angelayu@gmail.com",
   "012",
@@ -465,7 +510,7 @@ Build a complete understanding of Python from the ground up!",
   338109,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -512,7 +557,7 @@ Build an army of powerful Machine Learning models and know how to combine them t
   138093,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -564,7 +609,7 @@ Support Vector Machines",
   92855,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -607,7 +652,7 @@ Understand both Python 2 and Python 3.",
   65451,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -661,7 +706,7 @@ Learn GUIs (Graphical-User Interfaces)",
   45246,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -704,7 +749,7 @@ Have a portfolio of various data analysis projects.",
   15537,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -748,7 +793,7 @@ Programmatically control the mouse and keyboard to click and type for you.",
   77623,
   50.39,
   10.79,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -795,7 +840,7 @@ Implement a full Models-Views-Templates structure for your site",
   35933,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -843,7 +888,7 @@ Conduct algorithmic Trading on Quantopian",
   14463,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -891,7 +936,7 @@ Conduct algorithmic Trading on Quantopian",
   14463,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -929,7 +974,7 @@ Master modern Python 3.9(latest) fundamentals as well as advanced topics",
   23456,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -967,7 +1012,7 @@ Gain the Python Skills Necessary to Learn In-Demand Topics, such as Data Science
   30971,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -1005,7 +1050,7 @@ Work through nearly 200 exercises and quizzes!",
   21478,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -1043,7 +1088,7 @@ Install hacking lab & needed software (on Windows, OS X and Linux)",
   12156,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 
 INSERT INTO `course` (
@@ -1087,6 +1132,6 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   10849,
   129.99,
   9.99,
-  "incomplete"
+  0
 );
 #--------------------------------------------------------------------------------

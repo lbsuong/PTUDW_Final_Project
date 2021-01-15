@@ -1,10 +1,10 @@
 const db = require('../utils/db');
 const config = require('../config/default.json');
+const courseModel = require('../models/course.model');
 
-const TBL_LECTURER = 'lecturer';
 const TBL_RATING = 'rating';
 const TBL_COURSE = 'course';
-const PRI_KEY = 'id';
+const TBL_USERS = 'users';
 
 module.exports = {
     recentlyById(id) {
@@ -29,11 +29,44 @@ module.exports = {
         }, TBL_RATING);
     },
 
-    async isAlreadyRated(username) {
-        const result = await db.load(`SELECT * FROM ${TBL_RATING} userid = '${username}'`);
+    async isAlreadyRated(username, courseid) {
+        const result = await db.load(`SELECT * FROM ${TBL_RATING} WHERE studentid = '${username}' AND courseid = ${courseid}`);
         if (result.length === 0) {
             return false;
         }
         return true;
+    },
+
+    pageOnRatingByCourseID(id, offset) {
+        return db.load(
+            `SELECT ${TBL_RATING}.*, ${TBL_USERS}.username, ${TBL_USERS}.picture
+            FROM ${TBL_RATING}
+            INNER JOIN ${TBL_USERS}
+            ON ${TBL_RATING}.studentid = ${TBL_USERS}.username
+            WHERE courseid = ${id}
+            LIMIT ${config.paginationOnRatingDetail.limit} OFFSET ${offset}`
+        )
+    },
+
+    async addNumRate(courseid, n) {
+        const entity = await courseModel.singleByIDNoAdditional(courseid);
+        entity.numrate += n;
+        const condition = { id: courseid };
+        return db.patch(entity, condition, TBL_COURSE);
+    },
+
+    async calRate(courseid) {
+        const entity = await courseModel.singleByIDNoAdditional(courseid);
+        const result = await db.load(
+            `SELECT AVG(rate) AS avgrate
+            FROM ${TBL_RATING}
+            WHERE courseid = ${courseid}`
+        );
+        if (result.length === 0) {
+            return null;
+        }
+        entity.rate = result[0].avgrate;
+        const condition = { id: courseid };
+        return db.patch(entity, condition, TBL_COURSE);
     }
 }

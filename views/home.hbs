@@ -45,7 +45,7 @@
 {{/each}}
 {{/section}}
 
-
+{{#if topThreeMostPopularCoursesInWeek}}
 <div id="topThreePopularContainer">
   <div id="carouselTopThreePopular" class="carousel slide" data-bs-ride="carousel">
 
@@ -73,7 +73,8 @@
               </polygon>
             </svg>
             <span style="vertical-align: middle">({{format numrate}})</span>
-            <span style="vertical-align: middle"> | Category: <a href="/category/{{id}}">{{categoryname}}</a></span>
+            <span style="vertical-align: middle"> | Category: <a
+                href="/category/{{categoryid}}">{{categoryname}}</a></span>
           </h6>
           <p class="mb-1">{{tinydes}}</p>
           <p>
@@ -97,26 +98,40 @@
     </a>
   </div>
 </div>
+{{/if}}
 
 <div class="container">
   <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Top 10 most view courses</strong></h3>
+  {{#if topTenMostViewCourses}}
   <div class="row">
     {{#each topTenMostViewCourses}}
     {{>courseCard}}
     {{/each}}
   </div>
+  {{else}}
+  <h4 class="text-danger d-flex justify-content-center">No course has been found</h4>
+  {{/if}}
   <hr>
   <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Top 10 newest courses</strong></h3>
+  {{#if topTenNewestCourses}}
   <div class="row">
     {{#each topTenNewestCourses}}
     {{>courseCard}}
     {{/each}}
   </div>
+  {{else}}
+  <h4 class="text-danger d-flex justify-content-center">No course has been found</h4>
+  {{/if}}
+
   <hr>
   <h3 class="mt-5 mb-3 text-center text-uppercase"><strong>Popular Topic</strong></h3>
+  {{#if topTenMostCountCategories}}
   <div class="mb-5">
     {{#each topTenMostCountCategories}}
     <a class="btn btn-info mb-1" href="/category/{{id}}" role="button">{{name}}</a>
     {{/each}}
   </div>
+  {{else}}
+  <h4 class="text-danger d-flex justify-content-center">No category has been found</h4>
+  {{/if}}
 </div>
