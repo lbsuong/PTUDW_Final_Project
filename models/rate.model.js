@@ -7,12 +7,13 @@ const TBL_COURSE = 'course';
 const PRI_KEY = 'id';
 
 module.exports = {
-    recentlyById(id) {
-        let row = db.load(`SELECT ${TBL_RATING}.*, ${TBL_COURSE}.* FROM ${TBL_RATING}
+    async recentlyById(id) {
+        let row = await db.load(`SELECT ${TBL_RATING}.*, ${TBL_COURSE}.title AS coursetitle FROM ${TBL_RATING}
             LEFT JOIN ${TBL_COURSE} 
             ON ${TBL_RATING}.courseid = ${TBL_COURSE}.id
-            WHERE ${TBL_RATING}.lecturer = '${id}'
-            ORDER BY ${TBL_RATING}.date`);
+            WHERE ${TBL_COURSE}.lecturer = '${id}'
+            ORDER BY ${TBL_RATING}.date 
+            LIMIT 10 OFFSET 0`);
         if (row.length === 0)
             return null;
         return row;

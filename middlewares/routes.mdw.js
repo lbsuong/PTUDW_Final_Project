@@ -46,17 +46,14 @@ module.exports = function (app) {
       const course = await courseModel.pageOnCourseByLecID(req.session.profile.username, limit, c_offset);
 
       // Load review
-      // let result;
-      // if (req.session.isAuth === true && req.session.level.lecturer) {
-      //   result = await rateModel.recentlyById(req.session.profile.username);
-      // } else {
-      //   result = null;
-      // }
+      let review = await rateModel.recentlyById(req.session.profile.username);
+      console.log(review);
 
       // Load course
       res.render('vwLecturer/home', {
         forLecturer: true,
         course,
+        review,
         c_pageItems,
         c_canGoPrevious: c_page > 1,
         c_canGoNext: c_page < c_npage,

@@ -64,8 +64,9 @@
     {{#if forAdmin}}
 
     {{else}}
-    <a href="{{#if forUser}}/user/sign-up{{else if forLecturer}}/lecturer/sign-up{{else}}/admin/sign-up {{/if}}"
-      class="btn btn-primary text-nowrap">Sign up</a>
+    {{#if forUser}}
+    <a href="/user/sign-up" class="btn btn-primary text-nowrap">Sign up</a>
+    {{/if}}
     {{/if}}
     {{/if}}
   </div>

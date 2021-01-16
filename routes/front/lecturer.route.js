@@ -204,7 +204,7 @@ router.post('/create', auth.lecturer, function (req, res) {
                 numrate: 0,
                 originalprice: req.body.originalprice,
                 promotionalprice: req.body.promotionalprice,
-                status: "incomplete",
+                status: 0,
             }
             courseModel.addCourse(newCourse);
 
@@ -284,6 +284,13 @@ router.get('/course/:id', auth.lecturer, async function (req, res) {
 });
 
 router.post('/course/:id', auth.lecturer, async function (req, res) {
+    const postid = req.body.postid;
+    if (postid === "remove") {
+        const lessonid = req.body.lessonid;
+        console.log(req.body);
+        lessonModel.delById(lessonid);
+        return res.redirect(req.headers.referer);
+    }
     const courseid = req.params.id;
     const courseDetail = await lecturerModel.getOwnCourse(req.session.profile.username, courseid);
     if (courseDetail === null) {
@@ -339,6 +346,7 @@ router.post('/course/:id/add', auth.lecturer, async function (req, res) {
         filename: function (req, file, cb) {
             let filename = req.session.profile.username.concat(courseid).concat(rand).concat(file.originalname);
             lesson_path = lesson_path.concat(filename);
+            console.log(filename);
             cb(null, filename);
         }
     });

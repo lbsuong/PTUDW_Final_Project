@@ -24,10 +24,6 @@
                         <div class="col">
                             <label for="categoryid">Select Course Category</label>
                             <select class="form-control" name="categoryid" id="categoryid">
-                                {{!-- <option value="1">HIHI</option>
-                                <option value="1">HIHI</option>
-                                <option value="1">HIHI</option>
-                                <option value="1">HIHI</option> --}}
                                 {{#each listCat}}
                                 <option value="{{this.id}}">{{this.name}}</option>
                                 {{/each}}
@@ -52,16 +48,16 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="originalprice">Original Price</label>
-                                <input class="form-control" type="number" name="originalprice" id="originalprice"
-                                    required>
+                                <input class="form-control" type="number" step=any name="originalprice"
+                                    id="originalprice" required>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="form-group">
                                 <label for="promotionalprice">Promotional Price</label>
-                                <input class="form-control" type="number" name="promotionalprice" id="promotionalprice"
-                                    required>
+                                <input class="form-control" type="number" step=any name="promotionalprice"
+                                    id="promotionalprice" required>
                             </div>
                         </div>
                     </div>

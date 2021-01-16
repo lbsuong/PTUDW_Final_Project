@@ -60,7 +60,6 @@ router.post('/', auth.user, async function (req, res) {
         }
 
         for (i = 0; i < cart.length; i++) {
-
             let courseid = cart[i].courseid;
             let is_exist = await ownedModel.isExist(courseid, req.session.profile.username);
             console.log(is_exist);
@@ -72,7 +71,9 @@ router.post('/', auth.user, async function (req, res) {
                     date: dateNow,
                 }
                 ownedModel.add(newOwned);
+                courseModel.addOneStudentByID(courseid);
             }
+
             await cartModel.deleteByCourseID(courseid);
         }
         return res.redirect(req.headers.referer);

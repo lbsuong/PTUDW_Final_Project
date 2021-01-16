@@ -86,9 +86,34 @@
 
             <div class="card-body">
                 <h2 class="ml-5">Recently Review</h2>
-                <hr>
-                {{#if homeinfo}}
-
+                {{#if review}}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Rate by</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each review}}
+                        <tr>
+                            <td>
+                                <a href="/course/{{courseid}}"><b>{{coursetitle}}</b></a>
+                                <br>
+                                Comment: {{ratedetail}}
+                            </td>
+                            <td>{{studentid}}</td>
+                            <td>{{format_date date}}</td>
+                            <td>
+                                <div class="rating{{id}}" style="display: inline-block;"></div>
+                                <span style="vertical-align: middle; color: #6C757D">({{format rate}})</span>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
                 {{else}}
                 <p class="text-center">We don't find any review.</p>
                 {{/if}}
@@ -172,3 +197,33 @@
         </div>
     </div>
 </div>
+
+{{#section 'onlyjs'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{#each review}}
+<script>
+    $(function () {
+        $('.rating{{id}}').rateYo({
+            starWidth: '15px',
+            readOnly: true,
+            rating: {{ rate }},
+    });
+  });
+</script>
+{{/each}}
+
+
+{{#each course}}
+<script>
+    $(function () {
+        $('.rating{{id}}').rateYo({
+            starWidth: '15px',
+            readOnly: true,
+            rating: {{ rate }},
+    });
+  });
+</script>
+{{/each}}
+
+{{/section}}

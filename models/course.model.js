@@ -24,6 +24,7 @@ module.exports = {
 
     return rows[0];
   },
+
   addCourse(entity) {
     return db.add(entity, TBL_COURSE);
   },
@@ -229,6 +230,25 @@ module.exports = {
 
     const entity = rows[0];
     entity.numview++;
+    const condition = {
+      id: id
+    };
+    await db.patch(entity, condition, TBL_COURSE);
+  },
+
+  async addOneStudentByID(id) {
+    const rows = await db.load(
+      `SELECT *
+      FROM ${TBL_COURSE}
+      WHERE id = ${id}`
+    );
+    if (rows.length === 0) {
+      return;
+    }
+
+    const entity = rows[0];
+    entity.numstudent++;
+    entity.numstudentinaweek++;
     const condition = {
       id: id
     };

@@ -151,7 +151,11 @@
               <td>{{this.title}}</td>
               <td>{{format_date this.date}}</td>
               <td>
-                <button type="button" class="btn btn-light"><i class="fas fa-trash text-danger"></i></button>
+                <form action="" method="POST">
+                  <input type="hidden" name="postid" value="remove">
+                  <input type="hidden" name="lessonid" value="{{this.id}}">
+                  <button type="submit" class="btn btn-light"><i class="fas fa-trash text-danger"></i></button>
+                </form>
               </td>
             </tr>
             {{/each}}

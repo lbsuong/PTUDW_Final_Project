@@ -68,7 +68,7 @@
     Category: <a href="/category/{{currentCourse.categoryid}}">{{currentCourse.categoryname}}</a>
   </div>
   <div>
-    Status: <strong>{{status}}</strong>
+    Status: <strong> {{#if status}}Complete{{else}}Incomplete{{/if}}</strong>
   </div>
   {{#if level.user}}
   <form class=" d-inline-block" action="/user/cart/add" method="POST">

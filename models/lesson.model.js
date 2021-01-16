@@ -17,5 +17,11 @@ module.exports = {
 
     addLesson(entity) {
         return db.add(entity, TBL_LESSON);
+    },
+    delById(id) {
+        condition = {
+            id: id,
+        }
+        return db.del(condition, TBL_LESSON);
     }
 }
