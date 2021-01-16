@@ -13,5 +13,8 @@
   },
   "paginationOnLecHome": {
     "limit": 3
+  },
+  "paginationOnRatingDetail": {
+    "limit": 5
   }
 }

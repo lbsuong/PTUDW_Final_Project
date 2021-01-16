@@ -33,13 +33,13 @@
   });
 </script>
 
-{{#each topFiveMostPopularBySameCat}}
+{{#each rating}}
 <script>
   $(function () {
-    $('.rating{{id}}').rateYo({
+    $('#userRating{{id}}').rateYo({
       starWidth: '15px',
       readOnly: true,
-      rating: {{ rate }}
+      rating: $('#userRating{{id}}').data('rate')
     });
   });
 </script>
@@ -57,7 +57,7 @@
   <div data-rate="{{currentCourse.rate}}" id="rating" style="display: inline-block;"></div>
   <span style="vertical-align: middle;">({{format currentCourse.numrate}} ratings) {{format currentCourse.numstudent}}
     students</span>
-  <div>Created by {{currentCourse.lecturername}}</div>
+  <div>Created by <a href="/user/lecturer/{{currentCourse.lecturerid}}">{{currentCourse.lecturername}}</a></div>
   <div>Last updated {{format_date currentCourse.lastupdatedate}}</div>
   <div>Price:
     <strong>${{format_real_num currentCourse.promotionalprice}}</strong>
@@ -93,9 +93,9 @@
       {{{currentCourse.fulldes}}}
     </div>
   </div>
+
   {{#if topFiveMostPopularBySameCat}}
-  <hr>
-  <h4 class="mb-3"><strong>Students also bought:</strong></h4>
+  <h4 class="mb-3 mt-5"><strong>Students also bought:</strong></h4>
   <div class="my-3">
     {{#each topFiveMostPopularBySameCat}}
     <div class="row additionalCourse" onclick="location.href='/course/{{id}}';">
@@ -129,4 +129,50 @@
     {{/each}}
   </div>
   {{/if}}
+
+  <div class="mb-5">
+    <h4 class="mb-3 mt-5"><strong>Reviews:</strong></h4>
+    {{#if rating}}
+    {{#each rating}}
+    <div class="row mb-3">
+      <div class="col-1">
+        <img src="{{#if picture}}
+                  {{picture}}
+                  {{else}}
+                  /public/img/ava_default.jpg" {{/if}} alt="avatar"
+          class="img-thumbnail w-100 rounded-circle float-left">
+
+      </div>
+      <div class="col-11">
+        <div><strong>{{username}}</strong></div>
+        <div data-rate="{{rate}}" id="userRating{{id}}" class="d-inline-block p-0"></div>
+        <span class="ml-2" style="vertical-align: middle; color: #6C757D;">{{format_full_date date}}</span>
+        <div>{{ratedetail}}</div>
+      </div>
+    </div>
+    <hr>
+    {{/each}}
+    {{else}}
+    <h4 class="text-danger">No review has been found</h4>
+    {{/if}}
+    {{#if pageItems}}
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item {{#unless canGoPrevious}}disabled{{/unless}}">
+          <a class="page-link" href="?page={{previousPage}}" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+        {{#each pageItems}}
+        {{#if isActive}}
+        <li class="page-item active"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
+        {{else}}
+        <li class="page-item"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
+        {{/if}}
+        {{/each}}
+        <li class="page-item {{#unless canGoNext}}disabled{{/unless}}">
+          <a class="page-link" href="?page={{nextPage}}">Next</a>
+        </li>
+      </ul>
+    </nav>
+    {{/if}}
+  </div>
 </div>

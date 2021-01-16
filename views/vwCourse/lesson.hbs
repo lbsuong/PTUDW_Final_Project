@@ -1,38 +1,69 @@
 {{#section 'css'}}
+<link rel="stylesheet" href="https://cdn.plyr.io/3.6.3/plyr.css" />
 <style>
-  .noShadow:focus {
-    box-shadow: none;
+  #sidebar {
+    position: relative;
+    height: 95vh;
+    overflow: auto;
   }
 </style>
 {{/section}}
 
 
-{{#if lesson}}
-<div class="mb-5">
-  {{#if lesson.video}}
-  <video id="player" class="w-100" playsinline controls>
-    <source src="{{lesson.video}}" type="video/mp4" />
-  </video>
-  {{/if}}
-  {{#if lesson.detail}}
-  <div class="card mt-3">
-    <div class="card-header">
-      <h4><strong>Description</strong></h4>
+{{#section 'js'}}
+<script src="https://cdn.plyr.io/3.6.3/plyr.js"></script>
+<script>
+  const player = new Plyr('#player');
+  player.on('ended', function (e) {
+    $.ajax({
+      url: '/course/{{course.id}}/lesson/{{lesson.id}}',
+      type: 'POST'
+    });
+    $('#progress{{lesson.id}}').prop('checked', true);
+  });
+</script>
+
+{{#each progress}}
+<script>
+  $('#progress{{lessonid}}').prop('checked', true);
+</script>
+{{/each}}
+{{/section}}
+
+
+<div class="row w-100 m-0">
+  {{#if lesson}}
+  <div class="mb-5 col">
+    {{#if lesson.video}}
+    <video id="player" class="w-100" playsinline controls>
+      <source src="{{lesson.video}}" type="video/mp4" />
+    </video>
+    {{/if}}
+    {{#if lesson.detail}}
+    <div class="card mt-3 w-100">
+      <div class="card-header">
+        <h4><strong>Description</strong></h4>
+      </div>
+      <div class="card-body">
+        {{{lesson.detail}}}
+      </div>
     </div>
-    <div class="card-body">
-      {{{lesson.detail}}}
+    {{/if}}
+  </div>
+  <div class="col-4">
+    <div class="make-me-sticky w-100" id="sidebar">
+      {{#each allLesson}}
+      <a href="/course/{{../course.id}}/lesson/{{this.id}}"
+        class="list-group-item list-group-item-action {{#if this.isActive}}active{{/if}}">
+        <input id="progress{{this.id}}" type="checkbox" class="mr-3" disabled>
+        {{this.rank }}. {{this.title}}
+      </a>
+      {{/each}}
     </div>
+  </div>
+  {{else}}
+  <div class="container">
+    <h4 class="text-danger mt-5">No lecture has been found</h4>
   </div>
   {{/if}}
 </div>
-<hr>
-{{#each allLesson}}
-<a href="/course/{{../course.id}}/lesson/{{this.id}}"
-  class="list-group-item list-group-item-action {{#if this.isActive}}active{{/if}}">
-  {{this.id}}. {{this.title}}
-</a>
-{{/each}}
-</div>
-{{else}}
-<h4 class="text-danger mt-5">No lecture has been found</h4>
-{{/if}}

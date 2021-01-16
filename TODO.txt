@@ -1,8 +1,6 @@
 -Thêm đếm lĩnh vực được đăng kí nhiều nhất trong tuần.
 -Đếm khoá học nổi bật nhất trong tuần.
--Danh sách feedback của người học.
--Danh sách yêu thích
--Lưu quá trình học
 -Đăng nhập bằng google, facebook
 -OTP email
 -Sắp xếp lại thư mục course
+-thêm sao trong course của lecturer
