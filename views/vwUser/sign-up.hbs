@@ -35,6 +35,7 @@
       {{/if}}
       <p class="text-center">Please fill in this form to create an account.</p>
       <hr>
+
       <label for="username"><b>Username</b></label>
       <input class="accountInput" type="text" placeholder="Enter Your Username" name="username" required>
 
@@ -62,13 +63,15 @@
       <div class="container text-center pt-4 bg-light rounded">
         <p>Already have an account? <a href="/user/log-in"><b>Log In</b></a></p>
       </div>
-    </div>
   </form>
 </div>
 {{/if}}
 
 {{#section 'js'}}
 <script>
+  $('#submitForm_raub').submit(function (e) {
+    console.log('hihi...submit ne');
+  })
   $('#frmSignUp').submit(function (event) {
     const pass = $('#password').val();
     const re_pass = $('#password_re').val();

@@ -62,10 +62,10 @@ module.exports = {
   async getOwnCourse(lecturerid, courseid) {
     let result = await db.load(
       `SELECT  ${TBL_COURSE}.*, ${TBL_CATEGORY}.name AS categoryname 
-      FROM ${TBL_COURSE}
+    FROM ${TBL_COURSE}
     LEFT JOIN ${TBL_CATEGORY}
     ON ${TBL_CATEGORY}.id = ${TBL_COURSE}.categoryid
-     WHERE ${TBL_COURSE}.id = '${courseid}' AND ${TBL_COURSE}.lecturer = '${lecturerid}'`);
+    WHERE ${TBL_COURSE}.id = '${courseid}' AND ${TBL_COURSE}.lecturer = '${lecturerid}'`);
     if (result.length === 0)
       return null;
     return result[0];

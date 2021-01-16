@@ -1,3 +1,4 @@
+const { response } = require("express");
 
 module.exports = {
   user: function (req, res, next) {
@@ -10,6 +11,14 @@ module.exports = {
       }
       if (req.session.level.lecturer == true) {
         return res.redirect('/lecturer');
+      }
+      if (req.session.level.user) {
+        if (req.session.profile.vertify === false) {
+          return res.redirect('/user/vertify');
+        }
+        if (req.session.profile.disable) {
+          return res.render('blockAccount');
+        }
       }
     }
     next();
@@ -25,6 +34,11 @@ module.exports = {
       }
       if (req.session.level.user == true) {
         return res.redirect('/');
+      }
+      if (req.session.level.lecturer) {
+        if (req.session.profile.disable) {
+          return res.render('blockAccount');
+        }
       }
     }
     next();

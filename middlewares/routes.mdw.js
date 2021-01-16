@@ -77,11 +77,11 @@ module.exports = function (app) {
   });
 
   app.get('/redirect', function (req, res) {
-    if (req.headers.referer) {
-      req.session.retUrl = req.headers.referer;
+    if (req.session.preurl) {
+      return res.redirect(req.session.preurl);
+    } else {
+      res.redirect('/');
     }
-    let url = req.session.retUrl || '/';
-    res.redirect(url);
   });
 
   app.get('/privacy', function (req, res) {

@@ -8,6 +8,7 @@ CREATE TABLE `users` (
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `picture` varchar(100),
+  `verification` boolean NOT NULL,
   PRIMARY KEY (`username`)
 );
   
@@ -29,6 +30,13 @@ CREATE TABLE `admin` (
   `email` VARCHAR(100) NOT NULL
 );
   
+CREATE TABLE `otp` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(100) NOT NULL,
+  `code` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_ot_1` FOREIGN KEY (`username`) REFERENCES `user`(`username`) ON DELETE CASCADE
+)
 CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,

@@ -10,7 +10,9 @@ const TBL_OWNEDCOURSE = 'ownedcourse';
 module.exports = {
   async singleByID(id) {
     const rows = await db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_LECTURER}.username AS lecturerid, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, 
+      ${TBL_LECTURER}.username AS lecturerid, ${TBL_CATEGORY}.name AS categoryname,
+      ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
@@ -24,7 +26,12 @@ module.exports = {
 
     return rows[0];
   },
-
+  deleteByCourseID(courseid) {
+    condition = {
+      id: courseid,
+    }
+    return db.del(condition, TBL_COURSE);
+  },
   async singleByIDNoAdditional(id) {
     const rows = await db.load(
       `SELECT *
