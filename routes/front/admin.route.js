@@ -248,7 +248,7 @@ router.post('/lecturer-list/create-lecturer-account', auth.admin, async function
     await lecturerModel.add({
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 10),
-        name: req.body.username,
+        name: req.body.name,
         email: req.body.email,
         bankid: req.body.bankid,
         bankname: req.body.bankname,
@@ -687,10 +687,9 @@ router.post('/course-list/edit/:id', auth.admin, async function (req, res) {
                 delete entity.smallthumbnaillink;
             }
             await courseModel.changeInfo(entity);
+            res.redirect('/admin/course-list' + '?result=1');
         }
     });
-
-    res.redirect('/admin/course-list' + '?result=1');
 });
 
 router.post('/course-list/delete', auth.admin, async function (req, res) {

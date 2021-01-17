@@ -56,6 +56,7 @@ module.exports = {
     return db.load(
       `SELECT *
       FROM ${TBL_CATEGORY}
+      WHERE level = 2
       ORDER BY countinaweek DESC
       LIMIT ${n}`
     )
@@ -171,7 +172,7 @@ module.exports = {
   },
 
   async addCountInAWeekFor(courseid, n) {
-    const category = this.singleByID(courseid);
+    const category = await this.singleByID(courseid);
     const condition = { id: courseid };
     const entity = { countinaweek: category.countinaweek + 1 };
     return db.patch(entity, condition, TBL_CATEGORY);
