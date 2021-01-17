@@ -34,6 +34,45 @@
               Course List
             </a>
           </div>
+
+          {{#if showFilter}}
+          <div class="card mt-4">
+            <div class="card-header">
+              Filter
+            </div>
+            <div class="card-body">
+              <form id="frmFilter" method="GET">
+                <div class="mb-2">By Lecturer:</div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <input type="checkbox" id="byLecturer" name="byLecturer" {{#if byLecturerChecked}}checked{{/if}}>
+                    </div>
+                  </div>
+                  <select class="custom-select" name="lecturerid" id="lecturerid">
+                    {{#each lecturerList}}
+                    <option value="{{username}}" {{#if isSelected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="mb-2">By Category:</div>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <input type="checkbox" id="byCategory" name="byCategory" {{#if byCategoryChecked}}checked{{/if}}>
+                    </div>
+                  </div>
+                  <select class="custom-select" name="categoryid" id="categoryid">
+                    {{#each categoryList}}
+                    <option value="{{id}}" {{#if isSelected}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
+          {{/if}}
+
         </div>
         <div class="col-9">
           {{{body}}}
@@ -53,6 +92,24 @@
   <script src="/public/js/nav.js"></script>
   <script>
     $('#{{tabID}}').tab('show');
+  </script>
+  <script>
+    $('#byLecturer').on('change', function (e) {
+      $('#frmFilter').submit();
+    });
+    $('#byCategory').on('change', function (e) {
+      $('#frmFilter').submit();
+    });
+    $('#lecturerid').on('change', function (e) {
+      if ($('#byLecturer').is(':checked')) {
+        $('#frmFilter').submit();
+      }
+    });
+    $('#categoryid').on('change', function (e) {
+      if ($('#byCategory').is(':checked')) {
+        $('#frmFilter').submit();
+      }
+    });
   </script>
   {{{_sections.js}}}
 </body>

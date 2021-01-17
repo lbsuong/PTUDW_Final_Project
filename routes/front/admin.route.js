@@ -7,6 +7,11 @@ const courseModel = require('../../models/course.model');
 const config = require('../../config/default.json');
 const categoryModel = require('../../models/category.model');
 const auth = require('../../middlewares/auth.mdw');
+const multer = require('multer');
+const func = require('../../middlewares/function.mdw');
+const fs = require('fs');
+const lessonModel = require('../../models/lesson.model');
+const { lecturer } = require('../../middlewares/auth.mdw');
 
 const DEFAULT_ADMIN_PAGE = 'user-list';
 
@@ -33,7 +38,6 @@ router.post('/log-in', async function (req, res) {
     }
 
     const correctPassword = bcrypt.compareSync(req.body.password, result.password);
-    console.log(correctPassword);
     if (correctPassword == false) {
         return res.render('vwAdmin/log-in', {
             err_message: 'There was a problem logging in. Check your email and password or create an account.',
@@ -65,6 +69,10 @@ router.get('/user-list', auth.admin, async function (req, res) {
         message = 'Account has been changed';
     } else if (req.query.result === '2') {
         message = 'Account has been deleted';
+    } else if (req.query.result === '3') {
+        message = 'Account has been disable';
+    } else if (req.query.result === '4') {
+        message = 'Account has been enable';
     } else {
         message = null;
     }
@@ -143,6 +151,16 @@ router.post('/user-list/delete', auth.admin, async function (req, res) {
     res.redirect('/admin/user-list' + '?result=2')
 });
 
+router.post('/user-list/disable', auth.admin, async function (req, res) {
+    await userModel.disableAccount(req.body.usernameWantToDisable);
+    res.redirect('/admin/user-list' + '?result=3')
+});
+
+router.post('/user-list/enable', auth.admin, async function (req, res) {
+    await userModel.enableAccount(req.body.usernameWantToEnable);
+    res.redirect('/admin/user-list' + '?result=4')
+});
+
 //------------------------------------------------------------------------
 
 
@@ -156,6 +174,10 @@ router.get('/lecturer-list', auth.admin, async function (req, res) {
         message = 'Account has been changed';
     } else if (req.query.result === '3') {
         message = 'Account has been deleted'
+    } else if (req.query.result === '4') {
+        message = 'Account has been disable'
+    } else if (req.query.result === '5') {
+        message = 'Account has been enable'
     } else {
         message = null;
     }
@@ -206,6 +228,15 @@ router.post('/lecturer-list/create-lecturer-account', auth.admin, async function
             tabID: 'lecturers-list-link'
         });
     }
+    const emailIsExisted = await lecturerModel.emailExisted(req.body.email);
+    if (emailIsExisted) {
+        return res.render('vwAdmin/lecturer_list/create-lecturer-account', {
+            layout: 'admin-layout.hbs',
+            forAdmin: true,
+            err_message: 'Email has existed',
+            tabID: 'lecturers-list-link'
+        });
+    }
     if (req.body.confirmPassword !== req.body.password) {
         return res.render('vwAdmin/lecturer_list/create-lecturer-account', {
             layout: 'admin-layout.hbs',
@@ -220,7 +251,8 @@ router.post('/lecturer-list/create-lecturer-account', auth.admin, async function
         name: req.body.username,
         email: req.body.email,
         bankid: req.body.bankid,
-        bankname: req.body.bankname
+        bankname: req.body.bankname,
+        disable: false
     });
     res.redirect('/admin/lecturer-list' + '?result=1');
 });
@@ -273,6 +305,16 @@ router.post('/lecturer-list/edit/:username', auth.admin, async function (req, re
 router.post('/lecturer-list/delete', auth.admin, async function (req, res) {
     await lecturerModel.deleteAccount(req.body.usernameWantToDelete);
     res.redirect('/admin/lecturer-list' + '?result=3')
+});
+
+router.post('/lecturer-list/disable', auth.admin, async function (req, res) {
+    await lecturerModel.disableAccount(req.body.usernameWantToDisable);
+    res.redirect('/admin/lecturer-list' + '?result=4')
+});
+
+router.post('/lecturer-list/enable', auth.admin, async function (req, res) {
+    await lecturerModel.enableAccount(req.body.usernameWantToEnable);
+    res.redirect('/admin/lecturer-list' + '?result=5')
 });
 
 //------------------------------------------------------------------------
@@ -499,13 +541,32 @@ router.get('/course-list', auth.admin, async function (req, res) {
         message = 'Course has been changed';
     } else if (req.query.result === '2') {
         message = 'Course has been deleted';
+    } else if (req.query.result === '3') {
+        message = 'Course has been disable';
+    } else if (req.query.result === '4') {
+        message = 'Course has been enable';
     } else {
         message = null;
     }
+
+    let filter = null;
+    if (req.query.byLecturer === 'on' || req.query.byCategory === 'on') {
+        filter = {
+            lecturerid: null,
+            categoryid: null
+        };
+        if (req.query.byLecturer === 'on') {
+            filter.lecturerid = req.query.lecturerid;
+        }
+        if (req.query.byCategory === 'on') {
+            filter.categoryid = req.query.categoryid;
+        }
+    }
+
     let page = +req.query.page || 1;
     if (page < 1) page = 1;
     const offset = (page - 1) * config.pagination.limit;
-    const total = await courseModel.countOnCourse();
+    const total = await courseModel.countOnCourse(filter);
     const nPage = Math.ceil(total / config.pagination.limit);
     const pageItems = [];
     for (i = 1; i <= nPage; i++) {
@@ -515,20 +576,210 @@ router.get('/course-list', auth.admin, async function (req, res) {
         }
         pageItems.push(item);
     }
-    const courseList = await courseModel.pageOnCourse(offset);
+    const courseList = await courseModel.pageOnCourse(offset, filter);
+    const lecturerList = await lecturerModel.all();
+    const categoryList = await categoryModel.allCatIDByLevel(2);
 
+    for (i = 0; i < lecturerList.length; i++) {
+        lecturerList[i].isSelected = (lecturerList[i].username === req.query.lecturerid);
+    }
+    for (i = 0; i < categoryList.length; i++) {
+        categoryList[i].isSelected = (categoryList[i].id === +req.query.categoryid);
+    }
+
+    console.log(req.query);
     res.render('vwAdmin/course_list/course-list', {
         layout: 'admin-layout.hbs',
         forAdmin: true,
         courseList,
         tabID: 'courses-list-link',
+        showFilter: true,
+        lecturerList,
+        categoryList,
+        query: req.query,
         message,
         pageItems,
         canGoPrevious: page > 1,
         canGoNext: page < nPage,
         previousPage: +page - 1,
-        nextPage: +page + 1
+        nextPage: +page + 1,
+        byLecturerChecked: (req.query.byLecturer === 'on'),
+        byCategoryChecked: (req.query.byCategory === 'on')
     });
+});
+
+router.get('/course-list/edit/:id', auth.admin, async function (req, res) {
+    let message;
+    if (req.query.result === '1') {
+        message = 'Lesson has been changed';
+    } else if (req.query.result === '2') {
+        message = 'Lesson has been deleted';
+    } else {
+        message = null;
+    }
+
+    const id = req.params.id;
+    const course = await courseModel.singleByID(id);
+    const category = await categoryModel.allCatIDByLevel(2);
+    for (i = 0; i < category.length; i++) {
+        category[i].isSelected = (course.categoryid === category[i].id);
+    }
+    const lessonList = await lessonModel.allByCourse(id);
+
+    res.render('vwAdmin/course_list/edit-course', {
+        course,
+        category,
+        lessonList,
+        message
+    })
+});
+
+router.post('/course-list/edit/:id', auth.admin, async function (req, res) {
+    const id = req.params.id;
+
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+
+    const rand = func.random(5);
+    let video_path = `/public/courses/${id}/`;
+    const storage = multer.diskStorage({
+        destination: '.' + video_path,
+        filename: function (req, file, cb) {
+            const filename = req.session.profile.username.concat(rand).concat(file.originalname);
+            video_path = video_path.concat(filename);
+            cb(null, filename);
+        }
+    });
+    const upload = multer({ storage: storage })
+    upload.single('thumbnail')(req, res, async function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            const course = await courseModel.singleByID(id);
+            if (req.file !== undefined) {
+                fs.unlink('.' + course.bigthumbnaillink, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            const entity = {
+                id: id,
+                categoryid: +req.body.category,
+                title: req.body.title,
+                tinydes: req.body.tinydes,
+                fulldes: req.body.fulldes,
+                bigthumbnaillink: video_path,
+                smallthumbnaillink: video_path,
+                lastupdatedate: today,
+                originalprice: +req.body.originalprice,
+                promotionalprice: +req.body.promotionalprice,
+                status: +req.body.status
+            }
+            if (req.file === undefined) {
+                delete entity.bigthumbnaillink;
+                delete entity.smallthumbnaillink;
+            }
+            await courseModel.changeInfo(entity);
+        }
+    });
+
+    res.redirect('/admin/course-list' + '?result=1');
+});
+
+router.post('/course-list/delete', auth.admin, async function (req, res) {
+    await courseModel.deleteCourse(req.body.idWantToDelete);
+    res.redirect('/admin/course-list' + '?result=2');
+});
+
+router.post('/course-list/disable', auth.admin, async function (req, res) {
+    await courseModel.disableCourse(req.body.idWantToDisable);
+    res.redirect('/admin/course-list' + '?result=3');
+});
+
+router.post('/course-list/enable', auth.admin, async function (req, res) {
+    await courseModel.enableCourse(req.body.idWantToEnable);
+    res.redirect('/admin/course-list' + '?result=4');
+});
+
+router.get('/course-list/edit/:courseid/lesson/edit/:lessonid', auth.admin, async function (req, res) {
+    const courseid = req.params.courseid;
+    const lessonid = req.params.lessonid;
+    const lesson = await lessonModel.singleByID(lessonid);
+
+    res.render('vwAdmin/course_list/edit-lesson', {
+        courseid,
+        lesson
+    })
+});
+
+router.post('/course-list/edit/:courseid/lesson/edit/:lessonid', auth.admin, async function (req, res) {
+    const courseid = req.params.courseid;
+    const lessonid = req.params.lessonid;
+
+    let today = new Date();
+    const hour = String(today.getHours());
+    const minute = String(today.getMinutes());
+    const second = String(today.getSeconds());
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const yyyy = today.getFullYear();
+    today = second + minute + hour + dd + mm + yyyy;
+
+    let video_path = `/public/courses/${courseid}/`;
+    const storage = multer.diskStorage({
+        destination: '.' + video_path,
+        filename: function (req, file, cb) {
+            const filename = req.session.profile.username.concat(today).concat('.').concat(file.mimetype.split('/').pop());
+            video_path = video_path.concat(filename);
+            cb(null, filename);
+        }
+    });
+    const upload = multer({ storage: storage })
+    upload.single('video')(req, res, async function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            const lesson = await lessonModel.singleByID(lessonid);
+            if (req.file !== undefined) {
+                fs.unlink('.' + lesson.video, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+            const updateDate = `${yyyy}-${mm}-${dd} ${hour}:${minute}:${second}`;
+            const entity = {
+                id: lessonid,
+                title: req.body.title,
+                rank: req.body.rank,
+                video: video_path,
+                detail: req.body.detail,
+                date: updateDate
+            }
+            if (req.file === undefined) {
+                delete entity.video;
+            }
+            await lessonModel.changeInfo(entity);
+        }
+    });
+
+    res.redirect(`/admin/course-list/edit/${courseid}` + '?result=1');
+});
+
+router.post('/course-list/edit/:courseid/lesson/delete', auth.admin, async function (req, res) {
+    const courseid = req.params.courseid;
+    const lesson = await lessonModel.singleByID(req.body.idWantToDelete);
+    fs.unlink('.' + lesson.video, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+    await lessonModel.delById(req.body.idWantToDelete);
+    res.redirect(`/admin/course-list/edit/${courseid}` + '?result=2');
 });
 
 //------------------------------------------------------------------------

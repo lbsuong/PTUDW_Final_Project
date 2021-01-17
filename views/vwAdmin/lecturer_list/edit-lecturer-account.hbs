@@ -1,3 +1,12 @@
+{{#section 'css'}}
+<style>
+  .passwordNote {
+    font-size: 80%;
+  }
+</style>
+{{/section}}
+
+
 {{#if err_message}}
 <div class="container">
   <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
@@ -15,13 +24,19 @@
   <div class="card">
     <div class="card-body">
       <form method="POST" class="d-inline">
-        <div class="form-group">
+        <div class="form-group mb-0">
           <label for="password">Password</label>
           <input type="password" class="form-control" id="password" name="password">
         </div>
-        <div class="form-group">
+        <div class="passwordNote mb-3">
+          <strong>Note: </strong>leave this blank if you don't want to change password.
+        </div>
+        <div class="form-group mb-0">
           <label for="confirmPassword">Confirm Password</label>
           <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+        </div>
+        <div class="passwordNote mb-3">
+          <strong>Note: </strong>leave this blank if you don't want to change password.
         </div>
         <div class="form-group">
           <label for="name">Name</label>
@@ -47,6 +62,17 @@
         <input type="hidden" id="usernameWantToDelete" name="usernameWantToDelete" value="{{lecturer.username}}">
         <button type="submit" class="btn btn-danger float-right">Delete Account</button>
       </form>
+      {{#if lecturer.disable}}
+      <form action="/admin/lecturer-list/enable" method="POST" class="d-inline float-right mr-2">
+        <input type="hidden" id="usernameWantToEnable" name="usernameWantToEnable" value="{{lecturer.username}}">
+        <button type="submit" class="btn btn-info float-right">Enable Account</button>
+      </form>
+      {{else}}
+      <form action="/admin/lecturer-list/disable" method="POST" class="d-inline float-right mr-2">
+        <input type="hidden" id="usernameWantToDisable" name="usernameWantToDisable" value="{{lecturer.username}}">
+        <button type="submit" class="btn btn-secondary float-right">Disable Account</button>
+      </form>
+      {{/if}}
     </div>
   </div>
 </div>

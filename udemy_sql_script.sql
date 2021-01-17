@@ -8,6 +8,7 @@ CREATE TABLE `users` (
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `picture` varchar(100),
+  `disable` BOOLEAN NOT NULL,
   PRIMARY KEY (`username`)
 );
   
@@ -19,6 +20,7 @@ CREATE TABLE `lecturer` (
   `email` VARCHAR(100) NOT NULL,
   `bankid` BIGINT NOT NULL,
   `bankname` VARCHAR(45) NOT NULL,
+  `disable` BOOLEAN NOT NULL,
   PRIMARY KEY (`username`)
 );
 
@@ -60,7 +62,8 @@ CREATE TABLE `course` (
   `numrate` INT NOT NULL,
   `originalprice` FLOAT NOT NULL,
   `promotionalprice` FLOAT NOT NULL,
-  `status` boolean NOT NULL,
+  `status` BOOLEAN NOT NULL,
+  `disable` BOOLEAN NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`),
@@ -149,52 +152,60 @@ INSERT INTO `users` (
   `username`,
   `password`,
   `name`,
-  `email`
+  `email`,
+  `disable`
 )
 VALUES (
   "theson",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Vo The Son",
-  "abc@gmail.com"
+  "abc@gmail.com",
+  1
 );
 
 INSERT INTO `users` (
   `username`,
   `password`,
   `name`,
-  `email`
+  `email`,
+  `disable`
 )
 VALUES (
   "a",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "a",
-  "abc@gmail.com"
+  "abc@gmail.com",
+  0
 );
 
 INSERT INTO `users` (
   `username`,
   `password`,
   `name`,
-  `email`
+  `email`,
+  `disable`
 )
 VALUES (
   "b",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "b",
-  "abc@gmail.com"
+  "abc@gmail.com",
+  0
 );
 
 INSERT INTO `users` (
   `username`,
   `password`,
   `name`,
-  `email`
+  `email`,
+  `disable`
 )
 VALUES (
   "c",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "c",
-  "abc@gmail.com"
+  "abc@gmail.com",
+  0
 );
 #--------------------------------------------------------------------------------
 
@@ -302,7 +313,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "joseportilla",
@@ -310,7 +322,8 @@ VALUES (
   "Jose Portilla",
   "joseportilla@gmail.com",
   "123",
-  "Jose Portilla"
+  "Jose Portilla",
+  1
 );
 
 INSERT INTO `lecturer` (
@@ -319,7 +332,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "kirilleremenko",
@@ -327,7 +341,8 @@ VALUES (
   "Kirill Eremenko",
   "kirilleremenko@gmail.com",
   "456",
-  "Kirill Eremenko"
+  "Kirill Eremenko",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -336,7 +351,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "timbuchalka",
@@ -344,7 +360,8 @@ VALUES (
   "Tim Buchalka",
   "timbuchalka@gmail.com",
   "789",
-  "Tim Buchalka"
+  "Tim Buchalka",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -353,7 +370,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "arditsulce",
@@ -361,7 +379,8 @@ VALUES (
   "Ardit Sulce",
   "arditsulce@gmail.com",
   "012",
-  "Ardit Sulce"
+  "Ardit Sulce",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -370,7 +389,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "alsweigart",
@@ -378,7 +398,8 @@ VALUES (
   "Al Sweigart",
   "alsweigart@gmail.com",
   "012",
-  "Al Sweigart"
+  "Al Sweigart",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -387,7 +408,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "andreineagoie",
@@ -395,7 +417,8 @@ VALUES (
   "Andrei Neagoie",
   "andreineagoie@gmail.com",
   "012",
-  "Andrei Neagoie"
+  "Andrei Neagoie",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -404,7 +427,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "ziyadyehia",
@@ -412,7 +436,8 @@ VALUES (
   "Ziyad Yehia",
   "ziyadyehia@gmail.com",
   "012",
-  "Ziyad Yehia"
+  "Ziyad Yehia",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -421,7 +446,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "coltsteele",
@@ -429,7 +455,8 @@ VALUES (
   "Colt Steele",
   "coltsteele@gmail.com",
   "012",
-  "Colt Steele"
+  "Colt Steele",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -438,7 +465,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "zaidsabih",
@@ -446,7 +474,8 @@ VALUES (
   "Zaid Sabih",
   "zaidsabih@gmail.com",
   "012",
-  "Zaid Sabih"
+  "Zaid Sabih",
+  0
 );
 
 INSERT INTO `lecturer` (
@@ -455,7 +484,8 @@ INSERT INTO `lecturer` (
   `name`,
   `email`,
   `bankid`,
-  `bankname`
+  `bankname`,
+  `disable`
 )
 VALUES (
   "angelayu",
@@ -463,7 +493,8 @@ VALUES (
   "Angela Yu",
   "angelayu@gmail.com",
   "012",
-  "Angela Yu"
+  "Angela Yu",
+  0
 );
 #--------------------------------------------------------------------------------
 
@@ -485,7 +516,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -510,7 +542,8 @@ Build a complete understanding of Python from the ground up!",
   338109,
   129.99,
   9.99,
-  0
+  0,
+  1
 );
 
 INSERT INTO `course` (
@@ -529,7 +562,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -557,6 +591,7 @@ Build an army of powerful Machine Learning models and know how to combine them t
   138093,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -576,7 +611,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   3,
@@ -609,6 +645,7 @@ Support Vector Machines",
   92855,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -628,7 +665,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -652,6 +690,7 @@ Understand both Python 2 and Python 3.",
   65451,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -671,7 +710,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -706,6 +746,7 @@ Learn GUIs (Graphical-User Interfaces)",
   45246,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -725,7 +766,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -749,6 +791,7 @@ Have a portfolio of various data analysis projects.",
   15537,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -768,7 +811,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -793,6 +837,7 @@ Programmatically control the mouse and keyboard to click and type for you.",
   77623,
   50.39,
   10.79,
+  0,
   0
 );
 
@@ -812,7 +857,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -840,6 +886,7 @@ Implement a full Models-Views-Templates structure for your site",
   35933,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -859,7 +906,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -888,6 +936,7 @@ Conduct algorithmic Trading on Quantopian",
   14463,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -907,7 +956,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -936,6 +986,7 @@ Conduct algorithmic Trading on Quantopian",
   14463,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -955,7 +1006,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -974,6 +1026,7 @@ Master modern Python 3.9(latest) fundamentals as well as advanced topics",
   23456,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -993,7 +1046,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -1012,6 +1066,7 @@ Gain the Python Skills Necessary to Learn In-Demand Topics, such as Data Science
   30971,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -1031,7 +1086,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -1050,6 +1106,7 @@ Work through nearly 200 exercises and quizzes!",
   21478,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -1069,7 +1126,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -1088,6 +1146,7 @@ Install hacking lab & needed software (on Windows, OS X and Linux)",
   12156,
   129.99,
   9.99,
+  0,
   0
 );
 
@@ -1107,7 +1166,8 @@ INSERT INTO `course` (
   `numrate`,
   `originalprice`,
   `promotionalprice`,
-  `status`
+  `status`,
+  `disable`
 )
 VALUES (
   2,
@@ -1132,6 +1192,7 @@ Learn to use modern frameworks like Selenium, Beautiful Soup, Request, Flask, Pa
   10849,
   129.99,
   9.99,
+  0,
   0
 );
 #--------------------------------------------------------------------------------

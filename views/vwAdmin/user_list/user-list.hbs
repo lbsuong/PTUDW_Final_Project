@@ -23,7 +23,7 @@
   </thead>
   <tbody>
     {{#each userList}}
-    <tr>
+    <tr {{#if disable}}class="table-danger" {{/if}}>
       <th scope="row">{{username}}</th>
       <td>{{name}}</td>
       <td>{{email}}</td>

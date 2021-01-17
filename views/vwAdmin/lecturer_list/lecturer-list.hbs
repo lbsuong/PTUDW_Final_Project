@@ -25,7 +25,7 @@
   </thead>
   <tbody>
     {{#each lecturerList}}
-    <tr>
+    <tr {{#if disable}}class="table-danger" {{/if}}>
       <th scope="row">{{username}}</th>
       <td>{{name}}</td>
       <td>{{email}}</td>

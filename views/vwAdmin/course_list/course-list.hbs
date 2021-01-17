@@ -1,5 +1,16 @@
 {{#section 'css'}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  .imgBorderNormal {
+    border: 1px solid #DFDFDF;
+    border-radius: 5%;
+  }
+
+  .imgBorderDisable {
+    border: 1px solid #EE1A22;
+    border-radius: 5%;
+  }
+</style>
 {{/section}}
 
 
@@ -16,19 +27,60 @@
   });
 </script>
 {{/each}}
+
+{{#each pageItems}}
+<script>
+  $('#pageNumber{{value}}').on('click', function (e) {
+    e.preventDefault();
+    const page = $(this).data('page');
+    $('#page').val(page);
+    $('#frmCourseList').submit();
+  });
+</script>
+{{/each}}
+
+<script>
+  $('#pagePrevious').on('click', function (e) {
+    e.preventDefault();
+    const page = $(this).data('page');
+    $('#page').val(page);
+    $('#frmCourseList').submit();
+  });
+
+  $('#pageNext').on('click', function (e) {
+    e.preventDefault();
+    const page = $(this).data('page');
+    $('#page').val(page);
+    $('#frmCourseList').submit();
+  });
+</script>
 {{/section}}
 
+
+{{#if message}}
+<div class="container">
+  <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+    <strong>
+      {{message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+{{/if}}
 
 <div class="container mb-5">
   {{#if courseList}}
   <div class="row">
     {{#each courseList}}
     <div class="col-sm-4 mb-5 d-flex align-items-stretch">
-      <div class="card" style="width: 18rem;">
-        <img src="/public/img/courses/{{id}}/small_thumbnail.jpg" class="card-img-top imgBorder" alt="{{title}}">
-        <div class="card-body">
+      <div class="card {{#if disable}}border-danger{{/if}}" style="width: 18rem;">
+        <img src="{{smallthumbnaillink}}"
+          class="card-img-top {{#if disable}}imgBorderDisable{{else}}imgBorderNormal{{/if}}" alt="{{title}}">
+        <div class="card-body border-danger">
           <h5 class="card-title">{{title}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
+          <h6 class="card-subtitle mb-2 text-muted"><a href="/user/lecturer/{{lecturerid}}">{{lecturername}}</a></h6>
           <span class="text-danger" style="vertical-align: middle;"><strong>{{rate}}</strong></span>
           <div class="rating{{id}}" style="display: inline-block;"></div>
           <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
@@ -41,10 +93,10 @@
           <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
               class="card-link"><small>{{categoryname}}</small></a></p>
         </div>
-        <div class="card-footer">
+        <div class="card-footer {{#if disable}}border-danger{{/if}}">
           <div class="d-flex justify-content-center">
-            <a class="btn btn-primary mr-1" href="/course/{{id}}" role="button">
-              <i class="fas fa-info-circle"></i>
+            <a class="btn btn-primary mr-1" href="/admin/course-list/edit/{{id}}" role="button">
+              <i class="fas fa-edit"></i>
               Detail + Edit
             </a>
           </div>
@@ -57,22 +109,32 @@
   <h4 class="text-danger">No course has been found</h4>
   {{/if}}
   {{#if pageItems}}
-  <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-      <li class="page-item {{#unless canGoPrevious}}disabled{{/unless}}">
-        <a class="page-link" href="?page={{previousPage}}" tabindex="-1" aria-disabled="true">Previous</a>
-      </li>
-      {{#each pageItems}}
-      {{#if isActive}}
-      <li class="page-item active"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
-      {{else}}
-      <li class="page-item"><a class="page-link" href="?page={{value}}">{{value}}</a></li>
-      {{/if}}
-      {{/each}}
-      <li class="page-item {{#unless canGoNext}}disabled{{/unless}}">
-        <a class="page-link" href="?page={{nextPage}}">Next</a>
-      </li>
-    </ul>
-  </nav>
+  <form id="frmCourseList" method="GET">
+    <input type="hidden" name="byLecturer" value="{{#if query.byLecturer}}{{query.byLecturer}}{{else}}off{{/if}}">
+    <input type="hidden" name="lecturerid" value="{{#if query.lecturerid}}{{query.lecturerid}}{{else}}0{{/if}}">
+    <input type="hidden" name="byCategory" value="{{#if query.byCategory}}{{query.byCategory}}{{else}}off{{/if}}">
+    <input type="hidden" name="categoryid" value="{{#if query.categoryid}}{{query.categoryid}}{{else}}0{{/if}}">
+    <input type="hidden" name="page" id="page">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <div class="btn-group" role="group">
+          <button type=" submit" class="btn border-dark" id="pagePrevious" data-page={{previousPage}} {{#unless
+            canGoPrevious}}disabled{{/unless}}>
+            Previous
+          </button>
+          {{#each pageItems}}
+          <button type=" submit" class="btn {{#if isActive}}btn-primary{{else}}border-dark{{/if}}"
+            id="pageNumber{{value}}" data-page={{value}}>
+            {{value}}
+          </button>
+          {{/each}}
+          <button type=" submit" class="btn border-dark" id="pageNext" data-page={{nextPage}} {{#unless
+            canGoNext}}disabled{{/unless}}>
+            Next
+          </button>
+        </div>
+      </ul>
+    </nav>
+  </form>
   {{/if}}
 </div>

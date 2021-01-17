@@ -13,7 +13,14 @@ router.get('/:id', async function (req, res) {
   if (req.session.isAuth) {
     const result = await courseModel.userHasOwnedCourse(req.session.profile.username, id)
     if (result) {
-      return res.redirect(`/course/${id}/lesson/1`);
+      const firstLessonID = await lessonModel.getFirstLessonID(id);
+      let url = '';
+      if (firstLessonID === null) {
+        url = `/course/${id}/lesson`;
+      } else {
+        url = `/course/${id}/lesson/${firstLessonID}`;
+      }
+      return res.redirect(url);
     }
   }
 
@@ -43,7 +50,10 @@ router.get('/:id', async function (req, res) {
   }
   const rating = await rateModel.pageOnRatingByCourseID(id, offset);
 
+  const lessonList = await lessonModel.allByCourse(id);
+
   res.render('vwCourse/course', {
+    forUser: true,
     currentCourse,
     status,
     topFiveMostPopularBySameCat,
@@ -52,13 +62,16 @@ router.get('/:id', async function (req, res) {
     canGoPrevious: page > 1,
     canGoNext: page < nPage,
     previousPage: +page - 1,
-    nextPage: +page + 1
+    nextPage: +page + 1,
+    lessonList
   });
 });
 
 router.get('/:id/lesson', auth.user, async function (req, res) {
   const id = req.params.id;
-  res.redirect(`/course/${id}/lesson/1`);
+  res.render('vwCourse/lesson', {
+    layout: 'course-layout.hbs',
+  });
 });
 
 router.get('/:id/lesson/:lessonid', auth.user, async function (req, res) {
@@ -72,7 +85,7 @@ router.get('/:id/lesson/:lessonid', auth.user, async function (req, res) {
   const lessonid = +req.params.lessonid;
 
   const course = await courseModel.singleByID(id);
-  const lesson = await lessonModel.singleByID(lessonid, id);
+  const lesson = await lessonModel.singleByID(lessonid);
   const allLesson = await lessonModel.allByCourse(id);
   for (i = 0; i < allLesson.length; i++) {
     allLesson[i].isActive = (allLesson[i].id === lessonid)

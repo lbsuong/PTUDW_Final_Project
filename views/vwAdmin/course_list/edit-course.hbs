@@ -1,0 +1,175 @@
+{{#section 'css'}}
+<style>
+  #lessonList {
+    max-height: 50vh;
+    overflow: auto;
+  }
+
+  #thumbnailNote {
+    font-size: 80%;
+  }
+</style>
+{{/section}}
+
+
+{{#section 'js'}}
+<script>
+  tinymce.init({
+    selector: '#fulldes'
+  });
+
+  $('#thumbnailGroupFile').on('change', function () {
+    const value = $(this).val();
+    if (value === '') {
+      $('#thumbnailGroupFileLabel').text('Choose file');
+    } else {
+      const path = value.split('\\');
+      $('#thumbnailGroupFileLabel').text(path.pop());
+    }
+  });
+</script>
+{{/section}}
+
+
+<div class="container mb-5 mt-5">
+  {{#if message}}
+  <div class="alert alert-success alert-dismissible fade show mb-5" role="alert">
+    <strong>
+      {{message}}
+    </strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {{/if}}
+
+  <form method="POST" enctype="multipart/form-data" class="d-inline">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Title</span>
+      </div>
+      <input type="text" aria-label="Title" class="form-control" value="{{course.title}}" name="title" required>
+    </div>
+
+    <div class="mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="thumbnailGroupFileAddon">Thumbnail</span>
+        </div>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="thumbnailGroupFile"
+            aria-describedby="thumbnailGroupFileAddon" name="thumbnail" accept="image/*">
+          <label class="custom-file-label" for="thumbnailGroupFile" id="thumbnailGroupFileLabel">Choose file</label>
+        </div>
+      </div>
+      <div id="thumbnailNote">
+        <strong>Note: </strong>ignore this if you don't want to change thumbnail.
+      </div>
+    </div>
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Tiny Description</span>
+      </div>
+      <input type="text" aria-label="Tiny Description" class="form-control" value="{{course.tinydes}}" name="tinydes"
+        required>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Original Price</span>
+          </div>
+          <input class="form-control" type="number" step=any name="originalprice" id="originalPrice"
+            value="{{course.originalprice}}" required>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Promotional Price</span>
+          </div>
+          <input class="form-control" type="number" step=any name="promotionalprice" id="promotionalPrice"
+            value="{{course.promotionalprice}}" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="categoryGroupSelect">Category</label>
+      </div>
+      <select class="custom-select" id="categoryGroupSelect" name="category">
+        {{#each category}}
+        <option value="{{id}}" {{#if isSelected}}selected{{/if}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="statusGroupSelect">Status</label>
+      </div>
+      <select class="custom-select" id="statusGroupSelect" name="status">
+        <option value="0" {{#unless course.status}}selected{{/unless}}>Incomplete</option>
+        <option value="1" {{#if course.status}}selected{{/if}}>Complete</option>
+      </select>
+    </div>
+
+    <hr>
+
+    <div class="card mt-4 mb-4">
+      <h5 class="card-header">What you will learn</h5>
+      <div class="card-body">
+        <textarea id="fulldes" name="fulldes" required>{{course.fulldes}}</textarea>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5>Lesson list</h5>
+      </div>
+      <div class="card-body" id="lessonList">
+        {{#if lessonList}}
+        <ul class="list-group list-group-flush">
+          {{#each lessonList}}
+          <li class="list-group-item">
+            <div class="row align-items-center">
+              <div class="col">{{rank}}. {{title}}</div>
+              <div class="col-1">
+                <a class="btn" href="/admin/course-list/edit/{{../course.id}}/lesson/edit/{{id}}" role="button">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+          {{/each}}
+        </ul>
+        {{else}}
+        <h5 class="text-danger">No lesson has been found</h5>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="mb-4"></div>
+    <button type="submit" class="btn btn-success">Apply</button>
+    <a class="btn btn-danger" href="/admin/course-list" role="button">Cancel</a>
+  </form>
+  <form action="/admin/course-list/delete" method="POST" class="d-inline float-right">
+    <input type="hidden" id="idWantToDelete" name="idWantToDelete" value="{{course.id}}">
+    <button type="submit" class="btn btn-danger float-right">Delete Course</button>
+  </form>
+  {{#if course.disable}}
+  <form action="/admin/course-list/enable" method="POST" class="d-inline float-right mr-2">
+    <input type="hidden" id="idWantToEnable" name="idWantToEnable" value="{{course.id}}">
+    <button type="submit" class="btn btn-info float-right">Enable Course</button>
+  </form>
+  {{else}}
+  <form action="/admin/course-list/disable" method="POST" class="d-inline float-right mr-2">
+    <input type="hidden" id="idWantToDisable" name="idWantToDisable" value="{{course.id}}">
+    <button type="submit" class="btn btn-secondary float-right">Disable Course</button>
+  </form>
+  {{/if}}
+</div>

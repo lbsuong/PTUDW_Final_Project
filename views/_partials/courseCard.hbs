@@ -1,3 +1,13 @@
+{{#section 'css'}}
+<style>
+    .imgBorder {
+        border: 1px solid #DFDFDF;
+        border-radius: 5%;
+    }
+</style>
+{{/section}}
+
+
 <div class="col-sm-4 mb-5 d-flex align-items-stretch">
     <div class="card" style="width: 18rem;">
         <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
@@ -8,6 +18,11 @@
             <div class="rating{{id}}" style="display: inline-block;"></div>
             <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
             <p class="card-text">{{tinydes}}</p>
+            <p>
+                <strong>${{format_real_num promotionalprice}}</strong>
+                &nbsp;
+                <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
+            </p>
             <p class="card-text"><small class="text-muted">Category: </small><a href="/category/{{categoryid}}"
                     class="card-link"><small>{{categoryname}}</small></a></p>
         </div>

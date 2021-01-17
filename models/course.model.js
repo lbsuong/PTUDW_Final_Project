@@ -6,6 +6,7 @@ const TBL_COURSE = 'course';
 const TBL_LECTURER = 'lecturer';
 const TBL_CATEGORY = 'category';
 const TBL_OWNEDCOURSE = 'ownedcourse';
+const TBL_LESSON = 'lesson';
 
 module.exports = {
   async singleByID(id) {
@@ -44,7 +45,7 @@ module.exports = {
 
   topMostPopularInAWeek(n) {
     return db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
@@ -57,7 +58,7 @@ module.exports = {
 
   topMostPopularByCategory(n, catId, except) {
     return db.load(
-      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
+      `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.username AS lecturerid, ${TBL_LECTURER}.name AS lecturername, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
@@ -273,24 +274,70 @@ module.exports = {
     await db.patch(entity, condition, TBL_COURSE);
   },
 
-  async countOnCourse() {
-    const result = await db.load(`SELECT COUNT(*) AS total FROM ${TBL_COURSE}`);
+  async countOnCourse(filter) {
+    let sql =
+      `SELECT COUNT(*) AS total, ${TBL_LECTURER}.username AS lecturerid, ${TBL_CATEGORY}.id AS categoryid
+      FROM ${TBL_COURSE}
+      LEFT JOIN ${TBL_LECTURER}
+      ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
+      LEFT JOIN ${TBL_CATEGORY}
+      ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id`;
+
+    let filterCount = 0;
+    if (filter !== null) {
+      sql = sql.concat(' WHERE');
+      if (filter.lecturerid !== null) {
+        if (filterCount > 0) {
+          sql = sql.concat(' AND');
+        }
+        sql = sql.concat(` ${TBL_LECTURER}.username = '${filter.lecturerid}'`);
+        filterCount++;
+      }
+      if (filter.categoryid !== null) {
+        if (filterCount > 0) {
+          sql = sql.concat(' AND');
+        }
+        sql = sql.concat(` ${TBL_CATEGORY}.id = ${filter.categoryid}`);
+        filterCount++;
+      }
+    }
+
+    const result = await db.load(sql);
     if (result.length === 0) {
       return null;
     }
     return result[0].total;
   },
 
-  pageOnCourse(offset) {
-    return db.load(
+  pageOnCourse(offset, filter) {
+    let sql =
       `SELECT ${TBL_COURSE}.*, ${TBL_LECTURER}.name AS lecturername, ${TBL_LECTURER}.username AS lecturerid, ${TBL_CATEGORY}.name AS categoryname, ${TBL_CATEGORY}.id AS categoryid
       FROM ${TBL_COURSE}
       LEFT JOIN ${TBL_LECTURER}
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
-      ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
-      LIMIT ${config.pagination.limit} OFFSET ${offset}`
-    );
+      ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id`;
+
+    let filterCount = 0;
+    if (filter !== null) {
+      sql = sql.concat(' WHERE');
+      if (filter.lecturerid !== null) {
+        if (filterCount > 0) {
+          sql = sql.concat(' AND');
+        }
+        sql = sql.concat(` ${TBL_LECTURER}.username = '${filter.lecturerid}'`);
+        filterCount++;
+      }
+      if (filter.categoryid !== null) {
+        if (filterCount > 0) {
+          sql = sql.concat(' AND');
+        }
+        sql = sql.concat(` ${TBL_CATEGORY}.id = ${filter.categoryid}`);
+        filterCount++;
+      }
+    }
+    sql = sql.concat(` LIMIT ${config.pagination.limit} OFFSET ${offset}`);
+    return db.load(sql);
   },
 
   pageOnCourseByLecID(id, limit, offset) {
@@ -324,5 +371,28 @@ module.exports = {
   changeInfo(newEntity) {
     const condition = { id: newEntity.id };
     return db.patch(newEntity, condition, TBL_COURSE);
+  },
+
+  async deleteCourse(id) {
+    const lessonCondition = { course: id };
+    await db.del(lessonCondition, TBL_LESSON);
+    const courseCondition = { id: id };
+    return db.del(courseCondition, TBL_COURSE);
+  },
+
+  disableCourse(id) {
+    const condition = { id: id };
+    const entity = {
+      disable: true
+    };
+    return db.patch(entity, condition, TBL_COURSE);
+  },
+
+  enableCourse(id) {
+    const condition = { id: id };
+    const entity = {
+      disable: false
+    };
+    return db.patch(entity, condition, TBL_COURSE);
   }
 }

@@ -14,7 +14,8 @@ module.exports = {
       FROM ${TBL_COURSE}
       WHERE
         MATCH(title)
-        AGAINST('${keywords}*' IN BOOLEAN MODE)`
+        AGAINST('${keywords}*' IN BOOLEAN MODE)
+        AND disable = 0`
     );
     return count[0].total;
   },
@@ -35,7 +36,8 @@ module.exports = {
             FROM ${TBL_COURSE}
             WHERE
               MATCH(title)
-              AGAINST('${keywords}*' IN BOOLEAN MODE)) AS T
+              AGAINST('${keywords}*' IN BOOLEAN MODE)
+              AND disable = 0) AS T
       LEFT JOIN ${TBL_LECTURER}
       ON T.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
@@ -47,6 +49,7 @@ module.exports = {
 
   async countOnCategory(keywords) {
     let count = 0;
+    const closeCategory = [];
     const searchResult = await db.load(
       `SELECT *
       FROM ${TBL_CATEGORY}
@@ -73,14 +76,17 @@ module.exports = {
           for (course of allCoursesByCat) {
             count++;
           }
+          closeCategory.push(subCategory.id);
         }
       } else {
-        const allCoursesByCat = await courseModel.allByCategoryID(category.id);
-        if (allCoursesByCat.length === 0) {
-          continue;
-        }
-        for (course of allCoursesByCat) {
-          count++;
+        if (!closeCategory.includes(category.id)) {
+          const allCoursesByCat = await courseModel.allByCategoryID(category.id);
+          if (allCoursesByCat.length === 0) {
+            continue;
+          }
+          for (course of allCoursesByCat) {
+            count++;
+          }
         }
       }
     }
@@ -88,6 +94,7 @@ module.exports = {
   },
 
   async pageOnCategory(keywords, offset, sortType) {
+    const closeCategory = [];
     const searchResult = await db.load(
       `SELECT *
       FROM ${TBL_CATEGORY}
@@ -115,16 +122,23 @@ module.exports = {
             continue;
           }
           for (course of allCoursesByCat) {
-            allCourses.push(course);
+            if (!course.disable) {
+              allCourses.push(course);
+            }
           }
+          closeCategory.push(subCategory.id);
         }
       } else {
-        const allCoursesByCat = await courseModel.allByCategoryID(category.id, offset);
-        if (allCoursesByCat === null) {
-          continue;
-        }
-        for (course of allCoursesByCat) {
-          allCourses.push(course);
+        if (!closeCategory.includes(category.id)) {
+          const allCoursesByCat = await courseModel.allByCategoryID(category.id, offset);
+          if (allCoursesByCat === null) {
+            continue;
+          }
+          for (course of allCoursesByCat) {
+            if (!course.disable) {
+              allCourses.push(course);
+            }
+          }
         }
       }
     }

@@ -11,7 +11,7 @@
   }
 
   .imgBorder {
-    border: 1px solid #b7b8be;
+    border: 1px solid #DFDFDF;
     border-radius: 5%;
   }
 </style>
@@ -62,7 +62,7 @@
           <img src="{{bigthumbnaillink}}" class="d-block w-100 h-100" alt="{{title}}">
         </a>
         <div class="carousel-caption d-none d-md-block">
-          <h5>{{title}} - {{lecturername}}</h5>
+          <h5>{{title}} - <a href="/user/lecturer/{{lecturerid}}">{{lecturername}}</a></h5>
           <h6>
             <span style="vertical-align: middle;">Rated by students: </span>
             <span class="text-warning" style="vertical-align: middle;">{{rate}}</span>

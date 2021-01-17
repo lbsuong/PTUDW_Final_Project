@@ -1,0 +1,74 @@
+{{#section 'css'}}
+<style>
+  #videoNote {
+    font-size: 80%;
+  }
+</style>
+{{/section}}
+
+
+{{#section 'js'}}
+<script>
+  tinymce.init({
+    selector: '#detail'
+  });
+
+  $('#videoGroupFile').on('change', function () {
+    const value = $(this).val();
+    if (value === '') {
+      $('#videoGroupFileLabel').text('Choose file');
+    } else {
+      const path = value.split('\\');
+      $('#videoGroupFileLabel').text(path.pop());
+    }
+  });
+</script>
+{{/section}}
+
+
+<div class="container mt-5 mb-5">
+  <form method="POST" enctype="multipart/form-data" class="d-inline">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="title">Title</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Title input" aria-describedby="title" value="{{lesson.title}}"
+        name="title" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="rank">Lesson Numerical Order</span>
+      </div>
+      <input type="number" class="form-control" aria-label="Rank input" aria-describedby="rank" value="{{lesson.rank}}"
+        name="rank" required>
+    </div>
+
+    <div class="mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="videoGroupFileAddon">Video</span>
+        </div>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="videoGroupFile" aria-describedby="videoGroupFileAddon"
+            name="video" accept="video/*">
+          <label class="custom-file-label" for="videoGroupFile" id="videoGroupFileLabel">Choose file</label>
+        </div>
+      </div>
+      <div id="videoNote">
+        <strong>Note: </strong>ignore this if you don't want to change video.
+      </div>
+    </div>
+
+    <h4><strong>Video Description</strong></h4>
+    <textarea id="detail" name="detail" required>{{lesson.detail}}</textarea>
+
+    <div class="mb-4"></div>
+    <button type="submit" class="btn btn-success">Apply</button>
+    <a class="btn btn-danger" href="/admin/course-list/edit/{{courseid}}" role="button">Cancel</a>
+  </form>
+  <form action="/admin/course-list/edit/{{courseid}}/lesson/delete" method="POST" class="d-inline float-right">
+    <input type="hidden" id="idWantToDelete" name="idWantToDelete" value="{{lesson.id}}">
+    <button type="submit" class="btn btn-danger float-right">Delete Lesson</button>
+  </form>
+</div>

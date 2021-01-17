@@ -47,5 +47,21 @@ module.exports = {
   deleteAccount(username) {
     const condition = { username: username };
     return db.del(condition, TBL_USERS);
+  },
+
+  disableAccount(username) {
+    const condition = { username: username };
+    const entity = {
+      disable: true
+    };
+    return db.patch(entity, condition, TBL_USERS);
+  },
+
+  enableAccount(username) {
+    const condition = { username: username };
+    const entity = {
+      disable: false
+    };
+    return db.patch(entity, condition, TBL_USERS);
   }
 };

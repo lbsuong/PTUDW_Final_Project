@@ -1,6 +1,6 @@
 DROP DATABASE IF EXISTS `udemy`;
 CREATE DATABASE `udemy` CHARACTER SET utf8mb4;
-USE `udemy`;	
+USE `udemy`;
 
 CREATE TABLE `users` (
   `username` VARCHAR(30) NOT NULL,
@@ -8,6 +8,7 @@ CREATE TABLE `users` (
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `picture` varchar(100),
+  `disable` BOOLEAN NOT NULL,
   PRIMARY KEY (`username`)
 );
   
@@ -19,6 +20,7 @@ CREATE TABLE `lecturer` (
   `email` VARCHAR(100) NOT NULL,
   `bankid` BIGINT NOT NULL,
   `bankname` VARCHAR(45) NOT NULL,
+  `disable` BOOLEAN NOT NULL,
   PRIMARY KEY (`username`)
 );
 
@@ -60,7 +62,8 @@ CREATE TABLE `course` (
   `numrate` INT NOT NULL,
   `originalprice` FLOAT NOT NULL,
   `promotionalprice` FLOAT NOT NULL,
-  `status` boolean NOT NULL,
+  `status` BOOLEAN NOT NULL,
+  `disable` BOOLEAN NOT NULL,
   CONSTRAINT `fk_c_1` FOREIGN KEY (`lecturer`) REFERENCES `lecturer`(`username`) ON DELETE CASCADE,
   CONSTRAINT `fk_c_2` FOREIGN KEY (`categoryid`) REFERENCES `category`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`),
@@ -126,8 +129,9 @@ CREATE TABLE `progress` (
   `lessonid` INT NOT NULL
 );
 
-#----------------------------------------------------
+#--------------------------------------------------------------------------------
 
+#----------------------------------admin-----------------------------------------
 INSERT INTO `admin` (
   `username`,
   `password`,
@@ -140,3 +144,4 @@ VALUES (
   "admin",
   "admin@gmail.com"
 );
+#--------------------------------------------------------------------------------

@@ -17,6 +17,11 @@
   .additionalCourse:hover {
     cursor: pointer;
   }
+
+  #lessonList {
+    max-height: 50vh;
+    overflow: auto;
+  }
 </style>
 {{/section}}
 
@@ -48,7 +53,7 @@
 
 
 <div id="thumbnail">
-  <img class="w-100 h-100" src="{{currentCourse.bigthumbnaillink}}" alt="{{currentCourse.title}}">
+  <img class="w-100 h-100" src="{{currentCourse.bigthumbnaillink}}" alt="{{currentCourse.title}}" class="img-fluid">
 </div>
 <div class="container mb-2 mt-4">
   <h1>{{currentCourse.title}}</h1>
@@ -94,16 +99,35 @@
     </div>
   </div>
 
+  <hr>
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5>Lesson list</h5>
+    </div>
+    <div class="card-body" id="lessonList">
+      {{#if lessonList}}
+      <ul class="list-group list-group-flush">
+        {{#each lessonList}}
+        <li class="list-group-item">{{rank}}. {{title}}</li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <h5 class="text-danger">No lesson has been found</h5>
+      {{/if}}
+    </div>
+  </div>
+
   {{#if topFiveMostPopularBySameCat}}
   <h4 class="mb-3 mt-5"><strong>Students also bought:</strong></h4>
   <div class="my-3">
     {{#each topFiveMostPopularBySameCat}}
     <div class="row additionalCourse" onclick="location.href='/course/{{id}}';">
       <div class="col-3">
-        <img src="{{smallthumbnaillink}}" alt="{{title}}">
+        <img src="{{smallthumbnaillink}}" alt="{{title}}" class="img-fluid">
       </div>
       <div class="col-5">
         <h5>{{title}}</h5>
+        <h6><a href="/user/lecturer/{{lecturerid}}">{{lecturername}}</a></h6>
         <p class="mt-1 mb-0">Updated {{format_date lastupdatedate}}</p>
       </div>
       <div class="col-1">
@@ -153,7 +177,7 @@
     <hr>
     {{/each}}
     {{else}}
-    <h4 class="text-danger">No review has been found</h4>
+    <h4 class="text-danger mb-3">No review has been found</h4>
     {{/if}}
     {{#if pageItems}}
     <nav aria-label="Page navigation">

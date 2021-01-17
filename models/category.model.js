@@ -27,7 +27,7 @@ module.exports = {
   },
 
   allCatIDByLevel(level) {
-    return db.load(`SELECT * FROM ${TBL_CATEGORY} WHERE LEVEL = ${level}`);
+    return db.load(`SELECT * FROM ${TBL_CATEGORY} WHERE level = ${level}`);
   },
 
   subCatByID(id) {
