@@ -53,6 +53,16 @@ router.post('/log-in', async function (req, res) {
         });
     }
 
+    if (result.disable === true) {
+        return res.render('vwUser/log-in', {
+            notify: {
+                message: 'Your account has been block. Please contact support for more information',
+                err: true,
+            },
+            forUser: true,
+        });
+    }
+
     req.session.isAuth = true;
     req.session.level = {
         user: false,
@@ -264,6 +274,21 @@ router.get('/course', auth.lecturer, async function (req, res) {
         c_previousPage: +c_page - 1,
         c_nextPage: +c_page + 1
     })
+});
+
+// DELETE COURSE HANDLE
+router.post('/course/del', auth.lecturer, async function (req, res) {
+    const courseid = req.body.courseid;
+    const courseDetail = await lecturerModel.getOwnCourse(req.session.profile.username, courseid);
+    console.log(courseid)
+    console.log(courseDetail);
+    if (courseDetail === null) {
+        return res.render('refuse', {
+            forLecturer: true,
+        });
+    }
+    await courseModel.deleteByCourseID(courseid);
+    res.redirect(req.headers.referer);
 });
 
 router.get('/course/:id', auth.lecturer, async function (req, res) {

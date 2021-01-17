@@ -15,6 +15,12 @@ module.exports = function (app) {
     res.locals.isAuth = req.session.isAuth;
     res.locals.level = req.session.level;
     res.locals.profile = req.session.profile;
+    if (req.session.preurl) {
+      if (req.session.preurl !== req.headers.referer)
+        req.session.preurl = req.headers.referer;
+    } else {
+      req.session.preurl = req.headers.referer;
+    }
     if (req.session.isAuth && req.session.level.user) {
       let cartID = await cartModel.cartByUsername(req.session.profile.username);
       if (cartID.length === 0) {

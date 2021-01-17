@@ -5,10 +5,15 @@ const userModel = require('../../models/user.model');
 const cartModel = require('../../models/cart.model');
 const courseModel = require('../../models/course.model');
 const wishModel = require('../../models/wish.model');
+const otpModel = require('../../models/otp.model');
 const auth = require('../../middlewares/auth.mdw');
 const lecturerModel = require('../../models/lecturer.model');
 const config = require('../../config/default.json');
 const ownedModel = require('../../models/owned.model');
+const func = require('../../middlewares/function.mdw');
+const transporter = require('../../utils/mail');
+const { isBuffer } = require('util');
+const { resolveSoa } = require('dns');
 
 const router = express.Router();
 
@@ -49,7 +54,15 @@ router.post('/log-in', async function (req, res) {
       forUser: true,
     });
   }
-
+  if (result.disable === true) {
+    return res.render('vwUser/log-in', {
+      notify: {
+        message: 'Your account has been block. Please contact support for more information',
+        err: true,
+      },
+      forUser: true,
+    });
+  }
   // LOAD CART
 
   req.session.isAuth = true;
@@ -64,6 +77,7 @@ router.post('/log-in', async function (req, res) {
     name: result.name,
     email: result.email,
     picture: result.picture,
+    verification: result.verification,
   }
 
   let url = '/';
@@ -71,6 +85,7 @@ router.post('/log-in', async function (req, res) {
 });
 
 router.post('/sign-up', async function (req, res) {
+  console.log("SIGNUP:")
   console.log(req.body);
   let result = await userModel.singleByUsername(req.body.username);
   if (result) {
@@ -82,16 +97,113 @@ router.post('/sign-up', async function (req, res) {
       forUser: true,
     });
   }
+  let emailCheck = await userModel.singleByEmail(req.body.email);
+  if (emailCheck) {
+    return res.render('vwUser/sign-up', {
+      notify: {
+        message: "Email already exists. Please enter another email.",
+        err: true,
+      },
+      forUser: true,
+    });
+  }
 
   const newAccout = {
     username: req.body.username,
     password: bcrypt.hashSync(req.body.password, 10),
     name: req.body.name,
     email: req.body.email,
+    verification: false,
+  }
+  userModel.add(newAccout);
+
+  req.session.isAuth = true;
+  req.session.level = {
+    user: true,
+    lecturer: false,
+    admin: falsem
+  }
+  req.session.profile = {
+    username: req.body.username,
+    name: req.body.name,
+    email: req.body.email,
+    picture: null,
+    verification: false,
+  }
+  res.redirect('/user/vertify');
+});
+
+router.get('/user/vertify', function (req, res) {
+  if (req.session.isAuth === false) {
+    return res.redirect('/user/log-in');
+  }
+  if (req.session.level.lecturer) {
+    return res.redirect('/lecturer');
+  }
+  if (req.session.level.admin) {
+    return res.redirect('/admin');
+  }
+  if (req.session.profile.verification) {
+    return res.redirect('/');
   }
 
-  userModel.add(newAccout);
-  res.redirect('/');
+  let otp = func.otp();
+  // EMAIL VALIDACATION
+  let mailOptions = {
+    to: req.body.email,
+    subject: "OTP for registration is :",
+    html: "<h3>OTP for account verification is </h3>" + otp,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      return console.log(error);
+    }
+
+    // otp
+    newOTP = {
+      username: req.session.profile.username,
+      code: otp,
+    }
+
+    otpModel.add(newOTP);
+
+    return res.render('vertify', {
+      forUser: true,
+    });
+  });
+})
+
+router.post('/user/vertify', async function (req, res) {
+  //CHECK STATUS
+  if (req.session.isAuth === false) {
+    return res.redirect('/user/log-in');
+  }
+  if (req.session.level.lecturer) {
+    return res.redirect('/lecturer');
+  }
+  if (req.session.level.admin) {
+    return res.redirect('/admin');
+  }
+  if (req.session.profile.verification) {
+    return res.redirect('/');
+  }
+
+  // HANDLE
+  let code = req.body.code;
+  let result = await otpModel.get(req.session.profile.username);
+
+  if (code === result.code) {
+    res.redirect('/');
+  } else {
+    res.render('vwUser/vertify', {
+      forUser: true,
+      notify: {
+        message: "Wrong OTP. Please enter the OTP you received.",
+        err: true,
+      },
+    })
+  }
 });
 
 router.get('/profile', auth.user, async function (req, res) {

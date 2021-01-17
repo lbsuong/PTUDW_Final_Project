@@ -7,5 +7,12 @@ module.exports = {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
-    }
+    },
+
+    otp: function () {
+        let otp_n = Math.random();
+        otp_n = otp_n * 1000000;
+        return parseInt(otp_n);
+    },
+
 }

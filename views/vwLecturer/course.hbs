@@ -26,37 +26,7 @@
                 {{#if course}}
                 <div class="row m-auto">
                     {{#each course}}
-                    <div class="col-sm-4 mb-5 d-flex align-items-stretch">
-                        <div class="card ml-auto mr-auto" style="width: 18rem;">
-                            <img src="{{smallthumbnaillink}}" class="card-img-top imgBorder" alt="{{title}}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{title}}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{lecturername}}</h6>
-                                <span class="text-danger"
-                                    style="vertical-align: middle;"><strong>{{rate}}</strong></span>
-                                <div class="rating{{id}}" style="display: inline-block;"></div>
-                                <span style="vertical-align: middle; color: #6C757D">({{format numrate}})</span>
-                                {{!-- <p class="card-text">{{tinydes}}</p> --}}
-                                <p>
-                                    <strong>${{format_real_num promotionalprice}}</strong>
-                                    &nbsp;
-                                    <del style="color: #6C757D;">${{format_real_num originalprice}}</del>
-                                </p>
-                                <p class="card-text"><small class="text-muted">Category: </small><a
-                                        href="/category/{{categoryid}}"
-                                        class="card-link"><small>{{categoryname}}</small></a>
-                                </p>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-center">
-                                    <a class="btn btn-primary mr-1" href="/lecturer/course/{{id}}" role="button">
-                                        <i class="fas fa-info-circle"></i>
-                                        Detail
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{>lecCourseCard}}
                     {{/each}}
                 </div>
                 {{#if c_pageItems}}
