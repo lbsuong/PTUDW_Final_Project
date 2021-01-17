@@ -5,12 +5,8 @@ const { get } = require('../utils/mail');
 const TBL_OTP = 'otp';
 
 module.exports = {
-    async add(user, otp) {
-        entity = {
-            username: user,
-            code: otp,
-        }
-        let result = await this.get(user);
+    async add(entity) {
+        let result = await this.get(entity.username);
         if (result === null)
             return await db.add(entity, TBL_OTP);
         else {
@@ -35,5 +31,9 @@ module.exports = {
             username: user,
         }
         return await db.del(condition, TBL_OTP);
+    },
+    async calSecond(date, currentDate) {
+        let result = await db.load(`SELECT TIMESTAMPDIFF(SECOND,'${date}','${currentDate}') AS time`);
+        return result[0].time;
     }
 }

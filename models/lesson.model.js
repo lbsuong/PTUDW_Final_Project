@@ -48,5 +48,33 @@ module.exports = {
             return null;
         }
         return firstLesson[0].id;
+    },
+    async isAvailableRank(idx, courseid) {
+        let answer = await db.load(`SELECT * FROM ${TBL_LESSON} WHERE course = ${courseid} AND ${TBL_LESSON}.rank = ${idx}`);
+        if (answer.length === 0)
+            return true;
+        return false;
+    },
+
+    async getAvailableRank(courseid) {
+        let ans = [];
+        let result = await db.load(`SELECT MAX(${TBL_LESSON}.rank) AS maxrank
+        FROM ${TBL_LESSON} WHERE course = ${courseid}`);
+        let maxrank = result[0].maxrank;
+        if (maxrank === null)
+            maxrank = 1;
+
+        for (i = 1; i <= maxrank; i++) {
+            let check = await this.isAvailableRank(i, courseid);
+            if (check)
+                ans.push(i);
+        }
+
+        for (i = maxrank + 1; i < maxrank + 5; i++) {
+
+            ans.push(i);
+        }
+        console.log(ans)
+        return ans;
     }
 }

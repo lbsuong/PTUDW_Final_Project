@@ -31,30 +31,62 @@ router.get('/sign-up', function (req, res) {
   });
 });
 
-
 router.post('/log-in', async function (req, res) {
-  let result = await userModel.singleByUsername(req.body.username);
-  if (result == null) {
-    console.log('render');
-    return res.render('vwUser/log-in', {
-      notify: {
-        message: 'There was a problem logging in. Check your email and password or create an account.',
-        err: true,
-      },
-      forUser: true,
-    });
+  let result;
+  if (req.body.googlelogin === "true") {
+    let userLogin = await userModel.singleByEmail(req.body.email);
+    if (userLogin === null) {
+      const newAccout = {
+        username: req.body.email,
+        password: bcrypt.hashSync(req.body.email, 10),
+        name: req.body.name,
+        email: req.body.email,
+        verification: true,
+        disable: false,
+      }
+      userModel.add(newAccout);
+
+      req.session.isAuth = true;
+      req.session.level = {
+        user: true,
+        lecturer: false,
+        admin: false,
+      }
+      req.session.profile = {
+        username: req.body.email,
+        name: req.body.name,
+        email: req.body.email,
+        picture: req.body.picture,
+        verification: true,
+      }
+      return res.redirect('/');
+    } else {
+      result = await userModel.singleByUsername(req.body.username);
+    }
+  } else {
+    result = await userModel.singleByUsername(req.body.username);
+    if (result == null) {
+      return res.render('vwUser/log-in', {
+        notify: {
+          message: 'There was a problem logging in. Check your email and password or create an account.',
+          err: true,
+        },
+        forUser: true,
+      });
+    }
+    const correctPassword = bcrypt.compareSync(req.body.password, result.password);
+    if (correctPassword == false) {
+      return res.render('vwUser/log-in', {
+        notify: {
+          message: 'There was a problem logging in. Check your email and password or create an account.',
+          err: true,
+        },
+        forUser: true,
+      });
+    }
   }
-  const correctPassword = bcrypt.compareSync(req.body.password, result.password);
-  if (correctPassword == false) {
-    return res.render('vwUser/log-in', {
-      notify: {
-        message: 'There was a problem logging in. Check your email and password or create an account.',
-        err: true,
-      },
-      forUser: true,
-    });
-  }
-  if (result.disable === true) {
+
+  if (result.disable == true) {
     return res.render('vwUser/log-in', {
       notify: {
         message: 'Your account has been block. Please contact support for more information',
@@ -63,7 +95,6 @@ router.post('/log-in', async function (req, res) {
       forUser: true,
     });
   }
-  // LOAD CART
 
   req.session.isAuth = true;
   req.session.level = {
@@ -80,13 +111,14 @@ router.post('/log-in', async function (req, res) {
     verification: result.verification,
   }
 
+  if (result.verification == false) {
+    return res.redirect('/user/vertify');
+  }
   let url = '/';
   res.redirect('/');
 });
 
 router.post('/sign-up', async function (req, res) {
-  console.log("SIGNUP:")
-  console.log(req.body);
   let result = await userModel.singleByUsername(req.body.username);
   if (result) {
     return res.render('vwUser/sign-up', {
@@ -114,6 +146,7 @@ router.post('/sign-up', async function (req, res) {
     name: req.body.name,
     email: req.body.email,
     verification: false,
+    disable: false,
   }
   userModel.add(newAccout);
 
@@ -133,7 +166,7 @@ router.post('/sign-up', async function (req, res) {
   res.redirect('/user/vertify');
 });
 
-router.get('/user/vertify', function (req, res) {
+router.get('/vertify', async function (req, res) {
   if (req.session.isAuth === false) {
     return res.redirect('/user/log-in');
   }
@@ -147,11 +180,23 @@ router.get('/user/vertify', function (req, res) {
     return res.redirect('/');
   }
 
+  let currentOTP = await otpModel.get(req.session.profile.username);
+  if (currentOTP) {
+    let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    let second = await otpModel.calSecond(currentOTP.date, currentTime);
+
+    if (second < 600) {
+      return res.render('vwUser/vertify', {
+        forUser: true,
+      });
+    }
+  }
   let otp = func.otp();
+
   // EMAIL VALIDACATION
   let mailOptions = {
-    to: req.body.email,
-    subject: "OTP for registration is :",
+    to: req.session.profile.email,
+    subject: "OTP for registration",
     html: "<h3>OTP for account verification is </h3>" + otp,
   };
 
@@ -159,22 +204,22 @@ router.get('/user/vertify', function (req, res) {
     if (error) {
       return console.log(error);
     }
-
+    let dateNow = new Date().toISOString().slice(0, 19).replace('T', ' ');
     // otp
     newOTP = {
       username: req.session.profile.username,
       code: otp,
+      date: dateNow,
     }
-
     otpModel.add(newOTP);
 
-    return res.render('vertify', {
+    return res.render('vwUser/vertify', {
       forUser: true,
     });
   });
 })
 
-router.post('/user/vertify', async function (req, res) {
+router.post('/vertify', async function (req, res) {
   //CHECK STATUS
   if (req.session.isAuth === false) {
     return res.redirect('/user/log-in');
@@ -193,10 +238,29 @@ router.post('/user/vertify', async function (req, res) {
   let code = req.body.code;
   let result = await otpModel.get(req.session.profile.username);
 
-  if (code === result.code) {
-    res.redirect('/');
+  let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  let second = await otpModel.calSecond(result.date, currentTime);
+  if (second > 600) {
+    return res.render('vwUser/vertify', {
+      forUser: true,
+      notify: {
+        message: "OTP code has expired. Please press RESEND to receive a new OTP.",
+        err: true,
+      }
+    });
+  }
+
+  if (code == result.code) {
+    newProfile = {
+      username: req.session.profile.username,
+      verification: true,
+    }
+    req.session.profile.verification = true;
+    userModel.changeProfile(newProfile);
+    otpModel.del(req.session.profile.username);
+    return res.redirect('/');
   } else {
-    res.render('vwUser/vertify', {
+    return res.render('vwUser/vertify', {
       forUser: true,
       notify: {
         message: "Wrong OTP. Please enter the OTP you received.",
@@ -206,6 +270,13 @@ router.post('/user/vertify', async function (req, res) {
   }
 });
 
+router.post('/vertify/resend', async function (req, res) {
+  if (req.body.resend == "resend") {
+    otpModel.del(req.session.profile.username);
+  }
+  res.redirect('/user/vertify');
+});
+
 router.get('/profile', auth.user, async function (req, res) {
   res.render('vwUser/profile', {
     forUser: true,
@@ -213,25 +284,23 @@ router.get('/profile', auth.user, async function (req, res) {
 });
 
 router.post('/profile', auth.user, async function (req, res) {
-  console.log(req.body);
   let post_id = req.body.postId;
 
   // =========== CHANGE PICTURE ============
   if (post_id == null) {
-    console.log("CHANGING PICTURE!");
-    let filename = req.session.profile.username;
+    let rand = func.random(5);
+    let pic_path = '/public/data/profile_img/';
     const storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, './public/data/profile_img/')
-      },
+      destination: './public/data/profile_img/',
       filename: function (req, file, cb) {
-        filename = filename.concat(file.originalname);
-        cb(null, filename);
+        let file_ext = file.originalname.split('.').pop();
+        let fname = req.session.profile.username.concat(rand).concat('.').concat(file_ext);
+        pic_path = pic_path.concat(fname);
+        cb(null, fname);
       }
     });
     const upload = multer({ storage });
     upload.single('filename')(req, res, function (err) {
-      console.log(req.body);
       if (err) {
         return res.render('vwUser/profile', {
           notify: {
@@ -241,18 +310,9 @@ router.post('/profile', auth.user, async function (req, res) {
           forUser: true,
         })
       } else {
-        filename = profile_img_path.concat(filename);
-        console.log("Filename: ");
-        console.log(filename);
-        userModel.changePicture(filename, req.session.profile.username);
-        req.session.profile.picture = filename;
-        return res.render('vwUser/profile', {
-          notify: {
-            message: "Change Your Picture Successfully!",
-            err: false,
-          },
-          forUser: true,
-        })
+        userModel.changePicture(pic_path, req.session.profile.username);
+        req.session.profile.picture = pic_path;
+        return res.redirect('/user/profile');
       }
     });
   }
@@ -261,9 +321,8 @@ router.post('/profile', auth.user, async function (req, res) {
 
   // =========== CHANGE PASSWORD ============ 
   if (post_id === "password") {
-    console.log("IAMHERE");
     let result = await userModel.singleByUsername(req.session.profile.username);
-    console.log(result);
+
     const correctPassword = bcrypt.compareSync(req.body.currPass, result.password);
     if (correctPassword == false) {
       return res.render('vwUser/profile', {
@@ -284,7 +343,38 @@ router.post('/profile', auth.user, async function (req, res) {
       },
     });
   }
-  // ==========================================
+  // =========== CHANGE PROFILE =============
+  if (post_id === "info") {
+    let checkEmail = await userModel.singleByEmail(req.body.email);
+    if (checkEmail) {
+      if (checkEmail.username !== req.session.profile.username) {
+        return res.render('vwUser/profile', {
+          notify: {
+            message: "Email already exists. Please enter another email.",
+            err: true,
+          },
+          forUser: true,
+        });
+      }
+    }
+    let vertify = true;
+    if (req.body.email != req.session.profile.email) {
+      vertify = false;
+      req.session.profile.verification = false;
+    }
+
+    newProfile = {
+      username: req.session.profile.username,
+      name: req.body.name,
+      email: req.body.email,
+      verification: vertify,
+    }
+    userModel.changeProfile(newProfile);
+
+    req.session.profile.name = req.body.name;
+    req.session.profile.email = req.body.email;
+    return res.redirect('/user/profile');
+  }
 });
 
 router.get('/lecturer/:username', async function (req, res) {
@@ -317,6 +407,7 @@ router.get('/lecturer/:username', async function (req, res) {
     nextPage: +page + 1
   });
 });
+
 router.get('/course', auth.user, async function (req, res) {
   const limit = 12;
   let c_page = +req.query.c || 1;
@@ -337,7 +428,6 @@ router.get('/course', auth.user, async function (req, res) {
   }
   // Load course
   let course = await ownedModel.singleByUsername(req.session.profile.username, limit, c_offset);
-  console.log(course);
   res.render('vwUser/course', {
     forUser: true,
     course,

@@ -14,7 +14,12 @@ module.exports = {
     db.update(bankid, 'bankid', PRI_KEY, id, TBL_LECTURER);
     return db.update(bankname, 'bankname', PRI_KEY, id, TBL_LECTURER);
   },
-
+  async singleByEmail(email) {
+    const rows = await db.load(`SELECT ${TBL_LECTURER}.username FROM ${TBL_LECTURER} WHERE email = '${email}'`);
+    if (rows.length == 0)
+      return null;
+    return rows[0];
+  },
   changeInfo(name, email, id) {
     db.update(name, 'name', PRI_KEY, id, TBL_LECTURER);
     return db.update(email, 'email', PRI_KEY, id, TBL_LECTURER);

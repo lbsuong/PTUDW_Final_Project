@@ -36,6 +36,22 @@
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
     crossorigin="anonymous"></script>
   <script src="/public/js/nav.js"></script>
+
+  <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+  <script>
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
+    function onLoad() {
+      gapi.load('auth2', function () {
+        gapi.auth2.init();
+      });
+    }
+  </script>
+
   {{{_sections.script}}}
   {{{_sections.js}}}
   {{{_sections.onlyjs}}}

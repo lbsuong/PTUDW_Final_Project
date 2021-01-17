@@ -34,11 +34,13 @@ CREATE TABLE `admin` (
   
 CREATE TABLE `otp` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(100) NOT NULL,
+  `username` VARCHAR(30) NOT NULL,
   `code` INT NOT NULL,
+  `date` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_ot_1` FOREIGN KEY (`username`) REFERENCES `user`(`username`) ON DELETE CASCADE
-)
+  CONSTRAINT `fk_ot_1` FOREIGN KEY (`username`) REFERENCES `users`(`username`) ON DELETE CASCADE
+);
+
 CREATE TABLE `category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -161,13 +163,15 @@ INSERT INTO `users` (
   `password`,
   `name`,
   `email`,
-  `disable`
+  `disable`,
+  `verification`
 )
 VALUES (
   "theson",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "Vo The Son",
   "abc@gmail.com",
+  1,
   1
 );
 
@@ -176,14 +180,16 @@ INSERT INTO `users` (
   `password`,
   `name`,
   `email`,
-  `disable`
+  `disable`,
+  `verification`
 )
 VALUES (
   "a",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "a",
   "abc@gmail.com",
-  0
+  0,
+  1
 );
 
 INSERT INTO `users` (
@@ -191,14 +197,16 @@ INSERT INTO `users` (
   `password`,
   `name`,
   `email`,
-  `disable`
+  `disable`,
+  `verification`
 )
 VALUES (
   "b",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "b",
   "abc@gmail.com",
-  0
+  0,
+  1
 );
 
 INSERT INTO `users` (
@@ -206,14 +214,16 @@ INSERT INTO `users` (
   `password`,
   `name`,
   `email`,
-  `disable`
+  `disable`,
+  `verification`
 )
 VALUES (
   "c",
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "c",
   "abc@gmail.com",
-  0
+  0,
+  1
 );
 #--------------------------------------------------------------------------------
 

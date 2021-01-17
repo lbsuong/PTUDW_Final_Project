@@ -88,26 +88,26 @@ router.get('/profile', auth.lecturer, function (req, res) {
 });
 
 router.post('/profile', auth.lecturer, async function (req, res) {
-    console.log(req.body);
     let post_id = req.body.postId;
 
     // =========== CHANGE PICTURE ============
     if (post_id == null) {
-        console.log("CHANGING PICTURE!");
-        let filename = req.session.profile.username;
+        let rand = func.random(5);
+        let pic_path = '/public/data/lecturer_img/';
         const storage = multer.diskStorage({
-            destination: function (req, file, cb) {
-                cb(null, './public/data/lecturer_img/')
-            },
+            destination: './public/data/lecturer_img/',
             filename: function (req, file, cb) {
-                filename = filename.concat(file.originalname);
-                cb(null, filename);
+                let file_ext = file.originalname.split('.').pop();
+                let fname = req.session.profile.username.concat(rand).concat('.').concat(file_ext);
+                pic_path = pic_path.concat(fname);
+                cb(null, fname);
             }
         });
         const upload = multer({ storage });
         upload.single('filename')(req, res, function (err) {
             console.log(req.body);
             if (err) {
+                console.log(err)
                 return res.render('vwLecturer/profile', {
                     notify: {
                         message: "Something Went Wrong! Please Try Again",
@@ -116,18 +116,9 @@ router.post('/profile', auth.lecturer, async function (req, res) {
                     forUser: true,
                 })
             } else {
-                filename = profile_img_path.concat(filename);
-                console.log("Filename: ");
-                console.log(filename);
-                lecturerModel.changePicture(filename, req.session.profile.username);
-                req.session.profile.picture = filename;
-                return res.render('vwLecturer/profile', {
-                    notify: {
-                        message: "Change Your Picture Successfully!",
-                        err: false,
-                    },
-                    forUser: true,
-                })
+                lecturerModel.changePicture(pic_path, req.session.profile.username);
+                req.session.profile.picture = pic_path;
+                return res.render('/lecturer/profile');
             }
         });
     }
@@ -161,8 +152,19 @@ router.post('/profile', auth.lecturer, async function (req, res) {
 
     // ============ CHANGE PROFILE ==============
     if (post_id === "info") {
+        let checkEmail = await lecturerModel.singleByEmail(req.body.email);
+        if (checkEmail) {
+            if (checkEmail.username !== req.session.profile.username) {
+                return res.render('vwLecturer/profile', {
+                    notify: {
+                        message: "Email already exists. Please enter another email.",
+                        err: true,
+                    },
+                    forUser: true,
+                });
+            }
+        }
         lecturerModel.changeInfo(req.body.name, req.body.email, req.session.profile.username);
-
         req.session.profile.name = req.body.name;
         req.session.profile.email = req.body.email;
         return res.redirect('/lecturer/profile');
@@ -185,7 +187,8 @@ router.post('/create', auth.lecturer, function (req, res) {
             cb(null, course_bigthum_path);
         },
         filename: function (req, file, cb) {
-            let filename = req.session.profile.username.concat(rand).concat(file.originalname);
+            let file_ext = file.originalname.split('.').pop();
+            let filename = req.session.profile.username.concat(rand).concat('.').concat(file_ext);
             big_thumbnail_path = big_thumbnail_path.concat(filename);
             cb(null, filename);
         }
@@ -346,9 +349,11 @@ router.get('/course/:id/add', auth.lecturer, async function (req, res) {
             forLecturer: true,
         });
     }
+    availableRank = await lessonModel.getAvailableRank(courseid);
 
     res.render('vwLecturer/addVideo', {
         forLecturer: true,
+        availableRank,
     });
 });
 
@@ -370,7 +375,8 @@ router.post('/course/:id/add', auth.lecturer, async function (req, res) {
             cb(null, './public/courses/lessons/');
         },
         filename: function (req, file, cb) {
-            let filename = req.session.profile.username.concat(courseid).concat(rand).concat(file.originalname);
+            let file_ext = file.originalname.split('.').pop();
+            let filename = req.session.profile.username.concat(courseid).concat(rand).concat('.').concat(file_ext);
             lesson_path = lesson_path.concat(filename);
             console.log(filename);
             cb(null, filename);
@@ -398,4 +404,5 @@ router.post('/course/:id/add', auth.lecturer, async function (req, res) {
         }
     });
 });
+
 module.exports = router;

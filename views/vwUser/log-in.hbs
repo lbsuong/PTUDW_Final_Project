@@ -16,23 +16,27 @@
         <p>You only can sign in when you are not sign in</p>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" href="/general/sign-out"> Log out </a>
+        <a class="btn btn-primary" onclick="signOut()" href="/general/sign-out"> Log out </a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"
           onclick="returnToPreviousPage()">Close</button>
-        {{!-- <a class="btn btn-primary" href="/redirect">Close</a> --}}
       </div>
     </div>
   </div>
 </div>
 {{else}}
 <div id="id01">
-  <form class="modal-content animate" action="" method="POST">
+  <form id="signinForm" class="modal-content animate" action="" method="POST">
     <div class="container">
       {{#if notify}}
       <div class="alert alert-danger text-center"> {{notify.message}}</div>
       {{/if}}
+      <input type="hidden" name="googlelogin" id="googlelogin">
+      <input type="hidden" name="picture" id="picture">
+      <input type="hidden" name="email" id="email">
+      <input type="hidden" name="name" id="name">
+
       <label for="uname"><b>Username</b></label>
-      <input class="accountInput" type="text" placeholder="Enter Username" name="username" required>
+      <input class="accountInput" type="text" placeholder="Enter Username" name="username" id="username" required>
 
       <label for="psw"><b>Password</b></label>
       <input class="accountInput" type="password" placeholder="Enter Password" name="password" required>
@@ -57,7 +61,6 @@
 {{/if}}
 
 {{#section 'js'}}
-<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
   function returnToPreviousPage() {
     let url = "{{retUrl}}";
@@ -70,8 +73,15 @@
 
 <script>
   function onSignIn(googleUser) {
-    console.log("ONHERRE")
     var profile = googleUser.getBasicProfile();
+
+    $('#googlelogin').val("true");
+    $('#name').val(profile.getName());
+    $('#picture').val(profile.getImageUrl());
+    $('#email').val(profile.getEmail());
+
+    $('#signinForm').submit();
+
     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());
     console.log('Image URL: ' + profile.getImageUrl());

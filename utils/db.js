@@ -8,7 +8,8 @@ const pool = mysql.createPool({
   password: 'root',
   database: 'udemy',
   connectionLimit: 50,
-  insecureAuth: true
+  insecureAuth: true,
+  dateStrings: true,
 });
 
 const pool_query = util.promisify(pool.query).bind(pool);

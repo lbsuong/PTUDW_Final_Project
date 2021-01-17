@@ -13,7 +13,7 @@ module.exports = {
         return res.redirect('/lecturer');
       }
       if (req.session.level.user) {
-        if (req.session.profile.vertify === false) {
+        if (req.session.profile.verification == false) {
           return res.redirect('/user/vertify');
         }
         if (req.session.profile.disable) {

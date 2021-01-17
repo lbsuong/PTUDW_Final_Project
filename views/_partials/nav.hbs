@@ -42,7 +42,7 @@
       <li class="nav-item dropdown">
         <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">HI, {{#if profile.picture}}<img class="img-thumbnail rounded-circle"
-            style="width: 30px; height: 30px;" src="../../{{profile.picture}}" alt="Avatar">{{else}}<i
+            style="width: 30px; height: 30px;" src="{{profile.picture}}" alt="Avatar">{{else}}<i
             class="fas fa-user-circle"></i>{{/if}}
           <b>{{profile.name}}</b></button>
         <div class="dropdown-menu dropdown-menu-right">
@@ -53,7 +53,9 @@
           <a class="dropdown-item" href="/user/course"><i class="fas fa-book-open pr-3"></i>My Courses</a>
           <a class="dropdown-item" href="/user/wish"><i class="fas fa-clipboard-check pr-4"></i>Wish List</a>
           {{/if}}
-          <a class="dropdown-item" href="/general/sign-out"><i class="fas fa-sign-out-alt pr-3"></i>Log out</a>
+          <a class="dropdown-item" onclick="signOut()" href="/general/sign-out"><i
+              class="fas fa-sign-out-alt pr-3"></i>Log out</a>
+          {{!-- href="/general/sign-out" --}}
         </div>
       </li>
     </ul>

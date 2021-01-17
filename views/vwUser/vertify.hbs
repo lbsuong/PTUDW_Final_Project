@@ -1,0 +1,27 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="../css/cssUser/log-in.css">
+{{/section}}
+
+<div id="id01">
+    <div class="modal-content animate">
+        <div class="container ">
+            {{#if notify}}
+            <div class="alert alert-danger text-center"> {{notify.message}}</div>
+            {{/if}}
+            <h5 class="text-center text-danger">Your account needs to be verified.</h5>
+            <h5 class="text-center">We had seen an OTP to your email {{profile.email}}</h5>
+            <hr>
+            <form action="" method="POST">
+                <label for="code"><b>Enter OTP</b></label>
+                <input class="accountInput" type="text" placeholder="Enter OTP" name="code" required>
+                <button id="loginButton" type="submit">Verify</button>
+            </form>
+            <div class="text-center">
+                <form action="/user/vertify/resend" method="POST">
+                    <input type="hidden" name="resend" value="resend">
+                    <button class="btn btn-success">RESEND OTP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
