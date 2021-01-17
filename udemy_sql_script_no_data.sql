@@ -31,7 +31,7 @@ CREATE TABLE `admin` (
   `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(100) NOT NULL
 );
-
+  
 CREATE TABLE `otp` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(100) NOT NULL,
@@ -151,5 +151,178 @@ VALUES (
   "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
   "admin",
   "admin@gmail.com"
+);
+#--------------------------------------------------------------------------------
+
+
+#----------------------------------users-----------------------------------------
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user1",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user1",
+  "user1@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user2",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user2",
+  "user2@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user3",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user3",
+  "user3@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user4",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user4",
+  "user4@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user5",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user5",
+  "user5@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user6",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user6",
+  "user6@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user7",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user7",
+  "user7@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user8",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user8",
+  "user8@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user9",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user9",
+  "user9@gmail.com",
+  0,
+  1
+);
+
+INSERT INTO `users` (
+  `username`,
+  `password`,
+  `name`,
+  `email`,
+  `disable`,
+  `verification`
+)
+VALUES (
+  "user10",
+  "$2a$10$7vQgaayHtzepqU/TUJ7Z4u9w/RKvN6lNeXkHT8PuttKYBvnQmQFhW",
+  "user10",
+  "user10@gmail.com",
+  0,
+  1
 );
 #--------------------------------------------------------------------------------

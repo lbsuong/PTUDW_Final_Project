@@ -248,7 +248,7 @@ router.post('/lecturer-list/create-lecturer-account', auth.admin, async function
     await lecturerModel.add({
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 10),
-        name: req.body.username,
+        name: req.body.name,
         email: req.body.email,
         bankid: req.body.bankid,
         bankname: req.body.bankname,
@@ -587,7 +587,6 @@ router.get('/course-list', auth.admin, async function (req, res) {
         categoryList[i].isSelected = (categoryList[i].id === +req.query.categoryid);
     }
 
-    console.log(req.query);
     res.render('vwAdmin/course_list/course-list', {
         layout: 'admin-layout.hbs',
         forAdmin: true,
@@ -666,6 +665,10 @@ router.post('/course-list/edit/:id', auth.admin, async function (req, res) {
                     }
                 });
             }
+            if (course.categoryid !== +req.body.category) {
+                await categoryModel.addCountInAWeekFor(+req.body.category, 1);
+                await categoryModel.addCountInAWeekFor(course.categoryid, -1);
+            }
             const entity = {
                 id: id,
                 categoryid: +req.body.category,
@@ -684,10 +687,9 @@ router.post('/course-list/edit/:id', auth.admin, async function (req, res) {
                 delete entity.smallthumbnaillink;
             }
             await courseModel.changeInfo(entity);
+            res.redirect('/admin/course-list' + '?result=1');
         }
     });
-
-    res.redirect('/admin/course-list' + '?result=1');
 });
 
 router.post('/course-list/delete', auth.admin, async function (req, res) {

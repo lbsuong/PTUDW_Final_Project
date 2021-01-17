@@ -1,2 +1,1 @@
--Cộng và trừ lĩnh vực khi sửa course trong admin
 -Đếm khoá học nổi bật nhất trong tuần.

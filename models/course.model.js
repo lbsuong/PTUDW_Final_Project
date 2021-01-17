@@ -58,6 +58,7 @@ module.exports = {
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+      WHERE ${TBL_COURSE}.disable = 0
       ORDER BY numstudentinaweek DESC
       LIMIT ${n}`
     );
@@ -73,6 +74,7 @@ module.exports = {
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
       WHERE ${TBL_COURSE}.categoryid = ${catId}
       AND ${TBL_COURSE}.id <> ${except}
+      AND ${TBL_COURSE}.disable = 0
       ORDER BY numstudent DESC
       LIMIT ${n}`
     );
@@ -86,6 +88,7 @@ module.exports = {
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+      WHERE ${TBL_COURSE}.disable = 0
       ORDER BY numview DESC
       LIMIT ${n}`
     );
@@ -99,6 +102,7 @@ module.exports = {
       ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
       LEFT JOIN ${TBL_CATEGORY}
       ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
+      WHERE ${TBL_COURSE}.disable = 0
       ORDER BY id DESC
       LIMIT ${n}`
     );
@@ -123,7 +127,8 @@ module.exports = {
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
           LEFT JOIN ${TBL_LECTURER} ON
           ${TBL_LECTURER}.username = ${TBL_COURSE}.lecturer
-          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}
+          AND ${TBL_COURSE}.disable = 0`
         );
         for (j = 0; j < temp.length; j++) {
           result.push(temp[j]);
@@ -137,7 +142,8 @@ module.exports = {
         ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
         LEFT JOIN ${TBL_LECTURER} ON
         ${TBL_LECTURER}.username = ${TBL_COURSE}.lecturer
-        WHERE ${TBL_COURSE}.categoryid = ${id}`
+        WHERE ${TBL_COURSE}.categoryid = ${id}
+        AND ${TBL_COURSE}.disable = 0`
       );
       if (temp.length === 0) {
         return result;
@@ -166,7 +172,8 @@ module.exports = {
         const temp = await db.load(
           `SELECT COUNT(*) AS total
           FROM ${TBL_COURSE}
-          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}
+          AND ${TBL_COURSE}.disable = 0`
         );
         if (temp.length !== 0) {
           count += temp[0].total;
@@ -176,7 +183,8 @@ module.exports = {
       const temp = await db.load(
         `SELECT COUNT(*) AS total
         FROM ${TBL_COURSE}
-        WHERE ${TBL_COURSE}.categoryid = ${id}`
+        WHERE ${TBL_COURSE}.categoryid = ${id}
+        AND ${TBL_COURSE}.disable = 0`
       );
       count = temp[0].total;
     }
@@ -207,7 +215,8 @@ module.exports = {
           ON ${TBL_COURSE}.categoryid = ${TBL_CATEGORY}.id
           LEFT JOIN ${TBL_LECTURER}
           ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
-          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}`
+          WHERE ${TBL_COURSE}.categoryid = ${subcat[i].id}
+          AND ${TBL_COURSE}.disable = 0`
         );
         let j = 0;
         if (offset <= temp.length) {
@@ -232,6 +241,7 @@ module.exports = {
         LEFT JOIN ${TBL_LECTURER}
         ON ${TBL_COURSE}.lecturer = ${TBL_LECTURER}.username
         WHERE ${TBL_COURSE}.categoryid = ${id}
+        AND ${TBL_COURSE}.disable = 0
         LIMIT ${config.pagination.limit} OFFSET ${offset}`
       );
       if (temp.length === 0) {
