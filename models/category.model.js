@@ -168,5 +168,12 @@ module.exports = {
       return null;
     }
     return result[0].id;
+  },
+
+  async addCountInAWeekFor(courseid, n) {
+    const category = this.singleByID(courseid);
+    const condition = { id: courseid };
+    const entity = { countinaweek: category.countinaweek + 1 };
+    return db.patch(entity, condition, TBL_CATEGORY);
   }
 }

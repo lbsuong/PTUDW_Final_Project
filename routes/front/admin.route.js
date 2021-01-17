@@ -587,7 +587,6 @@ router.get('/course-list', auth.admin, async function (req, res) {
         categoryList[i].isSelected = (categoryList[i].id === +req.query.categoryid);
     }
 
-    console.log(req.query);
     res.render('vwAdmin/course_list/course-list', {
         layout: 'admin-layout.hbs',
         forAdmin: true,
@@ -665,6 +664,10 @@ router.post('/course-list/edit/:id', auth.admin, async function (req, res) {
                         console.log(err);
                     }
                 });
+            }
+            if (course.categoryid !== +req.body.category) {
+                await categoryModel.addCountInAWeekFor(+req.body.category, 1);
+                await categoryModel.addCountInAWeekFor(course.categoryid, -1);
             }
             const entity = {
                 id: id,
