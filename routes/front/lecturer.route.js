@@ -369,11 +369,9 @@ router.post('/course/:id/add', auth.lecturer, async function (req, res) {
     }
 
     let rand = func.random(5);
-    let lesson_path = '/public/courses/lessons/';
+    let lesson_path = `/public/courses/${courseid}/`;
     const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, './public/courses/lessons/');
-        },
+        destination: `.${lesson_path}`,
         filename: function (req, file, cb) {
             let file_ext = file.originalname.split('.').pop();
             let filename = req.session.profile.username.concat(courseid).concat(rand).concat('.').concat(file_ext);
